@@ -45,7 +45,7 @@ export function glassFor(scope, { assemble = false } = {}) {
     let g = walls.get(wall);
     if (!g) {
       const s = byId[wall.dataset.glass];
-      g = new GlassWall(wall, { wall: s.wall, trimColour: s.trim, small: wall.closest('.platform') ? s.name : null, columns: false, trim: 64 });
+      g = new GlassWall(wall, { wall: s.wall, trimColour: s.trim, small: null, columns: false, trim: 64 });
       if (g.failed) return;
       g.still = reduced.matches;
       walls.set(wall, g);

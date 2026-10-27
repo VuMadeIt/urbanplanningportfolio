@@ -195,21 +195,26 @@ export class GlassWall {
       const size = parseFloat(cs.fontSize) * d;
       x.font = `${cs.fontWeight} ${size}px ${cs.fontFamily}`;
       if ('letterSpacing' in x) x.letterSpacing = `${parseFloat(cs.letterSpacing) * d || 0}px`;
-      const words = name.querySelectorAll('.wall-word');
-      const lines = words.length ? [...words] : [name];
+      // group the words by the line they sit on, then centre each whole line on the wall
+      const parts = name.querySelectorAll('.wall-word');
       const range = document.createRange();
-      lines.forEach((el) => {
-        range.selectNodeContents(el.classList?.contains('wall-word') ? el : el.firstChild || el);
-        const rects = [...range.getClientRects()].filter((rr) => rr.width > 2);
-        const rr = rects[0] || el.getBoundingClientRect();
-        const text = (el.classList?.contains('wall-word') ? el.textContent : (el.firstChild?.textContent || el.textContent)).toUpperCase();
-        const m = x.measureText(text);
+      const lines = [];
+      const items = parts.length ? [...parts] : [name.firstChild || name];
+      items.forEach((node) => {
+        range.selectNodeContents(node);
+        const rr = [...range.getClientRects()].filter((r) => r.width > 2)[0] || (node.getBoundingClientRect?.() ?? name.getBoundingClientRect());
+        const text = node.textContent.trim().toUpperCase();
+        const line = lines.find((l) => Math.abs(l.top - rr.top) < rr.height * 0.4);
+        if (line) line.text += ` ${text}`;
+        else lines.push({ top: rr.top, height: rr.height, text });
+      });
+      const ls = parseFloat(cs.letterSpacing) * d || 0;
+      lines.forEach((l) => {
+        const m = x.measureText(l.text);
         const asc = m.actualBoundingBoxAscent || size * 0.7;
         const desc = m.actualBoundingBoxDescent || 0;
-        const ls = parseFloat(cs.letterSpacing) * d || 0;
-        const left = (W - m.width - ls) / 2;
-        const midY = (rr.top - wr.top + rr.height / 2) * d;
-        x.fillText(text, left, midY + (asc - desc) / 2);
+        const midY = (l.top - wr.top + l.height / 2) * d;
+        x.fillText(l.text, (W - m.width - ls) / 2, midY + (asc - desc) / 2);
       });
     }
     const gl = this.gl;
