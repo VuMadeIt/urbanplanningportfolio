@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffc72c"/><text x="32" y="41" text-anchor="middle" font-family="Futura, Century Gothic, sans-serif" font-weight="700" font-size="26" fill="#121212">LV</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#121212"/>
+  <rect x="31" y="4" width="2" height="12" fill="#f4f4f1"/>
+  <rect x="29.5" y="15" width="5" height="7" fill="#f4f4f1"/>
+  <ellipse cx="32" cy="25" rx="8.5" ry="3.6" fill="#da251d"/>
+  <rect x="27" y="23.5" width="10" height="3" fill="#f4f4f1"/>
+  <path d="M30 28h4l3 30h-10z" fill="#f4f4f1"/>
+  <rect x="10" y="57" width="44" height="3" fill="#ffc72c"/>
+</svg>
