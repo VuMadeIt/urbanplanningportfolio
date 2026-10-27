@@ -21,7 +21,8 @@ export const sound = {
   set(on) {
     enabled = on;
     localStorage.setItem('lv-sound', on ? 'on' : 'off');
-    if (on) ensure();
+    if (on) { ensure(); preloadAnnouncements(); }
+    window.dispatchEvent(new CustomEvent('soundchange', { detail: on }));
   },
 };
 
@@ -82,3 +83,77 @@ export function rumble(duration = 3, peak = 0.35) {
   src.connect(lp).connect(g).connect(master);
   src.start(t0);
 }
+
+/* ---------------- Station announcements and the sound of the car ----------------
+   public/audio holds real TTC recordings (CC BY 4.0, PascalHD via Wikimedia Commons): "Please stand
+   clear of the doors", "Doors will open on the left/right" and the car moving between Museum and
+   Queen's Park. The TTC's own voice can't say "Liam Vu", so the station names are synthesized
+   (Kokoro, Apache 2.0) and passed through a small PA-speaker filter to sit beside the real clips. */
+const buffers = new Map();
+const CLIPS = ['arriving-home', 'welcome', 'stand-clear', 'doors-left', 'doors-right', 'ride-bed',
+  ...['social', 'art', 'about', 'contact'].map((s) => `arriving-${s}`),
+  ...['home', 'social', 'art', 'about', 'contact', 'projects', 'case-studies'].map((s) => `next-${s}`)];
+function clip(name) {
+  if (!ensure()) return Promise.resolve(null);
+  if (!buffers.has(name)) {
+    buffers.set(name, fetch(`/audio/${name}.mp3`).then((r) => (r.ok ? r.arrayBuffer() : null))
+      .then((b) => (b ? ctx.decodeAudioData(b) : null)).catch(() => null));
+  }
+  return buffers.get(name);
+}
+export function preloadAnnouncements() { if (enabled) CLIPS.forEach(clip); }
+
+let pending = [];   // scheduled clips that have not started yet
+let voiceEnd = 0;   // when the last scheduled clip finishes
+/** Announcements play to the end and never talk over each other. A new announcement waits for the one
+ *  playing now; anything still waiting its turn from an older ride is dropped, since you are going elsewhere. */
+export function say(names, { queue = false, delay = 0 } = {}) {
+  if (!enabled || !ensure()) return;
+  const now = ctx.currentTime;
+  if (!queue) {
+    pending = pending.filter((p) => {
+      if (p.start > now + 0.02) { try { p.src.stop(); } catch {} return false; }
+      return true;
+    });
+    voiceEnd = pending.reduce((m, p) => Math.max(m, p.end), 0);
+  }
+  Promise.all(names.map(clip)).then((bufs) => {
+    let t = Math.max(ctx.currentTime + delay, voiceEnd ? voiceEnd + 0.25 : 0);
+    for (const b of bufs) {
+      if (!b) continue;
+      const src = ctx.createBufferSource();
+      src.buffer = b;
+      src.connect(master);
+      src.start(t);
+      const item = { src, start: t, end: t + b.duration };
+      pending.push(item);
+      src.onended = () => { pending = pending.filter((p) => p !== item); };
+      t += b.duration + 0.2;
+    }
+    voiceEnd = Math.max(voiceEnd, t - 0.2);
+  });
+}
+
+/** The real car moving: fades in, holds, fades out */
+export function rideSound(duration = 2.5, level = 0.9) {
+  if (!enabled || !ensure()) return;
+  clip('ride-bed').then((b) => {
+    if (!b) { rumble(duration, 0.35); return; }
+    const s = ctx.createBufferSource();
+    const g = ctx.createGain();
+    const t0 = ctx.currentTime;
+    s.buffer = b;
+    s.loop = true;
+    s.loopStart = 1; s.loopEnd = b.duration - 1;
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(level, t0 + Math.min(0.6, duration * 0.3));
+    g.gain.setValueAtTime(level, t0 + duration * 0.7);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + duration + 0.6);
+    s.connect(g).connect(master);
+    s.start(t0, 2 + Math.random() * 10);
+    s.stop(t0 + duration + 0.7);
+  });
+}
+
+/* Browsers keep sound asleep until the visitor touches the page: wake it on the first touch */
+['pointerdown', 'keydown'].forEach((ev) => window.addEventListener(ev, () => { if (enabled) { ensure(); preloadAnnouncements(); } }, { once: true, passive: true }));

@@ -446,3 +446,17 @@ body[data-station='home'] .linemap { visibility: hidden; }
   .js .mic-item.is-in .mic-art--drawn .draw path { animation: draw-line 1.8s var(--ease-in-out) 0.3s forwards; }
 }
 @keyframes draw-line { to { stroke-dashoffset: 0; } }
+
+/* ---------- Intro: ride with sound ---------- */
+.intro-tools { display: none; position: absolute; z-index: 5; right: var(--m); top: 20px; gap: 8px; }
+.js.is-intro .intro-tools { display: flex; }
+.intro-tools .skip-intro { position: static; display: block; }
+.intro-sound {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px;
+  background: var(--yellow); color: var(--ink); font-size: var(--t-small); font-weight: 600;
+  transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease;
+}
+.intro-sound svg { width: 20px; height: 20px; }
+.intro-sound[hidden] { display: none; }
+.intro-sound:active { transform: scale(0.96); }
+@media (hover: hover) and (pointer: fine) { .intro-sound:hover { background: #ffd65c; } }

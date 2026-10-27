@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import { trainSVG, doorX, trainWidth, TRAIN } from './kit.js';
-import { chimeOpen, rumble } from './audio.js';
+import { chimeOpen, rideSound, say, sound } from './audio.js';
 
 const CARS = 4;
 
@@ -48,6 +48,16 @@ export function runIntro({ onBoarded, glass, onSkip }) {
   };
 
   let done = false;
+  let doorsOpen = false;
+  // Ride with sound: turns the announcements on; if the doors have already opened, you still hear the station
+  const soundBtn = document.querySelector('[data-intro-sound]');
+  soundBtn?.addEventListener('click', () => {
+    sound.set(true);
+    soundBtn.hidden = true;
+    if (doorsOpen) say(['arriving-home', 'doors-right']);
+    else rideSound(3, 0.8);
+  });
+  if (sound.on && soundBtn) soundBtn.hidden = true;
   const finish = () => {
     if (done) return;
     done = true;
@@ -61,6 +71,7 @@ export function runIntro({ onBoarded, glass, onSkip }) {
     window.removeEventListener('keydown', onKey);
     window.removeEventListener('resize', onResize);
     sessionStorage.setItem('lv-boarded', '1');
+    if (doorsOpen || sound.on) say(['welcome'], { queue: true });
     onBoarded?.();
   };
 
@@ -71,12 +82,12 @@ export function runIntro({ onBoarded, glass, onSkip }) {
     .set(trainEl, { x: -g.tw }, 0)
     .to(platform.querySelector('.headlight'), { opacity: 0.75, duration: 1.1, ease: 'power2.in' }, 0.5)
     .call(() => { arrivals.textContent = 'Arriving'; }, null, 0.9)
-    .call(() => rumble(5.4, 0.4), null, 0.7)
+    .call(() => rideSound(4.6, 1), null, 0.9)
     .to(trainEl, { x: () => g.stopX, duration: 4.3, ease: 'power3.out', onUpdate: onMove }, 1.35)
     .to(platform.querySelector('.headlight'), { opacity: 0, duration: 0.5 }, 1.7)
     .set(streaks, { opacity: 0 })
     .to(trainEl, { x: () => g.stopX + 7 * g.s, duration: 0.22, ease: 'sine.out', yoyo: true, repeat: 1 })
-    .call(() => { arrivals.textContent = 'Doors open'; chimeOpen(); }, null, '+=0.1')
+    .call(() => { arrivals.textContent = 'Doors open'; chimeOpen(); doorsOpen = true; say(['arriving-home', 'doors-right']); }, null, '+=0.1')
     .to(svg.querySelectorAll('.dl'), { x: -80, duration: 0.85, ease: 'power2.inOut' }, '+=0.12')
     .to(svg.querySelectorAll('.dr'), { x: 80, duration: 0.85, ease: 'power2.inOut' }, '<')
     // step aboard: the camera walks into the open door in the middle of the screen

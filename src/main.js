@@ -248,6 +248,7 @@ const paintSound = () => {
   soundBtn.querySelector('.sound-label').textContent = sound.on ? 'Sound on' : 'Sound off';
 };
 soundBtn.addEventListener('click', () => { sound.set(!sound.on); paintSound(); });
+window.addEventListener('soundchange', paintSound);
 paintSound();
 
 /* ---------------- Resize ---------------- */

@@ -1,8 +1,11 @@
 import gsap from 'gsap';
 import { stations } from './data.js';
 import { streetcarSVG, streetcarDoorX, streetcarWidth, STREETCAR, cyclistSVG, poseCyclist, skylineSVG, stopPoleSVG } from './kit.js';
-import { chimeClose, chimeOpen, gong, bell, rumble } from './audio.js';
+import { chimeClose, chimeOpen, gong, bell, say, rideSound } from './audio.js';
 import { reduced } from './content.js';
+
+const DOORS = { home: 'doors-right', social: 'doors-right', art: 'doors-left', about: 'doors-left', contact: 'doors-left' };
+let firstRide = true;
 
 const byId = Object.fromEntries(stations.map((s) => [s.id, s]));
 const order = stations.map((s) => s.id);
@@ -122,21 +125,23 @@ function subwayRide(from, to, swap, reveal) {
   const dist = strip.scrollWidth - vw;
   const marker = el.querySelector('.ride-map .is-to');
 
+  const announce = firstRide ? ['stand-clear', `next-${to.id}`] : [`next-${to.id}`];
+  firstRide = false;
   active = gsap.timeline({ onComplete: end })
-    .call(chimeClose)
+    .call(() => { chimeClose(); say(announce); })
     .set(out, { opacity: 0 })
     .fromTo(top, { yPercent: -100 }, { yPercent: 0, duration: 0.5, ease: 'expo.out' }, 0.1)
     .fromTo(L, { xPercent: -100 }, { xPercent: 0, duration: 0.62, ease: 'power3.inOut' }, 0.3)
     .fromTo(R, { xPercent: 100 }, { xPercent: 0, duration: 0.62, ease: 'power3.inOut' }, 0.3)
     .to(doors, { x: 3, duration: 0.06, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 0.92)
     .set(out, { opacity: 1 }, 0.92)
-    .call(() => rumble(2.6, 0.32), null, 0.95)
+    .call(() => rideSound(2.2 / (active?.timeScale() || 1)), null, 0.95)
     .fromTo(strip, { x: 0 }, { x: -dist, duration: 1.8, ease: 'power2.inOut' }, 0.95)
     .to(doors, { y: 2.5, rotation: 0.12, duration: 0.16, yoyo: true, repeat: 9, ease: 'sine.inOut' }, 1.0)
     .fromTo(marker, { '--fill': 0 }, { '--fill': 1, duration: 1.8, ease: 'power2.inOut' }, 0.95)
     .to(doors, { x: -6, duration: 0.18, yoyo: true, repeat: 1, ease: 'sine.out' }, 2.72)
     .call(() => { swap(); el.querySelector('.ride-led-a').textContent = 'Arriving at'; }, null, 2.78)
-    .call(chimeOpen, null, 2.9)
+    .call(() => { chimeOpen(); say([`arriving-${to.id}`, DOORS[to.id] || 'doors-right'], { queue: true }); }, null, 2.9)
     .to(out, { opacity: 0, duration: 0.15, ease: 'none' }, 3.0)
     .to(L, { xPercent: -100, duration: 0.65, ease: 'power3.inOut' }, 3.0)
     .to(R, { xPercent: 100, duration: 0.65, ease: 'power3.inOut' }, 3.0)
@@ -171,7 +176,7 @@ function streetcarRide(from, to, swap, reveal) {
 
   active = gsap.timeline({ onComplete: end })
     .fromTo(scene, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.55, ease: 'power3.inOut' })
-    .call(gong, null, 0.35)
+    .call(() => { gong(); say(['next-projects'], { delay: 0.7 }); }, null, 0.35)
     .fromTo(carEl, { x: -w }, { x: stopX, duration: 1.75, ease: 'power3.out' }, 0.35)
     .fromTo(sky, { x: 0 }, { x: -window.innerWidth * 0.04, duration: 1.75, ease: 'power3.out' }, 0.35)
     .to(carEl, { x: stopX + 5 * s, duration: 0.18, yoyo: true, repeat: 1, ease: 'sine.out' })
@@ -217,7 +222,7 @@ function bikeRide(from, to, swap, reveal) {
 
   active = gsap.timeline({ onComplete: () => { gsap.ticker.remove(pedal); end(); } })
     .fromTo(lane, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.55, ease: 'power3.inOut' })
-    .call(bell, null, 0.3)
+    .call(() => { bell(); say(['next-case-studies'], { delay: 0.45 }); }, null, 0.3)
     .fromTo(marksEl, { x: 0 }, { x: -vw * 2.2, duration: 2.3, ease: 'power1.inOut' }, 0)
     .fromTo(rider, { x: -vw * 0.45 }, { x: vw * 0.5 - rider.offsetWidth / 2, duration: 0.85, ease: 'power3.out' }, 0.25)
     .call(swap, null, 1.15)
