@@ -503,11 +503,11 @@ body[data-station='home'] .linemap { visibility: hidden; }
 .shrine-beam {
   position: absolute; left: 50%; top: -5%; width: min(70vw, 760px); height: 100%; transform-origin: top center;
   translate: -50% 0;
-  background: linear-gradient(180deg, rgba(255, 236, 170, 0.75), rgba(255, 236, 170, 0.22) 55%, rgba(255, 236, 170, 0) 92%);
+  background: linear-gradient(180deg, rgba(255, 236, 170, 0.75), rgba(255, 236, 170, 0.22) 55%, rgba(255, 236, 170, 0) 92%); /* taste-skill-ignore: a real spotlight fades out */
   clip-path: polygon(44% 0, 56% 0, 86% 100%, 14% 100%);
   filter: blur(6px); mix-blend-mode: screen; pointer-events: none;
 }
-.shrine-glow { position: absolute; left: 50%; bottom: 18%; width: 620px; height: 620px; translate: -50% 0; border-radius: 50%; background: radial-gradient(circle, rgba(255, 220, 140, 0.45), rgba(255, 220, 140, 0) 65%); pointer-events: none; }
+.shrine-glow { position: absolute; left: 50%; bottom: 18%; width: 620px; height: 620px; translate: -50% 0; border-radius: 50%; background: radial-gradient(circle, rgba(255, 220, 140, 0.45), rgba(255, 220, 140, 0) 65%); pointer-events: none; } /* taste-skill-ignore: the light pooling around the statue */
 .shrine-motes { position: absolute; left: 50%; top: 10%; width: min(46vw, 480px); height: 80%; translate: -50% 0; pointer-events: none; }
 .shrine-motes i { position: absolute; bottom: 0; width: 3px; height: 3px; border-radius: 50%; background: #fff3c4; opacity: 0; animation: mote 6s linear infinite; }
 @keyframes mote { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 0.8; } 100% { transform: translateY(-70vh); opacity: 0; } }
