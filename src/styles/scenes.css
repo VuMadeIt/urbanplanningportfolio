@@ -1,0 +1,164 @@
+/* =========================================================
+   Scenes: tile walls, track, platform edge, street, bike lane
+   ========================================================= */
+
+/* ---------- Tile wall ---------- */
+.wall {
+  --wall: #e8e7e2; --trim: var(--red); --name: var(--ink);
+  position: absolute; inset: 0 0 auto 0;
+  background: var(--wall); color: var(--name);
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.wall::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: var(--tiles); background-size: 120px 120px;
+}
+.wall-trim { position: absolute; left: 0; right: 0; top: 0; height: var(--bar-h); background: var(--trim); }
+.wall-name {
+  position: relative;
+  font-size: var(--fit, var(--t-mon));
+  font-weight: 600;
+  line-height: 0.8;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: center;
+  padding: var(--bar-h) 0 0 0.035em;
+}
+.wall-word { display: inline-block; }
+.wall--home { --wall: #e8e7e2; --trim: var(--red); --name: var(--ink); }
+.wall--social { --wall: var(--yellow); --trim: var(--ink); --name: var(--ink); }
+.wall--about { --wall: var(--blue); --trim: var(--gold); --name: var(--gold); }
+.wall--contact { --wall: #1a1a1a; --trim: var(--red); --name: var(--paper); }
+
+.wall-sign {
+  position: absolute; right: var(--m); top: calc(var(--bar-h) + 24px); z-index: 1;
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--ink); color: #fff; padding: 8px 14px 8px 8px;
+  font-size: var(--t-small); font-weight: 600;
+}
+.platform .wall-sign { top: 12px; right: auto; left: var(--m); }
+.wall-sign-line { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--yellow); color: var(--ink); font-weight: 700; }
+
+/* ---------- Track and platform edge ---------- */
+.track { position: absolute; left: 0; right: 0; background: #171717; }
+.rail { position: absolute; left: 0; right: 0; height: 6px; background: #5d5d5b; }
+.rail:first-child { top: 30%; }
+.rail:last-child { top: 68%; height: 8px; }
+.edge { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; }
+.tactile { height: 26px; flex: none; background: var(--yellow-deep) var(--dots); background-size: 22px 22px; }
+.floor {
+  flex: 1; background: var(--concrete); color: var(--ink);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--gutter);
+  padding: 12px var(--m);
+}
+
+/* ---------- Subway station hero ---------- */
+.hero { position: relative; overflow: hidden; }
+.hero--subway { height: 100svh; min-height: 600px; background: #171717; }
+.hero--subway .wall { height: 76%; }
+.hero--subway .track { top: 76%; height: 8%; }
+.hero--subway .edge { top: 84%; }
+.hero-lead { max-width: 46ch; font-size: var(--t-small); line-height: 1.4; font-weight: 500; }
+.next-sign {
+  flex: none; display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 16px;
+  background: var(--ink); color: #fff; font-weight: 600; font-size: var(--t-small); text-decoration: none;
+  transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease;
+}
+.next-sign svg { width: 20px; height: 20px; transition: transform var(--t-ui) var(--ease-out); }
+.next-sign:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .next-sign:hover { background: var(--red); }
+  .next-sign:hover svg { transform: translateX(4px); }
+}
+
+/* ---------- Home platform (the intro) ---------- */
+.platform { position: relative; height: 100svh; min-height: 560px; overflow: hidden; background: #171717; }
+.platform .wall { height: 74%; place-items: start center; }
+.platform .wall-name { padding-top: clamp(96px, 12vh, 140px); }
+.platform .track { top: 60%; height: 26%; }
+.platform .edge { top: 84%; }
+.platform .floor { font-weight: 500; font-size: var(--t-small); }
+.train-wrap { position: absolute; left: 0; right: 0; bottom: 15%; height: var(--train-h, 46%); pointer-events: none; }
+.train { position: absolute; left: 0; bottom: 0; height: 100%; will-change: transform; }
+.train svg { height: 100%; width: auto; max-width: none; }
+.headlight { position: absolute; left: -10vw; top: 44%; width: 40vw; height: 40%; background: #fff3c4; border-radius: 50%; filter: blur(60px); opacity: 0; pointer-events: none; }
+.streaks { position: absolute; left: 0; right: 0; bottom: 18%; height: 42%; pointer-events: none; opacity: 0; }
+.streaks i { position: absolute; left: 0; height: 3px; background: #fff; opacity: 0.55; }
+.arrivals { display: inline-flex; align-items: center; gap: 14px; background: var(--ink); color: var(--amber); padding: 10px 16px; font-weight: 600; }
+.arrivals-label { color: #fff; font-weight: 500; }
+.arrivals-time { min-width: 5.5em; text-align: right; }
+.skip-intro {
+  position: absolute; z-index: 5; right: var(--m); top: 20px;
+  min-height: 44px; padding: 0 16px; background: var(--ink); color: #fff;
+  font-size: var(--t-small); font-weight: 600;
+  transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease, opacity 300ms ease;
+}
+.skip-intro:active { transform: scale(0.96); }
+@media (hover: hover) and (pointer: fine) { .skip-intro:hover { background: var(--red); } }
+
+/* ---------- Streetcar stop hero ---------- */
+.hero--street {
+  --sky: var(--red); --name-c: var(--paper); --bldg-1: #b51c15; --bldg-2: #9c1711; --bldg-3: #c5241c;
+  height: 100svh; min-height: 620px; background: var(--sky);
+  display: grid; grid-template-rows: 1fr auto auto;
+}
+.station--art .street-name { justify-self: center; padding-left: 0; padding-right: 0; }
+.station--art .hero--street { --sky: #ecebe6; --name-c: var(--ink); --bldg-1: #d4d3cd; --bldg-2: #c2c1ba; --bldg-3: #dedcd6; }
+.street-name {
+  align-self: end; justify-self: start;
+  padding: calc(var(--bar-h) + 16px) var(--m) 0;
+  font-size: var(--fit, var(--t-mon)); font-weight: 600; line-height: 0.8; letter-spacing: -0.04em;
+  text-transform: uppercase; white-space: nowrap; color: var(--name-c);
+  position: relative; z-index: 1;
+}
+.street { position: relative; height: 34vh; min-height: 220px; }
+.street-skyline { position: absolute; left: 0; right: 0; bottom: 30%; height: 100%; }
+.street-skyline svg { width: 100%; height: 100%; }
+.street-road { position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: #2a2a2a; }
+.street-rail { position: absolute; left: 0; right: 0; height: 5px; background: #6b6b69; }
+.street-rail:first-child { top: 38%; }
+.street-rail:last-child { top: 70%; }
+.street-stop { position: absolute; z-index: 2; right: 14%; bottom: -12px; height: 118%; width: 120px; }
+.street-stop svg { height: 100%; width: auto; }
+.street-foot {
+  background: #cfccc5; color: var(--ink);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--gutter);
+  padding: 22px var(--m);
+}
+
+/* ---------- Bike lane hero ---------- */
+.hero--bike { height: 100svh; min-height: 620px; display: grid; grid-template-rows: 1fr auto; background: var(--green); }
+.lane { position: relative; display: grid; place-items: center; overflow: hidden; color: #fff; padding-top: var(--bar-h); }
+.lane-line { position: absolute; left: 0; right: 0; height: 14px; background: #fff; opacity: 0.94; }
+.lane-line--top { top: calc(var(--bar-h) + 24px); }
+.lane-line--bottom { bottom: 28px; }
+.road-name {
+  font-size: var(--fit, clamp(64px, 11vw, 190px)); font-weight: 600; line-height: 0.82; letter-spacing: -0.02em;
+  text-transform: uppercase; text-align: center; white-space: nowrap;
+  transform: scaleY(1.45); transform-origin: center;
+}
+.road-name .rl { display: block; }
+.lane-stencil { position: absolute; left: 5vw; top: 50%; width: clamp(90px, 11vw, 170px); margin-top: calc(var(--bar-h) / 2); transform: translateY(-50%); opacity: 0.94; }
+.lane-arrow { position: absolute; right: 6vw; top: 50%; width: clamp(28px, 3vw, 44px); margin-top: calc(var(--bar-h) / 2); transform: translateY(-50%) rotate(90deg); opacity: 0.94; }
+.lane-foot { background: #2a2a2a; color: var(--paper); display: flex; align-items: center; justify-content: space-between; gap: var(--gutter); padding: 22px var(--m); }
+.lane-foot .next-sign { background: var(--paper); color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .lane-foot .next-sign:hover { background: var(--yellow); } }
+
+/* ---------- Phone ---------- */
+@media (max-width: 760px) {
+  .wall::after { background-size: 90px 90px; }
+  .hero--subway .wall { height: 64%; }
+  .hero--subway .track { top: 64%; height: 6%; }
+  .hero--subway .edge { top: 70%; }
+  .floor, .street-foot, .lane-foot { flex-direction: column; align-items: flex-start; justify-content: center; }
+  .platform .wall-name { line-height: 0.84; white-space: normal; padding-top: 104px; }
+  .platform .wall-word { display: block; }
+  .platform .floor { flex-direction: row; align-items: center; }
+  .platform-line { max-width: 18ch; }
+  .street-stop { right: 6%; width: 84px; height: 84%; z-index: 0; }
+  .lane-stencil { left: 4vw; top: auto; bottom: 64px; transform: none; }
+  .lane-arrow { right: 6vw; top: auto; bottom: 56px; transform: rotate(90deg); }
+  .road-name { transform: scaleY(1.35); }
+}

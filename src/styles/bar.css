@@ -1,0 +1,89 @@
+/* ---------- The bar: wordmark, line map, sound ---------- */
+.bar {
+  position: fixed; inset: 0 0 auto 0; z-index: 40;
+  height: var(--bar-h);
+  display: flex; align-items: center; gap: var(--gutter);
+  padding: 0 var(--m);
+  color: var(--bar-ink, var(--ink));
+  background: var(--bar-bg, transparent);
+  transition: background-color 300ms ease, color 300ms ease, transform 500ms var(--ease-out), opacity 400ms ease;
+}
+.bar.is-solid { --bar-bg: var(--paper); --bar-ink: var(--ink); }
+body[data-station='home'] .bar { --bar-bg: #e4e5e3; }
+.is-intro .bar { opacity: 0; transform: translateY(-100%); pointer-events: none; }
+
+.wordmark { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; font-size: var(--t-body); letter-spacing: -0.01em; flex: none; }
+.bullet {
+  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  background: var(--yellow); color: var(--ink); font-size: 13px; font-weight: 700; letter-spacing: 0;
+  transition: transform var(--t-ui) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) { .wordmark:hover .bullet { transform: rotate(-12deg) scale(1.06); } }
+
+/* Line map: dots on a line, labels beside them */
+.linemap { margin-left: auto; }
+.linemap-list { display: flex; align-items: center; }
+.linemap-list li { position: relative; display: flex; align-items: center; }
+.linemap-list li + li { padding-left: 28px; }
+.linemap-list li + li::before {
+  content: ''; position: absolute; left: 4px; width: 20px; top: 50%; height: 4px; margin-top: -2px;
+  background: currentColor; opacity: 0.35;
+}
+.linemap-list a {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
+  font-size: var(--t-small); font-weight: 500; text-decoration: none; white-space: nowrap;
+}
+.linemap-list a::before {
+  content: ''; width: 12px; height: 12px; border-radius: 50%; flex: none;
+  border: 3px solid currentColor;
+  transition: transform var(--t-ui) var(--ease-out), background-color var(--t-hover) ease;
+}
+.linemap-list a[data-mode='bike']::before { border-radius: 3px; }
+.linemap-list a[data-mode='streetcar']::before { border-radius: 2px 2px 6px 6px; }
+.linemap-list a[aria-current='page']::before { background: currentColor; transform: scale(1.25); }
+.linemap-list a[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+@media (hover: hover) and (pointer: fine) {
+  .linemap-list a:hover::before { transform: scale(1.35); background: currentColor; }
+}
+
+.bar-tools { display: flex; align-items: center; gap: 8px; flex: none; }
+.sound {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px;
+  font-size: var(--t-small); font-weight: 500;
+  transition: transform var(--t-press) var(--ease-out);
+}
+.sound svg { width: 22px; height: 22px; }
+.sound .sound-wave { opacity: 0.3; transition: opacity var(--t-hover) ease; }
+.sound[aria-pressed='true'] .sound-wave { opacity: 1; }
+.sound:active { transform: scale(0.96); }
+.stops-toggle { display: none; min-height: 44px; padding: 0 16px; font-size: var(--t-small); font-weight: 600; background: var(--yellow); color: var(--ink); }
+
+/* Phone line map sheet */
+.stops-sheet {
+  position: fixed; inset: var(--bar-h) 0 0 0; z-index: 39;
+  background: var(--ink); color: var(--paper);
+  padding: 24px var(--m) 40px; overflow-y: auto;
+}
+.stops-sheet[hidden] { display: none; }
+.stops-sheet-title { color: var(--amber); font-weight: 600; font-size: var(--t-small); margin-bottom: 16px; }
+.stops-sheet-list { position: relative; }
+.stops-sheet-list::before { content: ''; position: absolute; left: 11px; top: 30px; bottom: 30px; width: 6px; background: var(--yellow); }
+.stops-sheet-list a {
+  position: relative; display: flex; align-items: baseline; gap: 12px; padding: 14px 0 14px 44px;
+  text-decoration: none; font-size: 32px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1;
+}
+.stops-sheet-list a::before {
+  content: ''; position: absolute; left: 2px; top: 50%; width: 24px; height: 24px; margin-top: -12px; border-radius: 50%;
+  background: var(--ink); border: 5px solid var(--paper);
+}
+.stops-sheet-list a[aria-current='page']::before { background: var(--paper); }
+.stops-sheet-list small { font-size: var(--t-small); font-weight: 400; opacity: 0.75; letter-spacing: 0; }
+
+@media (max-width: 1100px) {
+  .linemap { display: none; }
+  .bar-tools { margin-left: auto; }
+  .stops-toggle { display: inline-flex; align-items: center; }
+}
+@media (max-width: 520px) {
+  .sound-label { display: none; }
+}
