@@ -31,13 +31,17 @@ let intro = null;
 let rides = 0;
 const heroTimelines = new Map();
 
+// About now lives on the home page: old #/about links still land there
+const ALIASES = { about: 'home' };
+const hashId = () => location.hash.replace(/^#\/?/, '');
 const idFromHash = () => {
-  const h = location.hash.replace(/^#\/?/, '');
+  const h = hashId();
+  if (Object.hasOwn(ALIASES, h)) return ALIASES[h];
   return Object.hasOwn(byId, h) ? h : 'home';
 };
 const hashIsValid = () => {
-  const h = location.hash.replace(/^#\/?/, '');
-  return h === '' || Object.hasOwn(byId, h);
+  const h = hashId();
+  return h === '' || Object.hasOwn(byId, h) || Object.hasOwn(ALIASES, h);
 };
 
 /* ---------------- Boot ---------------- */

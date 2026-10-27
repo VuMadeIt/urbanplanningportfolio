@@ -91,8 +91,8 @@ export function rumble(duration = 3, peak = 0.35) {
    (Kokoro, Apache 2.0) and passed through a small PA-speaker filter to sit beside the real clips. */
 const buffers = new Map();
 const CLIPS = ['arriving-home', 'welcome', 'stand-clear', 'doors-left', 'doors-right', 'ride-bed',
-  ...['social', 'art', 'about', 'contact'].map((s) => `arriving-${s}`),
-  ...['home', 'social', 'art', 'about', 'contact', 'projects', 'case-studies'].map((s) => `next-${s}`)];
+  ...['social', 'art', 'contact'].map((s) => `arriving-${s}`),
+  ...['home', 'social', 'art', 'contact', 'projects', 'case-studies'].map((s) => `next-${s}`)];
 function clip(name) {
   if (!ensure()) return Promise.resolve(null);
   if (!buffers.has(name)) {

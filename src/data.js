@@ -33,6 +33,5 @@ export const stations = [
   { id: 'case-studies', name: 'Case studies', mode: 'bike', wall: '#1d8a4b', trim: '#16703c', ink: '#ffffff' },
   { id: 'projects', name: 'Projects', mode: 'streetcar', wall: '#da251d', trim: '#b51c15', ink: '#f4f4f1' },
   { id: 'art', name: 'Art', mode: 'subway', after: 'Museum, 1963', tile: 'Yellow', trimName: 'Blue', wall: '#e7cf7c', trim: '#2a4f8f', ink: '#2a4f8f', columns: true },
-  { id: 'about', name: 'About', mode: 'subway', after: 'College, 1954', tile: 'English Eggshell', trimName: 'American Red', wall: '#b3d4c8', trim: '#a8262b', ink: '#a8262b' },
   { id: 'contact', name: 'Contact', mode: 'subway', after: 'St. Patrick, 1963', tile: 'Green', trimName: 'Forest Green', wall: '#7fae94', trim: '#24533b', ink: '#1f4632' },
 ];

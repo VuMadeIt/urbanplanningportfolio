@@ -464,3 +464,7 @@ body[data-station='home'] .linemap { visibility: hidden; }
 /* Contact close: the name whole, edge to edge, nothing cut off */
 .close-name { font-size: 25.2vw; line-height: 0.86; margin-bottom: 0; padding: 0 0 0.05em; white-space: nowrap; letter-spacing: -0.045em; }
 @media (max-width: 760px) { .close-name { font-size: 25.2vw; } }
+
+/* ---------- Home: the About content lives under the car ---------- */
+.home-about { padding-top: var(--section); background: var(--paper); position: relative; }
+.station--home .next-stop { position: relative; }
