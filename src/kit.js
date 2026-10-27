@@ -260,3 +260,60 @@ export function lotusSVG() {
     <rect x="22" y="96" width="76" height="14" fill="#c99a2e"/><rect x="22" y="110" width="76" height="10" fill="#2a4f8f"/>
   </svg>${shaft('#ead9ad', '#dcc690', '#d6bf86')}${base('#e3cf9c', '#d1ba82')}`;
 }
+
+/* ---------------- The Olivia Chow shrine ---------------- */
+export function statueSVG() {
+  return `<svg viewBox="0 0 420 760" role="img" aria-label="A bronze statue of Mayor Olivia Chow with her bob haircut, one arm raised over the city, on a stone pedestal" focusable="false">
+    <!-- pedestal -->
+    <rect x="70" y="560" width="280" height="200" fill="#3b3442"/>
+    <rect x="70" y="560" width="280" height="22" fill="#4a4253"/>
+    <rect x="52" y="722" width="316" height="38" fill="#2f2936"/>
+    <rect x="100" y="600" width="220" height="92" fill="#2f2936"/>
+    <text x="210" y="636" text-anchor="middle" font-family="Jost Variable, Jost, sans-serif" font-weight="700" font-size="22" letter-spacing="3" fill="#e9c46a">OLIVIA CHOW</text>
+    <text x="210" y="664" text-anchor="middle" font-family="Fraunces Variable, Georgia, serif" font-style="italic" font-size="17" fill="#e9c46a">Mayor of Toronto</text>
+    <path d="M150 678h120" stroke="#e9c46a" stroke-width="2"/>
+    <!-- laurels -->
+    <g fill="none" stroke="#e9c46a" stroke-width="3" stroke-linecap="round">
+      <path d="M92 690c-12-22-10-50 8-70M328 690c12-22 10-50-8-70"/>
+    </g>
+    <g fill="#e9c46a">
+      <ellipse cx="86" cy="668" rx="7" ry="3.5" transform="rotate(-50 86 668)"/><ellipse cx="88" cy="644" rx="7" ry="3.5" transform="rotate(-70 88 644)"/>
+      <ellipse cx="334" cy="668" rx="7" ry="3.5" transform="rotate(50 334 668)"/><ellipse cx="332" cy="644" rx="7" ry="3.5" transform="rotate(70 332 644)"/>
+    </g>
+    <!-- the mayor in bronze -->
+    <g class="statue-figure">
+      <path d="M160 552l10-150h80l10 150z" fill="#6d5230"/>
+      <path d="M182 552l6-120h44l6 120z" fill="#7d6038"/>
+      <rect x="168" y="548" width="34" height="14" rx="4" fill="#4e3a20"/><rect x="218" y="548" width="34" height="14" rx="4" fill="#4e3a20"/>
+      <path d="M150 262c12-14 38-20 60-20s48 6 60 20l14 150H136z" fill="#8a6a3a"/>
+      <path d="M210 250l-18 28 18 34 18-34z" fill="#a9844c"/>
+      <path d="M150 268l-16 128 30 6 8-110z" fill="#7a5c32"/>
+      <path d="M262 262c10-4 18-2 24 4l56-118 22 10-58 132c-8 14-26 14-34 4z" fill="#8a6a3a"/>
+      <path d="M342 150c-4-14 2-26 12-30l14-6c8 0 10 8 6 14l-6 10 8 4c6 4 2 12-4 12l-14 2z" fill="#a9844c"/>
+      <rect x="196" y="216" width="28" height="36" fill="#a9844c"/>
+      <ellipse cx="210" cy="190" rx="36" ry="42" fill="#b08d52"/>
+      <path d="M170 196c-6-38 12-72 40-72s46 34 40 72c-2 14-8 26-12 30l-4-44c-8-14-18-20-24-20s-16 6-24 20l-4 44c-4-4-10-16-12-30z" fill="#5e4526"/>
+      <path d="M176 160c10-20 26-26 34-26s28 8 36 28c-14-6-26-8-36-8s-22 2-34 6z" fill="#5e4526"/>
+      <path d="M196 206c8 6 20 6 28 0" fill="none" stroke="#5e4526" stroke-width="3" stroke-linecap="round"/>
+      <path d="M150 268c12-14 38-20 60-20" fill="none" stroke="#c9a463" stroke-width="3" opacity=".7"/>
+    </g>
+    <!-- offerings at her feet: flowers, a bike, a Presto card, a rent-control scroll -->
+    <g class="offerings">
+      <g transform="translate(60 712)"><circle cx="10" cy="6" r="7" fill="#e76f51"/><circle cx="22" cy="2" r="7" fill="#f4a261"/><circle cx="32" cy="8" r="7" fill="#c77dff"/><path d="M14 12l6 24M24 10l-2 26M32 14l-6 22" stroke="#2a9d8f" stroke-width="3"/></g>
+      <g transform="translate(312 700)" fill="none" stroke="#9cc3d5" stroke-width="3"><circle cx="10" cy="40" r="10"/><circle cx="42" cy="40" r="10"/><path d="M10 40l12-20h16l4 20M22 20l8 20"/></g>
+      <rect x="150" y="744" width="40" height="16" rx="3" fill="#2a9d8f" transform="rotate(-8 170 752)"/>
+      <g transform="translate(232 738)"><rect width="46" height="16" rx="8" fill="#f1e3c4"/><text x="23" y="12" text-anchor="middle" font-family="Jost Variable, Jost, sans-serif" font-size="8" font-weight="700" fill="#5e4526">RENT</text></g>
+    </g>
+  </svg>`;
+}
+export function cityHallSVG() {
+  const letters = [['T', '#e63946'], ['O', '#f4a261'], ['R', '#e9c46a'], ['O', '#2a9d8f'], ['N', '#457b9d'], ['T', '#c77dff'], ['O', '#ff70a6']];
+  return `<svg viewBox="0 0 1600 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+    <path d="M330 600V170c90-60 210-60 300 0v430z" fill="#2a2235"/>
+    <path d="M1270 600V110c-100-70-240-70-340 0v490z" fill="#2a2235"/>
+    <g fill="#3a3048">${Array.from({ length: 14 }, (_, i) => `<rect x="${350 + (i % 7) * 38}" y="${210 + Math.floor(i / 7) * 160}" width="20" height="120"/>`).join('')}${Array.from({ length: 16 }, (_, i) => `<rect x="${950 + (i % 8) * 38}" y="${160 + Math.floor(i / 8) * 180}" width="20" height="140"/>`).join('')}</g>
+    <ellipse cx="800" cy="470" rx="150" ry="44" fill="#352c43"/><path d="M650 470c0-70 300-70 300 0z" fill="#3d334d"/>
+    <rect x="0" y="540" width="1600" height="60" fill="#1d1726"/>
+    <g font-family="Jost Variable, Jost, sans-serif" font-weight="700" font-size="74">${letters.map(([l, c], i) => `<text x="${520 + i * 82}" y="590" fill="${c}" opacity=".9">${l}</text>`).join('')}</g>
+  </svg>`;
+}

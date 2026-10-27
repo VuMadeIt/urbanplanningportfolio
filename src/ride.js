@@ -4,11 +4,11 @@ import { streetcarSVG, streetcarDoorX, streetcarWidth, STREETCAR, cyclistSVG, po
 import { chimeClose, chimeOpen, gong, bell, say, rideSound } from './audio.js';
 import { reduced } from './content.js';
 
-const DOORS = { home: 'doors-right', social: 'doors-right', art: 'doors-left', about: 'doors-left', contact: 'doors-left' };
+const DOORS = { shrine: 'doors-right', home: 'doors-right', social: 'doors-right', art: 'doors-left', about: 'doors-left', contact: 'doors-left' };
 let firstRide = true;
 
 const byId = Object.fromEntries(stations.map((s) => [s.id, s]));
-const order = stations.map((s) => s.id);
+const order = stations.filter((s) => !s.hidden).map((s) => s.id);
 const layer = () => document.getElementById('ride');
 
 let active = null; // the running timeline
@@ -112,7 +112,7 @@ function subwayRide(from, to, swap, reveal) {
     </div></div>
     <div class="ride-doors">${leafSVG('l')}${leafSVG('r')}</div>
     <div class="ride-top">
-      <p class="ride-led"><span class="ride-led-a">Next station</span> <span class="ride-led-b">${to.name}</span></p>
+      <p class="ride-led"><span class="ride-led-a">${to.hidden ? 'Unscheduled stop' : 'Next station'}</span> <span class="ride-led-b">${to.name}</span></p>
       ${lineMap(from.id, to.id)}
     </div>`, 'ride--subway');
 
@@ -138,7 +138,7 @@ function subwayRide(from, to, swap, reveal) {
     .call(() => rideSound(2.2 / (active?.timeScale() || 1)), null, 0.95)
     .fromTo(strip, { x: 0 }, { x: -dist, duration: 1.8, ease: 'power2.inOut' }, 0.95)
     .to(doors, { y: 2.5, rotation: 0.12, duration: 0.16, yoyo: true, repeat: 9, ease: 'sine.inOut' }, 1.0)
-    .fromTo(marker, { '--fill': 0 }, { '--fill': 1, duration: 1.8, ease: 'power2.inOut' }, 0.95)
+    .fromTo(marker || document.createElement('i'), { '--fill': 0 }, { '--fill': 1, duration: 1.8, ease: 'power2.inOut' }, 0.95)
     .to(doors, { x: -6, duration: 0.18, yoyo: true, repeat: 1, ease: 'sine.out' }, 2.72)
     .call(() => { swap(); el.querySelector('.ride-led-a').textContent = 'Arriving at'; }, null, 2.78)
     .call(() => { chimeOpen(); say([`arriving-${to.id}`, DOORS[to.id] || 'doors-right'], { queue: true }); }, null, 2.9)

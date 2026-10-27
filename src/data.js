@@ -34,4 +34,6 @@ export const stations = [
   { id: 'projects', name: 'Projects', mode: 'streetcar', wall: '#da251d', trim: '#b51c15', ink: '#f4f4f1' },
   { id: 'art', name: 'Art', mode: 'subway', after: 'Museum, 1963', tile: 'Yellow', trimName: 'Blue', wall: '#e7cf7c', trim: '#2a4f8f', ink: '#2a4f8f', columns: true },
   { id: 'contact', name: 'Contact', mode: 'subway', after: 'St. Patrick, 1963', tile: 'Green', trimName: 'Forest Green', wall: '#7fae94', trim: '#24533b', ink: '#1f4632' },
+  // a hidden stop: reached through a few secret doors on the site, never on the map
+  { id: 'shrine', name: 'Olivia Chow Shrine', mode: 'subway', hidden: true, wall: '#2a2235', trim: '#e9c46a', ink: '#e9c46a' },
 ];

@@ -91,8 +91,8 @@ export function rumble(duration = 3, peak = 0.35) {
    (Kokoro, Apache 2.0) and passed through a small PA-speaker filter to sit beside the real clips. */
 const buffers = new Map();
 const CLIPS = ['arriving-home', 'welcome', 'stand-clear', 'doors-left', 'doors-right', 'ride-bed',
-  ...['social', 'art', 'contact'].map((s) => `arriving-${s}`),
-  ...['home', 'social', 'art', 'contact', 'projects', 'case-studies'].map((s) => `next-${s}`)];
+  ...['social', 'art', 'contact', 'shrine'].map((s) => `arriving-${s}`),
+  ...['home', 'social', 'art', 'contact', 'projects', 'case-studies', 'shrine'].map((s) => `next-${s}`)];
 function clip(name) {
   if (!ensure()) return Promise.resolve(null);
   if (!buffers.has(name)) {
@@ -157,3 +157,26 @@ export function rideSound(duration = 2.5, level = 0.9) {
 
 /* Browsers keep sound asleep until the visitor touches the page: wake it on the first touch */
 ['pointerdown', 'keydown'].forEach((ev) => window.addEventListener(ev, () => { if (enabled) { ensure(); preloadAnnouncements(); } }, { once: true, passive: true }));
+
+/** A heavenly chord for the shrine: soft voices swelling under the spotlight */
+export function choir(duration = 4.5) {
+  if (!enabled || !ensure()) return;
+  const t0 = ctx.currentTime;
+  [261.6, 329.6, 392.0, 523.3].forEach((f, i) => {
+    for (const detune of [-6, 6]) {
+      const o = ctx.createOscillator();
+      const flt = ctx.createBiquadFilter();
+      const g = ctx.createGain();
+      o.type = 'sawtooth';
+      o.frequency.value = f;
+      o.detune.value = detune;
+      flt.type = 'bandpass'; flt.frequency.value = 900 + i * 180; flt.Q.value = 1.2;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.035, t0 + 1.2 + i * 0.15);
+      g.gain.setValueAtTime(0.035, t0 + duration - 1.2);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+      o.connect(flt).connect(g).connect(master);
+      o.start(t0); o.stop(t0 + duration + 0.1);
+    }
+  });
+}

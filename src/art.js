@@ -2,7 +2,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { stations, reels, FEED_URL } from './data.js';
 import { GlassWall } from './glass.js';
-import { doricSVG, lotusSVG } from './kit.js';
+import { doricSVG, lotusSVG, statueSVG, cityHallSVG } from './kit.js';
 import { reduced, loadIgScript } from './content.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -254,7 +254,7 @@ export function enableLineMaps() {
 
 /* ---------------- Next-stop boards carry the whole line ---------------- */
 export function renderNextMaps() {
-  const order = stations.map((s) => s.id);
+  const order = stations.filter((s) => !s.hidden).map((s) => s.id);
   document.querySelectorAll('.next-stop').forEach((board) => {
     const here = board.closest('.station')?.id;
     const next = board.querySelector('[data-ride]')?.dataset.ride;
@@ -290,4 +290,12 @@ export function enableJumps(getLenis) {
     if (lenis) lenis.scrollTo(target, { offset: -64, duration: 1.4 });
     else target.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth' });
   });
+}
+
+/* ---------------- The shrine ---------------- */
+export function renderShrine() {
+  document.querySelectorAll('[data-statue]').forEach((el) => (el.innerHTML = statueSVG()));
+  document.querySelectorAll('[data-city-hall]').forEach((el) => (el.innerHTML = cityHallSVG()));
+  const motes = document.querySelector('.shrine-motes');
+  if (motes) motes.innerHTML = Array.from({ length: 26 }, (_, i) => `<i style="left:${(i * 37) % 100}%;animation-delay:${(i * 0.37) % 6}s;animation-duration:${5 + (i % 5)}s"></i>`).join('');
 }

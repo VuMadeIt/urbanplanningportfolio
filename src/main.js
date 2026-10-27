@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { stations } from './data.js';
 import { runIntro } from './intro.js';
 import { ride, isRiding, skipRide, ridingTo } from './ride.js';
-import { sound } from './audio.js';
+import { sound, choir } from './audio.js';
 import { startLiveStats } from './stats.js';
 import { enableHireScreen } from './hire.js';
 import {
@@ -13,7 +13,7 @@ import {
 } from './content.js';
 import {
   renderSigns, renderColumns, glassFor, refreshGlass, dropGlass, renderReels, enablePlayer, closePlayer,
-  enablePaint, enableLineMaps, sizeLines, renderNextMaps, enableJumps, keepFocusedInView,
+  enablePaint, enableLineMaps, sizeLines, renderNextMaps, enableJumps, keepFocusedInView, renderShrine,
 } from './art.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -23,7 +23,7 @@ const byId = Object.fromEntries(stations.map((s) => [s.id, s]));
 const bar = document.getElementById('bar');
 const car = document.getElementById('car');
 const announcer = document.getElementById('announcer');
-const heroInk = { home: '#121212', social: '#ffffff', 'case-studies': '#ffffff', projects: '#f4f4f1', art: '#ffffff', about: '#ffffff', contact: '#ffffff' };
+const heroInk = { home: '#121212', social: '#ffffff', 'case-studies': '#ffffff', projects: '#f4f4f1', shrine: '#e9c46a', art: '#ffffff', about: '#ffffff', contact: '#ffffff' };
 
 let current = 'home';
 let lenis = null;
@@ -49,6 +49,7 @@ drawStreets();
 splitRoadNames();
 renderSigns();
 renderColumns();
+renderShrine();
 renderReels();
 renderNextMaps();
 fillTracks();
@@ -124,6 +125,16 @@ function revealHero(id) {
         .from(el.querySelector('.lane-stencil'), { x: -40, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.1)
         .from(el.querySelector('.lane-arrow'), { x: 40, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.2)
         .from(el.querySelectorAll('.lane-foot > *'), { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.25);
+    } else if (el.querySelector('.hero--shrine')) {
+      // you step off the train; the square is dark; then the light comes down on her
+      tl.set(el.querySelector('.hero--shrine'), { '--lit': 0 })
+        .from(el.querySelector('.shrine-statue'), { y: 40, opacity: 0, duration: 1.2, ease: 'expo.out' }, 0)
+        .from(el.querySelector('.shrine-hall'), { opacity: 0, duration: 1.4, ease: 'power2.out' }, 0)
+        .fromTo(el.querySelector('.shrine-beam'), { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 1.1, ease: 'expo.out' }, 0.9)
+        .to(el.querySelector('.hero--shrine'), { '--lit': 1, duration: 1.6, ease: 'power2.out' }, 1.0)
+        .fromTo(el.querySelector('.shrine-glow'), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.8, ease: 'expo.out' }, 1.1)
+        .call(() => choir(), null, 0.95)
+        .from(el.querySelectorAll('.shrine-copy > *'), { y: 24, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'expo.out' }, 1.5);
     } else if (id === 'home') {
       tl.kill();
       greet();
@@ -309,3 +320,11 @@ if (html.classList.contains('is-intro') && start === 'home') {
   arrive(start, { assemble: true });
   revealHero(start);
 }
+
+/* ---------------- Secret door: type "olivia" anywhere ---------------- */
+let typed = '';
+window.addEventListener('keydown', (e) => {
+  if (e.target.closest?.('input, textarea')) return;
+  typed = (typed + (e.key || '')).toLowerCase().slice(-6);
+  if (typed === 'olivia') { typed = ''; go('shrine'); }
+});

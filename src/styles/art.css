@@ -485,3 +485,57 @@ body[data-station='home'] .linemap { visibility: hidden; }
   .route-stop > .org-logo, .conf-stop > .org-logo { grid-column: 1 / -1; width: 46px; height: 46px; margin: 6px 0 8px; }
   .route-stop > div, .conf-stop > .conf-body { grid-column: 1 / -1; }
 }
+
+/* =========================================================
+   The Olivia Chow shrine (a hidden stop)
+   ========================================================= */
+.station--shrine { background: #17121f; color: #f4ecdc; }
+.hero--shrine { --lit: 1; position: relative; height: 100svh; min-height: 680px; overflow: hidden; background: #17121f; display: grid; place-items: end center; }
+.shrine-sky { position: absolute; inset: 0; background: #1d1628; }
+.shrine-star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #f4ecdc; opacity: 0.6; animation: twinkle 3s ease-in-out infinite; }
+.shrine-star:nth-child(1) { left: 12%; top: 14%; } .shrine-star:nth-child(2) { left: 28%; top: 8%; animation-delay: 1s; }
+.shrine-star:nth-child(3) { left: 71%; top: 12%; animation-delay: 0.5s; } .shrine-star:nth-child(4) { left: 86%; top: 22%; animation-delay: 2s; }
+.shrine-star:nth-child(5) { left: 44%; top: 5%; animation-delay: 1.5s; }
+@keyframes twinkle { 50% { opacity: 0.15; } }
+.shrine-hall { position: absolute; left: 0; right: 0; bottom: 0; height: 72%; opacity: calc(0.55 + var(--lit) * 0.45); }
+.shrine-hall svg { width: 100%; height: 100%; }
+/* the light that comes down on her: a soft-edged cone from the sky (a real light, so it fades) */
+.shrine-beam {
+  position: absolute; left: 50%; top: -5%; width: min(70vw, 760px); height: 100%; transform-origin: top center;
+  translate: -50% 0;
+  background: linear-gradient(180deg, rgba(255, 236, 170, 0.75), rgba(255, 236, 170, 0.22) 55%, rgba(255, 236, 170, 0) 92%);
+  clip-path: polygon(44% 0, 56% 0, 86% 100%, 14% 100%);
+  filter: blur(6px); mix-blend-mode: screen; pointer-events: none;
+}
+.shrine-glow { position: absolute; left: 50%; bottom: 18%; width: 620px; height: 620px; translate: -50% 0; border-radius: 50%; background: radial-gradient(circle, rgba(255, 220, 140, 0.45), rgba(255, 220, 140, 0) 65%); pointer-events: none; }
+.shrine-motes { position: absolute; left: 50%; top: 10%; width: min(46vw, 480px); height: 80%; translate: -50% 0; pointer-events: none; }
+.shrine-motes i { position: absolute; bottom: 0; width: 3px; height: 3px; border-radius: 50%; background: #fff3c4; opacity: 0; animation: mote 6s linear infinite; }
+@keyframes mote { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 0.8; } 100% { transform: translateY(-70vh); opacity: 0; } }
+.shrine-statue { position: relative; z-index: 2; width: min(34vw, 380px); margin-bottom: 3vh; filter: brightness(calc(0.45 + var(--lit) * 0.75)) saturate(calc(0.6 + var(--lit) * 0.6)); }
+.shrine-statue svg { width: 100%; height: auto; display: block; }
+.shrine-copy { position: absolute; z-index: 3; left: var(--m); bottom: 6vh; max-width: min(34vw, 460px); display: grid; gap: 16px; }
+.shrine-title { font-family: var(--voice); font-style: italic; font-weight: 420; font-size: clamp(40px, 5vw, 84px); line-height: 0.92; letter-spacing: -0.03em; color: #e9c46a; font-variation-settings: 'SOFT' 100, 'WONK' 1; }
+.shrine-title:focus { outline: none; }
+.shrine-lead { color: #f4ecdc; font-size: var(--t-body); }
+.shrine-intro { padding: var(--section) var(--m) var(--section); display: grid; gap: 20px; max-width: 70ch; }
+.station--shrine .section-title { color: #e9c46a; }
+.case--shrine .case-body { color: #f4ecdc; }
+.case--shrine .case-figure span { color: #e9c46a; }
+.case--shrine .ticks li::before { background: #e9c46a; }
+.shrine-vote { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 32px; padding: var(--section) var(--m); align-items: center; }
+.shrine-vote-text { grid-column: 1 / 7; display: grid; gap: 20px; }
+.shrine-vote [data-reel] { grid-column: 8 / 11; width: min(100%, 260px); }
+.shrine-vote .reel-card figcaption span { color: #cbbfa8; }
+.shrine-photo { margin: 0 auto var(--section); width: min(100% - 2 * var(--m), 520px); }
+.shrine-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 25%; }
+.shrine-photo figcaption { margin-top: 12px; font-size: var(--t-small); }
+.station--shrine .paint-sketch { filter: invert(0.9); }
+.shrine-note { padding: 0 var(--m) var(--section); font-size: var(--t-small); max-width: 70ch; color: #cbbfa8; }
+.secret-link { color: inherit; opacity: 0.7; text-decoration: underline dotted; }
+.street-stop { display: block; cursor: pointer; }
+@media (max-width: 760px) {
+  .shrine-statue { width: 66vw; margin-bottom: 30vh; }
+  .shrine-copy { max-width: none; right: var(--m); bottom: 4vh; }
+  .shrine-vote-text, .shrine-vote [data-reel] { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) { .shrine-motes, .shrine-star { animation: none; } }
