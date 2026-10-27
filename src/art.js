@@ -66,7 +66,7 @@ export function glassOf(wall) { return walls.get(wall); }
 
 /* ---------------- Reel cards and the player ---------------- */
 function reelCard(r) {
-  const likes = r.likes ? `<span class="reel-likes">${r.likes.toLocaleString('en-CA')} likes</span>` : '';
+  const likes = r.likes ? `<span class="reel-likes"><span data-stat="reels.${r.code}.likes">${r.likes.toLocaleString('en-CA')}</span> likes</span>` : '';
   const series = r.series ? `<span class="reel-series">${r.series}</span>` : '';
   const cover = r.cover || `/media/reels/${r.code}.jpg`;
   return `<figure class="reel-card">

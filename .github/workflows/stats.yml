@@ -1,0 +1,37 @@
+name: Refresh live counts
+
+# Every 30 minutes, read Liam's public follower, like and view counts and save them to public/stats.json.
+# The commit triggers a redeploy on hosts connected to this repo (Netlify, Vercel, Cloudflare Pages, GitHub Pages),
+# and open pages pick the new numbers up within five minutes.
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stats
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch counts
+        run: node scripts/fetch-stats.mjs --soft
+        env:
+          # optional: a YouTube Data API key makes the YouTube numbers exact and more reliable
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      - name: Commit if anything changed
+        run: |
+          if git diff --quiet -- public/stats.json; then echo "No change"; exit 0; fi
+          git add public/stats.json
+          git -c user.name="stats-bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Refresh live counts"
+          git push

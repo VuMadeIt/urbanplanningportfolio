@@ -5,6 +5,7 @@ import { stations } from './data.js';
 import { runIntro } from './intro.js';
 import { ride, isRiding, skipRide, ridingTo } from './ride.js';
 import { sound } from './audio.js';
+import { startLiveStats } from './stats.js';
 import {
   reduced, fitNames, drawStreets, splitRoadNames, fillTracks, enableDrag, enableVideos, stopVideos,
   watchVideos, watchReveals, revealVisible, watchCounts, buildSeams, renderCredits,
@@ -53,6 +54,7 @@ renderCredits();
 watchReveals();
 watchCounts();
 watchVideos();
+startLiveStats();
 
 if (!reduced.matches) {
   lenis = new Lenis({ lerp: 0.12, smoothWheel: true });

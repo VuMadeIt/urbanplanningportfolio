@@ -6,7 +6,8 @@ Plain HTML/CSS/JS with Vite, GSAP 3.15 (ScrollTrigger) and Lenis. No framework.
 ## Commands
 - `npm install`
 - `npm run dev`: dev server on http://localhost:5173
-- `npm run build` then `npm run preview`: production build in `dist/` (check the build before shipping)
+- `npm run build` then `npm run preview`: production build in `dist/` (refreshes live counts first, never fails on them)
+- `npm run stats`: refresh `public/stats.json` (live follower/like/view counts) by hand; `npm run build:offline` skips it
 - `?nointro` skips the train intro; `#/social`, `#/case-studies`, `#/projects`, `#/art`, `#/about`, `#/contact` open a station directly
 
 ## Structure
@@ -34,6 +35,14 @@ Plain HTML/CSS/JS with Vite, GSAP 3.15 (ScrollTrigger) and Lenis. No framework.
   (`late-title` is allowed on station deep links: the meter reads the first `h1` in the document, which belongs to a hidden station)
 - Dev film harness: `node .taste-skill/shots.mjs <plan.json>` (see `.taste-skill/*.json`); supports wait, click, eval, wheel, key, clickAt, tap, back, log, shot
 - Persona test reports and plans live in `.taste-skill/tests/<persona>/` (recruiter, phone, artdirector, a11y, chaos)
+
+## Live counts
+- `scripts/fetch-stats.mjs` reads public pages: Instagram followers (both accounts) and reel likes from share tags,
+  YouTube subscribers and video views (RSS + channel page, or the Data API with `YOUTUBE_API_KEY`). LinkedIn and TikTok
+  block automated reads, so LinkedIn (and the 50,000+ Monumental views) are set by hand in `MANUAL` in that script.
+  A failed source keeps its last good number.
+- `.github/workflows/stats.yml` runs it every 30 minutes and commits `public/stats.json` when numbers change.
+- `src/stats.js` loads `/stats.json` on page load and every 5 minutes; any element with `data-stat="path.in.json"` rolls to the new value.
 
 ## Facts on the page
 All facts come from Liam's LinkedIn, Instagram, YouTube, CIP, TRCA and Monumental pages (October 2026).

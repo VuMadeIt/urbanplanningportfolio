@@ -341,3 +341,12 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 @media (prefers-reduced-motion: no-preference) {
   .js .section-title[data-reveal], .js .gallery-title[data-reveal] { opacity: 1; }
 }
+
+/* Live counts: a small LED that says the numbers are current */
+.figures-note { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.live-dot { width: 10px; height: 10px; border-radius: 50%; background: #9a9a96; flex: none; }
+.figures-note.is-live .live-dot { background: #1aa34a; animation: live-pulse 2s ease-in-out infinite; }
+@keyframes live-pulse { 50% { opacity: 0.35; } }
+[data-stat].is-ticked { animation: tick 900ms var(--ease-out); }
+@keyframes tick { 0% { color: var(--red); } 100% { color: inherit; } }
+@media (prefers-reduced-motion: reduce) { .figures-note.is-live .live-dot, [data-stat].is-ticked { animation: none; } }

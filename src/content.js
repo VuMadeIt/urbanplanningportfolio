@@ -186,6 +186,7 @@ const countObserver = new IntersectionObserver((entries) => {
     if (!e.isIntersecting) continue;
     countObserver.unobserve(e.target);
     const el = e.target;
+    el.dataset.counted = '1';
     const end = Number(el.dataset.count);
     if (reduced.matches) continue;
     const obj = { v: 0 };
