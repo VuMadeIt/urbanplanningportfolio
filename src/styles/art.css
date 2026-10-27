@@ -396,3 +396,22 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 }
 .pole--left { align-self: start; height: 34px; border-radius: 0 0 4px 4px; }
 @media (max-width: 1100px) { .car-screen { width: min(64vw, 290px); } }
+
+/* ---------- About: conferences on Line 2 ---------- */
+.conf { padding: 0 var(--m) var(--section); }
+.conf .section-title { margin-bottom: 16px; }
+.conf-lead { max-width: 52ch; margin-bottom: 48px; }
+.conf-list { display: grid; gap: 40px; }
+.conf-stop { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; --dot-top: 0.1em; }
+.conf-when { grid-column: 1 / 4; font-size: var(--t-small); font-weight: 600; }
+.conf-body { grid-column: 4 / 9; display: grid; gap: 6px; justify-items: start; }
+.conf-body h3 { font-size: var(--t-h); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+.conf-body p { max-width: 50ch; }
+.conf-pic { grid-column: 9 / 12; width: 100%; max-width: 200px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 30%; justify-self: end; transition: transform var(--t-ui) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .conf-stop:hover .conf-pic { transform: rotate(-2deg) scale(1.03); } }
+@media (max-width: 760px) {
+  .conf-when, .conf-body { grid-column: 1 / -1; }
+  .conf-pic { grid-column: 1 / -1; justify-self: start; max-width: 160px; margin-top: 12px; }
+}
+.conf-list { gap: 28px; }
+.conf-pic { max-width: 150px; }
