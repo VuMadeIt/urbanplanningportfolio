@@ -141,7 +141,10 @@ function greet() {
     .from(car.querySelector('.pole--left'), { scaleY: 0, transformOrigin: 'top', duration: 0.9, ease: 'expo.out' }, 0.1)
     .from(car.querySelector('.screen-bezel'), { y: 24, opacity: 0, duration: 0.7, ease: 'expo.out' }, 0.25)
     .fromTo(car.querySelector('.screen-glass'), { scaleY: 0.006, scaleX: 0.5, filter: 'brightness(3)' }, { scaleY: 1, scaleX: 1, filter: 'brightness(1)', duration: 0.6, ease: 'expo.out', clearProps: 'filter,transform' }, 0.75)
-    .from(car.querySelector('.led-text'), { xPercent: 40, opacity: 0, duration: 0.9, ease: 'expo.out' }, 0.25);
+    .from(car.querySelector('.led-text'), { xPercent: 40, opacity: 0, duration: 0.9, ease: 'expo.out' }, 0.25)
+    .fromTo(car.querySelector('.car-map-list'), { '--draw': 0 }, { '--draw': 1, duration: 1.2, ease: 'power3.inOut' }, 0.1)
+    .from(car.querySelectorAll('.car-map-list li'), { y: 10, opacity: 0, duration: 0.5, stagger: 0.05, ease: 'power3.out' }, 0.2)
+    .from(car.querySelectorAll('.car-riders g > *'), { y: 16, opacity: 0, duration: 0.8, stagger: 0.015, ease: 'expo.out' }, 0.4);
   heroTimelines.set('home', tl);
 }
 

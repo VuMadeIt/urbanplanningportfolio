@@ -93,7 +93,32 @@
 
       <!-- Inside the car: the home screen -->
       <div class="car" id="car">
+        <nav class="car-map" aria-label="Route map above the doors">
+          <p class="car-map-title"><span class="car-map-line">Liam Vu Line</span><span>Doors open on the right</span></p>
+          <ol class="lmh car-map-list">
+            <li class="is-here"><span class="lmh-label"><span>Liam Vu</span><small>You are here</small></span></li>
+            <li><a href="#/social" data-ride="social"><span>Social</span><small>Subway</small></a></li>
+            <li><a href="#/case-studies" data-ride="case-studies"><span>Case studies</span><small>Bike lane</small></a></li>
+            <li><a href="#/projects" data-ride="projects"><span>Projects</span><small>Streetcar</small></a></li>
+            <li><a href="#/art" data-ride="art"><span>Art</span><small>Museum</small></a></li>
+            <li><a href="#/about" data-ride="about"><span>About</span><small>College</small></a></li>
+            <li><a href="#/contact" data-ride="contact"><span>Contact</span><small>St. Patrick</small></a></li>
+          </ol>
+        </nav>
         <div class="car-body">
+          <svg class="car-riders" viewBox="0 0 560 240" aria-hidden="true" focusable="false">
+            <rect x="0" y="226" width="560" height="14" fill="#cfd0cc"/>
+            <rect x="0" y="6" width="560" height="6" rx="3" fill="#bfc1bd"/>
+            <g fill="#c9cac6">
+              <rect x="70" y="12" width="4" height="40"/><rect x="62" y="50" width="20" height="10" rx="5"/>
+              <circle cx="72" cy="86" r="17"/><path d="M50 108h44l8 70H42z"/><path d="M84 112 74 60l6-2 12 52z"/><rect x="50" y="176" width="14" height="50"/><rect x="80" y="176" width="14" height="50"/>
+              <circle cx="190" cy="92" r="16"/><path d="M168 114h44l6 64h-56z"/><rect x="210" y="118" width="22" height="34" rx="4"/><rect x="170" y="176" width="13" height="50"/><rect x="198" y="176" width="13" height="50"/>
+              <path d="M214 136l20-10 3 6-20 10z"/>
+              <rect x="318" y="12" width="4" height="40"/><rect x="310" y="50" width="20" height="10" rx="5"/>
+              <circle cx="330" cy="88" r="17"/><path d="M306 110h48l6 68h-60z"/><path d="M322 114 316 60l6-1 8 54z"/><rect x="308" y="176" width="15" height="50"/><rect x="336" y="176" width="15" height="50"/>
+              <circle cx="455" cy="96" r="15"/><path d="M434 116h42l8 62h-58z"/><path d="M470 128h22v20h-22z"/><rect x="438" y="176" width="13" height="50"/><rect x="462" y="176" width="13" height="50"/>
+            </g>
+          </svg>
           <div class="pole pole--left" aria-hidden="true"></div>
           <figure class="car-screen">
             <div class="screen-bezel">
