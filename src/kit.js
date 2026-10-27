@@ -235,3 +235,28 @@ export function skylineSVG(seed = 7) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
     <g fill="var(--bldg-3)">${back}</g><g fill="var(--bldg-1)">${front}</g><g fill="var(--bldg-2)">${wins}</g></svg>`;
 }
+
+/* ---------------- Museum station columns (stand in front of the tiles) ---------------- */
+const shaft = (body, flute, shade) => `<svg class="col-shaft" viewBox="0 0 120 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <rect x="22" y="0" width="76" height="100" fill="${body}"/>
+  ${[0, 1, 2, 3, 4].map((i) => `<rect x="${30 + i * 13}" y="0" width="5" height="100" fill="${flute}"/>`).join('')}
+  <rect x="80" y="0" width="18" height="100" fill="${shade}"/>
+</svg>`;
+const base = (fill, shade) => `<svg class="col-base" viewBox="0 0 120 34" aria-hidden="true" focusable="false">
+  <rect x="14" y="0" width="92" height="12" fill="${fill}"/><rect x="6" y="12" width="108" height="22" fill="${fill}"/><rect x="84" y="0" width="30" height="34" fill="${shade}"/>
+</svg>`;
+export function doricSVG() {
+  return `<svg viewBox="0 0 120 52" aria-hidden="true" focusable="false">
+    <rect x="0" y="0" width="120" height="18" fill="#f1e9d6"/><rect x="96" y="0" width="24" height="18" fill="#ddd2b8"/>
+    <path d="M8 18h104l-14 22H22z" fill="#e6dcc4"/><path d="M88 18h24l-14 22h-12z" fill="#d6caae"/>
+    <rect x="22" y="40" width="76" height="12" fill="#d8ccb0"/>
+  </svg>${shaft('#efe6d1', '#ddd1b5', '#ddd1b5')}${base('#e9dfc8', '#d6caae')}`;
+}
+export function lotusSVG() {
+  return `<svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+    <path d="M0 0h120c-6 34-18 58-32 74H32C18 58 6 34 0 0z" fill="#e9d6a6"/>
+    <path d="M14 8c10 22 20 40 32 56M40 4c6 22 12 44 18 60M80 4c-6 22-12 44-18 60M106 8c-10 22-20 40-32 56" fill="none" stroke="#2a4f8f" stroke-width="5"/>
+    <rect x="22" y="74" width="76" height="14" fill="#2a4f8f"/><rect x="22" y="88" width="76" height="8" fill="#a8262b"/>
+    <rect x="22" y="96" width="76" height="14" fill="#c99a2e"/><rect x="22" y="110" width="76" height="10" fill="#2a4f8f"/>
+  </svg>${shaft('#ead9ad', '#dcc690', '#d6bf86')}${base('#e3cf9c', '#d1ba82')}`;
+}

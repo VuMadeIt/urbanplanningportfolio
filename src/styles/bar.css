@@ -6,7 +6,6 @@
   padding: 0 var(--m);
   color: var(--bar-ink, var(--ink));
   background: var(--bar-bg, transparent);
-  transition: background-color 300ms ease, color 300ms ease, transform 500ms var(--ease-out), opacity 400ms ease;
 }
 .bar.is-solid { --bar-bg: var(--paper); --bar-ink: var(--ink); }
 body[data-station='home'] .bar { --bar-bg: #e4e5e3; }

@@ -12,7 +12,7 @@
 }
 .wall::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
-  background-image: var(--tiles); background-size: 120px 120px;
+  background-image: var(--tiles); background-size: 174px 87px;
 }
 .wall-trim { position: absolute; left: 0; right: 0; top: 0; height: var(--bar-h); background: var(--trim); }
 .wall-name {
@@ -148,7 +148,7 @@
 
 /* ---------- Phone ---------- */
 @media (max-width: 760px) {
-  .wall::after { background-size: 90px 90px; }
+  .wall::after { background-size: 114px 57px; }
   .hero--subway .wall { height: 64%; }
   .hero--subway .track { top: 64%; height: 6%; }
   .hero--subway .edge { top: 70%; }

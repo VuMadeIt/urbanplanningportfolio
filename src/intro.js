@@ -5,7 +5,7 @@ import { chimeOpen, rumble } from './audio.js';
 const CARS = 4;
 
 /** Platform → train arrives, slows, stops → doors open → you step aboard. */
-export function runIntro({ onBoarded }) {
+export function runIntro({ onBoarded, glass, onSkip }) {
   const html = document.documentElement;
   const platform = document.getElementById('platform');
   const trainEl = document.getElementById('train');
@@ -40,6 +40,11 @@ export function runIntro({ onBoarded }) {
     streaks.style.transform = `translateX(${(-x * 0.15) % 200}px)`;
     trainEl.style.setProperty('--shake', `${(Math.random() - 0.5) * 3 * k}px`);
     wall.style.transform = `translateY(${((Math.random() - 0.5) * 2.4 * k).toFixed(2)}px)`;
+    // the headlight sweeps across the glass tiles as the train comes in
+    if (glass) {
+      const r = trainEl.getBoundingClientRect();
+      glass.setLight(Math.min(r.right, window.innerWidth + 200), r.top + r.height * 0.4);
+    }
   };
 
   let done = false;
@@ -60,8 +65,8 @@ export function runIntro({ onBoarded }) {
   };
 
   const tl = gsap.timeline({ onComplete: finish });
-  tl.from(platform.querySelectorAll('.wall-word'), { yPercent: 40, opacity: 0, duration: 0.9, stagger: 0.1, ease: 'expo.out' }, 0.05)
-    .from(platform.querySelector('.wall-sign'), { opacity: 0, y: -12, duration: 0.6, ease: 'power3.out' }, 0.4)
+  if (!glass) tl.from(platform.querySelectorAll('.wall-word'), { yPercent: 40, opacity: 0, duration: 0.9, stagger: 0.1, ease: 'expo.out' }, 0.05);
+  tl.from(platform.querySelector('.wall-sign'), { opacity: 0, y: -12, duration: 0.6, ease: 'power3.out' }, 0.4)
     .from(platform.querySelector('.floor'), { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.3)
     .set(trainEl, { x: -g.tw }, 0)
     .to(platform.querySelector('.headlight'), { opacity: 0.75, duration: 1.1, ease: 'power2.in' }, 0.5)
@@ -90,8 +95,9 @@ export function runIntro({ onBoarded }) {
   window.addEventListener('resize', onResize);
 
   const skipNow = () => { if (!done) finish(); };
-  skip.addEventListener('click', skipNow);
-  const onKey = (e) => { if (e.key === 'Escape' || e.key === 'Enter') skipNow(); };
+  const skipByHand = () => { if (!done) { finish(); onSkip?.(); } };
+  skip.addEventListener('click', skipByHand);
+  const onKey = (e) => { if (e.key === 'Escape' || (e.key === 'Enter' && document.activeElement === document.body)) skipByHand(); };
   window.addEventListener('keydown', onKey);
   skip.addEventListener('click', () => window.removeEventListener('keydown', onKey));
 

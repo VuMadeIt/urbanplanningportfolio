@@ -9,28 +9,38 @@ const order = stations.map((s) => s.id);
 const layer = () => document.getElementById('ride');
 
 let active = null; // the running timeline
+let target = null;
 
 export function isRiding() { return !!active; }
 export function skipRide() { if (active) active.progress(1); }
+export function ridingTo() { return active ? target : null; }
 
 /**
  * Carry the visitor from one station to another.
  * swap() switches the page underneath while the vehicle covers the screen.
  * reveal() runs as the new station comes into view.
  */
-export function ride(fromId, toId, { swap, reveal }) {
+export function ride(fromId, toId, { swap, reveal, speed = 1 }) {
   const to = byId[toId], from = byId[fromId] || byId.home;
+  target = toId;
   if (reduced.matches) return fade(to, swap, reveal);
   const kind = to.mode;
   const run = kind === 'bike' ? bikeRide : kind === 'streetcar' ? streetcarRide : subwayRide;
-  return run(from, to, swap, reveal);
+  const tl = run(from, to, swap, reveal);
+  tl.timeScale(speed);
+  return tl;
 }
 
 function begin(html, cls) {
   const el = layer();
   el.className = `ride is-on ${cls}`;
   el.innerHTML = html;
-  const onSkip = (e) => { if (e.type === 'click' || e.key === 'Escape') skipRide(); };
+  const t0 = performance.now();
+  // a second click of a double click should not throw the ride away
+  const onSkip = (e) => {
+    if (e.type === 'click' && performance.now() - t0 < 650) return;
+    if (e.type === 'click' || e.key === 'Escape') skipRide();
+  };
   el.addEventListener('click', onSkip);
   window.addEventListener('keydown', onSkip);
   return { el, end: () => {
@@ -39,6 +49,7 @@ function begin(html, cls) {
     el.className = 'ride';
     el.innerHTML = '';
     active = null;
+    target = null;
   } };
 }
 
@@ -68,8 +79,10 @@ function leafSVG(side) {
   const edge = side === 'l' ? `<rect x="${W - 18}" y="0" width="18" height="${H}" fill="#202326"/>` : `<rect x="0" y="0" width="18" height="${H}" fill="#202326"/>`;
   const pocket = side === 'l' ? `<rect x="0" y="0" width="${W * 0.08}" height="${H}" fill="#b1b6bb"/>` : `<rect x="${W * 0.92}" y="0" width="${W * 0.08}" height="${H}" fill="#b1b6bb"/>`;
   const sy = hy + hh + H * 0.06;
+  const words = hw < 190 ? 'Stand clear' : 'Please stand clear of the doors';
+  const fs = Math.min(16, (hw * 0.86) / (words.length * 0.52));
   const stripe = `<rect x="${hx}" y="${sy}" width="${hw}" height="${Math.max(30, H * 0.045)}" fill="#ffc72c"/>
-    <text x="${hx + hw / 2}" y="${sy + Math.max(30, H * 0.045) / 2 + 5}" text-anchor="middle" font-family="Jost Variable, Jost, sans-serif" font-weight="600" font-size="${Math.max(13, Math.min(16, hw / 14))}" fill="#121212">Please stand clear of the doors</text>`;
+    <text x="${hx + hw / 2}" y="${sy + Math.max(30, H * 0.045) / 2 + fs * 0.34}" text-anchor="middle" font-family="Jost Variable, Jost, sans-serif" font-weight="600" font-size="${fs.toFixed(1)}" fill="#121212">${words}</text>`;
   return `<svg class="ride-leaf ride-leaf--${side}" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" preserveAspectRatio="none" aria-hidden="true">
     <path d="M0 0H${W}V${H}H0Z${hole}" fill="#c3c8cd" fill-rule="evenodd"/>
     ${pocket}
@@ -79,7 +92,7 @@ function leafSVG(side) {
 }
 
 function stationWall(s, cls) {
-  return `<div class="rs-wall ${cls}" style="--wall:${s.wall};--name:${s.ink}"><span>${s.name}</span></div>`;
+  return `<div class="rs-wall ${cls}" style="--wall:${s.wall};--trim:${s.trim || s.ink};--name:${s.ink}"><span>${s.name}</span></div>`;
 }
 
 function lineMap(fromId, toId) {
@@ -118,17 +131,17 @@ function subwayRide(from, to, swap, reveal) {
     .to(doors, { x: 3, duration: 0.06, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 0.92)
     .set(out, { opacity: 1 }, 0.92)
     .call(() => rumble(2.6, 0.32), null, 0.95)
-    .fromTo(strip, { x: 0 }, { x: -dist, duration: 2.2, ease: 'power2.inOut' }, 1.0)
-    .to(doors, { y: 2.5, rotation: 0.12, duration: 0.16, yoyo: true, repeat: 11, ease: 'sine.inOut' }, 1.05)
-    .fromTo(marker, { '--fill': 0 }, { '--fill': 1, duration: 2.2, ease: 'power2.inOut' }, 1.0)
-    .to(doors, { x: -6, duration: 0.18, yoyo: true, repeat: 1, ease: 'sine.out' }, 3.15)
-    .call(() => { swap(); el.querySelector('.ride-led-a').textContent = 'Arriving at'; }, null, 3.2)
-    .call(chimeOpen, null, 3.35)
-    .to(out, { opacity: 0, duration: 0.15, ease: 'none' }, 3.45)
-    .to(L, { xPercent: -100, duration: 0.7, ease: 'power3.inOut' }, 3.45)
-    .to(R, { xPercent: 100, duration: 0.7, ease: 'power3.inOut' }, 3.45)
-    .call(() => reveal?.(), null, 3.6)
-    .to(top, { yPercent: -100, duration: 0.4, ease: 'power2.in' }, 3.75);
+    .fromTo(strip, { x: 0 }, { x: -dist, duration: 1.8, ease: 'power2.inOut' }, 0.95)
+    .to(doors, { y: 2.5, rotation: 0.12, duration: 0.16, yoyo: true, repeat: 9, ease: 'sine.inOut' }, 1.0)
+    .fromTo(marker, { '--fill': 0 }, { '--fill': 1, duration: 1.8, ease: 'power2.inOut' }, 0.95)
+    .to(doors, { x: -6, duration: 0.18, yoyo: true, repeat: 1, ease: 'sine.out' }, 2.72)
+    .call(() => { swap(); el.querySelector('.ride-led-a').textContent = 'Arriving at'; }, null, 2.78)
+    .call(chimeOpen, null, 2.9)
+    .to(out, { opacity: 0, duration: 0.15, ease: 'none' }, 3.0)
+    .to(L, { xPercent: -100, duration: 0.65, ease: 'power3.inOut' }, 3.0)
+    .to(R, { xPercent: 100, duration: 0.65, ease: 'power3.inOut' }, 3.0)
+    .call(() => reveal?.(), null, 3.1)
+    .to(top, { yPercent: -100, duration: 0.4, ease: 'power2.in' }, 3.25);
   return active;
 }
 
@@ -171,9 +184,9 @@ function streetcarRide(from, to, swap, reveal) {
       const oy = r.top + 252 * s;
       gsap.set(scene, { transformOrigin: `${ox}px ${oy}px` });
     })
-    .to(scene, { scale: 6, duration: 0.8, ease: 'power3.in' })
-    .call(() => reveal?.(), null, '-=0.3')
-    .to(el, { opacity: 0, duration: 0.3, ease: 'power1.in' }, '-=0.3')
+    .to(scene, { scale: 10, duration: 0.75, ease: 'power3.in' })
+    .call(() => reveal?.(), null, '-=0.1')
+    .to(el, { opacity: 0, duration: 0.14, ease: 'none' }, '-=0.08')
     .set(el, { opacity: 1 });
   return active;
 }

@@ -3,33 +3,50 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { stations } from './data.js';
 import { runIntro } from './intro.js';
-import { ride, isRiding, skipRide } from './ride.js';
+import { ride, isRiding, skipRide, ridingTo } from './ride.js';
 import { sound } from './audio.js';
 import {
-  reduced, fitNames, drawStreets, splitRoadNames, fillTracks, wakeEmbeds, enableDrag, enableVideos,
-  watchVideos, watchReveals, watchCounts, buildSeams, renderCredits,
+  reduced, fitNames, drawStreets, splitRoadNames, fillTracks, enableDrag, enableVideos, stopVideos,
+  watchVideos, watchReveals, revealVisible, watchCounts, buildSeams, renderCredits,
 } from './content.js';
+import {
+  renderSigns, renderColumns, glassFor, refreshGlass, dropGlass, renderReels, enablePlayer, closePlayer,
+  enablePaint, enableLineMaps, sizeLines, renderNextMaps, enableJumps, keepFocusedInView,
+} from './art.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const html = document.documentElement;
 const byId = Object.fromEntries(stations.map((s) => [s.id, s]));
 const bar = document.getElementById('bar');
+const car = document.getElementById('car');
 const announcer = document.getElementById('announcer');
-const heroInk = { home: '#121212', social: '#ffffff', 'case-studies': '#ffffff', projects: '#f4f4f1', art: '#121212', about: '#121212', contact: '#ffffff' };
+const heroInk = { home: '#121212', social: '#ffffff', 'case-studies': '#ffffff', projects: '#f4f4f1', art: '#ffffff', about: '#ffffff', contact: '#ffffff' };
 
 let current = 'home';
 let lenis = null;
+let intro = null;
+let rides = 0;
+const heroTimelines = new Map();
 
 const idFromHash = () => {
   const h = location.hash.replace(/^#\/?/, '');
-  return byId[h] ? h : 'home';
+  return Object.hasOwn(byId, h) ? h : 'home';
+};
+const hashIsValid = () => {
+  const h = location.hash.replace(/^#\/?/, '');
+  return h === '' || Object.hasOwn(byId, h);
 };
 
 /* ---------------- Boot ---------------- */
 drawStreets();
 splitRoadNames();
+renderSigns();
+renderColumns();
+renderReels();
+renderNextMaps();
 fillTracks();
+enablePaint();
 enableDrag();
 enableVideos();
 renderCredits();
@@ -43,10 +60,14 @@ if (!reduced.matches) {
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
 }
+enablePlayer(() => lenis);
+keepFocusedInView();
 
 /* ---------------- Stations ---------------- */
 function setStation(id) {
-  document.querySelector('.station.is-current')?.classList.remove('is-current');
+  const prev = document.querySelector('.station.is-current');
+  if (prev && prev.id !== id) { dropGlass(prev); stopVideos(prev); }
+  prev?.classList.remove('is-current');
   const el = document.getElementById(id);
   el.classList.add('is-current');
   document.body.dataset.station = id;
@@ -58,73 +79,92 @@ function setStation(id) {
   });
   window.scrollTo(0, 0);
   lenis?.scrollTo(0, { immediate: true, force: true });
+  paintBar();
   return el;
 }
 
-function arrive(id) {
+function arrive(id, { assemble = false } = {}) {
   const el = document.getElementById(id);
   fitNames(el);
-  wakeEmbeds(el);
-  watchHero(el);
-  requestAnimationFrame(() => { ScrollTrigger.refresh(); lenis?.resize(); });
+  glassFor(el, { assemble });
+  requestAnimationFrame(() => { ScrollTrigger.refresh(); lenis?.resize(); sizeLines(el); revealVisible(); });
   announcer.textContent = id === 'home' ? 'Liam Vu station' : `Arriving at ${byId[id].name}`;
+}
+
+/* Finish any entrance still running so nothing is ever left half-faded */
+function settleEntrances() {
+  heroTimelines.forEach((tl) => tl.progress(1).kill());
+  heroTimelines.clear();
 }
 
 /* Hero entrances: each kind of stop arrives its own way */
 function revealHero(id) {
-  if (reduced.matches) return;
   const el = document.getElementById(id);
   const name = el.querySelector('.station-name');
-  const tl = gsap.timeline();
-  if (el.querySelector('.hero--subway')) {
-    tl.from(name, { yPercent: 18, opacity: 0, duration: 1, ease: 'expo.out' })
-      .from(el.querySelectorAll('.floor > *'), { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.2);
-  } else if (el.querySelector('.hero--street')) {
-    tl.from(name, { yPercent: 30, opacity: 0, duration: 1, ease: 'expo.out' })
-      .from(el.querySelector('.street-skyline'), { yPercent: 14, duration: 1.2, ease: 'expo.out' }, 0)
-      .from(el.querySelector('.street-stop'), { yPercent: 8, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.15)
-      .from(el.querySelectorAll('.street-foot > *'), { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.25);
-  } else if (el.querySelector('.hero--bike')) {
-    tl.from(name.querySelectorAll('.rl'), { x: '-12vw', opacity: 0, duration: 1, stagger: 0.1, ease: 'expo.out' })
-      .from(el.querySelector('.lane-stencil'), { x: -40, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.1)
-      .from(el.querySelector('.lane-arrow'), { x: 40, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.2)
-      .from(el.querySelectorAll('.lane-foot > *'), { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.25);
-  } else if (id === 'home') greet();
-  name?.focus?.({ preventScroll: true });
+  if (!reduced.matches) {
+    settleEntrances();
+    const tl = gsap.timeline({ onComplete: () => heroTimelines.delete(id) });
+    if (el.querySelector('.hero--subway')) {
+      tl.from(el.querySelectorAll('.floor > *, .wall-sign'), { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.1);
+    } else if (el.querySelector('.hero--street')) {
+      tl.from(name, { yPercent: 30, opacity: 0, duration: 1, ease: 'expo.out' })
+        .from(el.querySelector('.street-skyline'), { yPercent: 14, duration: 1.2, ease: 'expo.out' }, 0)
+        .from(el.querySelector('.street-stop'), { yPercent: 8, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.15)
+        .from(el.querySelectorAll('.street-foot > *'), { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.25);
+    } else if (el.querySelector('.hero--bike')) {
+      tl.from(name.querySelectorAll('.rl'), { x: '-12vw', opacity: 0, duration: 1, stagger: 0.1, ease: 'expo.out' })
+        .from(el.querySelector('.lane-stencil'), { x: -40, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.1)
+        .from(el.querySelector('.lane-arrow'), { x: 40, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.2)
+        .from(el.querySelectorAll('.lane-foot > *'), { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.25);
+    } else if (id === 'home') {
+      tl.kill();
+      greet();
+    }
+    if (id !== 'home') heroTimelines.set(id, tl);
+  }
+  (name || document.querySelector('.greet'))?.focus?.({ preventScroll: true });
 }
 
 function greet() {
   if (reduced.matches) return;
-  const car = document.getElementById('car');
-  gsap.timeline()
+  settleEntrances();
+  const tl = gsap.timeline({ onComplete: () => heroTimelines.delete('home') })
     .from(car.querySelectorAll('.greet [data-line]'), { yPercent: 105, duration: 0.9, stagger: 0.11, ease: 'expo.out' })
     .from(car.querySelectorAll('.greet-lead, .car-greeting .button'), { y: 16, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' }, 0.3)
-        .from(car.querySelectorAll('.stoplist li'), { x: 28, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out' }, 0.3)
+    .from(car.querySelectorAll('.stoplist li'), { y: 14, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out' }, 0.3)
+    .fromTo(car.querySelector('.stoplist'), { '--draw': 0 }, { '--draw': 1, duration: 1.1, ease: 'power3.inOut' }, 0.3)
     .from(car.querySelectorAll('.card'), { yPercent: 30, opacity: 0, duration: 0.8, stagger: 0.07, ease: 'expo.out' }, 0.35)
     .from(car.querySelector('.pole--left'), { scaleY: 0, transformOrigin: 'top', duration: 0.9, ease: 'expo.out' }, 0.1)
     .from(car.querySelector('.led-text'), { xPercent: 40, opacity: 0, duration: 0.9, ease: 'expo.out' }, 0.25);
+  heroTimelines.set('home', tl);
 }
 
-/* ---------------- The bar takes the colour of what is under it ---------------- */
-let heroObserver = null;
-function watchHero(station) {
-  heroObserver?.disconnect();
-  const hero = station.querySelector('.hero') || station.querySelector('#car .car-body');
-  const set = (onHero) => {
-    bar.classList.toggle('is-solid', !onHero);
-    bar.style.setProperty('--bar-ink', onHero ? heroInk[current] : '');
-  };
-  set(true);
-  heroObserver = new IntersectionObserver(([e]) => set(e.isIntersecting), {
-    rootMargin: `0px 0px -${Math.max(0, window.innerHeight - 64)}px 0px`,
-  });
-  heroObserver.observe(hero);
+/* ---------------- The bar: clear over the hero's top, solid once you scroll ---------------- */
+function paintBar() {
+  const scrolled = (lenis ? lenis.scroll : window.scrollY) > 8;
+  const solid = scrolled || current === 'home';
+  bar.classList.toggle('is-solid', solid);
+  bar.style.setProperty('--bar-ink', solid ? '' : heroInk[current]);
 }
+if (lenis) lenis.on('scroll', paintBar);
+window.addEventListener('scroll', paintBar, { passive: true });
+
+/* A safety net: whatever is on screen when scrolling stops is shown, even if an observer missed it */
+let settleT;
+const onScrollSettle = () => { clearTimeout(settleT); settleT = setTimeout(revealVisible, 160); };
+if (lenis) lenis.on('scroll', onScrollSettle);
+window.addEventListener('scroll', onScrollSettle, { passive: true });
 
 /* ---------------- Riding between stations ---------------- */
-function go(id, push = true) {
-  if (isRiding()) skipRide();
+function go(id, { push = true, express = false } = {}) {
+  if (intro) intro.skip();
+  if (isRiding()) {
+    if (ridingTo() === id) return; // a double click on the same stop
+    skipRide();
+  }
   closeSheet();
+  closePlayer({ silent: true });
+  settleEntrances();
   if (id === current) {
     lenis ? lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: reduced.matches ? 'auto' : 'smooth' });
     return;
@@ -132,43 +172,65 @@ function go(id, push = true) {
   if (push) history.pushState({ id }, '', id === 'home' ? '#/' : `#/${id}`);
   const from = current;
   current = id;
+  rides += 1;
   ride(from, id, {
+    speed: express ? 1.9 : rides > 1 ? 1.35 : 1,
     swap: () => { setStation(id); arrive(id); },
     reveal: () => revealHero(id),
   });
 }
 
 document.addEventListener('click', (e) => {
+  const skip = e.target.closest('a[data-skip]');
+  if (skip) {
+    e.preventDefault();
+    if (intro) intro.skip();
+    const target = document.querySelector('.station.is-current .station-name') || document.querySelector('.greet');
+    target?.focus();
+    return;
+  }
   const a = e.target.closest('a[data-ride]');
   if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
   e.preventDefault();
   go(a.dataset.ride);
 });
 window.addEventListener('hashchange', () => {
+  if (!hashIsValid()) history.replaceState(null, '', '#/');
   const id = idFromHash();
-  if (id !== current) go(id, false);
+  if (id !== current) go(id, { push: false, express: true });
 });
 
 /* ---------------- Phone stops sheet ---------------- */
 const sheet = document.getElementById('stops-sheet');
 const sheetBtn = document.querySelector('.stops-toggle');
-function closeSheet() {
+function closeSheet({ restoreFocus = false } = {}) {
   if (sheet.hidden) return;
   sheet.hidden = true;
   sheetBtn.setAttribute('aria-expanded', 'false');
+  sheetBtn.textContent = 'Stops';
   lenis?.start();
+  if (restoreFocus) sheetBtn.focus();
 }
-sheetBtn.addEventListener('click', () => {
-  const open = sheet.hidden;
-  sheet.hidden = !open;
-  sheetBtn.setAttribute('aria-expanded', String(open));
-  if (open) {
-    lenis?.stop();
-    gsap.from(sheet.querySelectorAll('li'), { x: -24, opacity: 0, duration: 0.45, stagger: 0.04, ease: 'power3.out' });
-    sheet.querySelector('a')?.focus();
+function openSheet() {
+  sheet.hidden = false;
+  sheetBtn.setAttribute('aria-expanded', 'true');
+  sheetBtn.textContent = 'Close';
+  lenis?.stop();
+  if (!reduced.matches) gsap.from(sheet.querySelectorAll('li'), { x: -24, opacity: 0, duration: 0.45, stagger: 0.04, ease: 'power3.out', clearProps: 'all' });
+  sheet.querySelector('a')?.focus();
+}
+sheetBtn.addEventListener('click', () => (sheet.hidden ? openSheet() : closeSheet({ restoreFocus: true })));
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !sheet.hidden) closeSheet({ restoreFocus: true });
+  // keep keyboard focus inside the open sheet (the toggle stays reachable to close it)
+  if (e.key === 'Tab' && !sheet.hidden) {
+    const items = [sheetBtn, ...sheet.querySelectorAll('a')];
+    const i = items.indexOf(document.activeElement);
+    const next = e.shiftKey ? (i <= 0 ? items.length - 1 : i - 1) : (i === -1 || i === items.length - 1 ? 0 : i + 1);
+    e.preventDefault();
+    items[next].focus();
   }
 });
-window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
 
 /* ---------------- Sound toggle ---------------- */
 const soundBtn = document.querySelector('[data-sound]');
@@ -184,25 +246,54 @@ let rz;
 window.addEventListener('resize', () => {
   clearTimeout(rz);
   rz = setTimeout(() => {
-    fitNames(document.getElementById(current));
-    if (html.classList.contains('is-intro')) fitNames(document.getElementById('platform'));
-    watchHero(document.getElementById(current));
+    const el = document.getElementById(current);
+    fitNames(el);
+    refreshGlass(el);
+    sizeLines(el);
+    const platform = document.getElementById('platform');
+    if (platform) { fitNames(platform); refreshGlass(platform); }
   }, 120);
 });
 
 /* ---------------- Start ---------------- */
+if (!hashIsValid()) history.replaceState(null, '', '#/');
 const start = idFromHash();
-document.fonts?.ready.then(() => fitNames(document.getElementById(current)));
+document.fonts?.ready.then(() => {
+  const el = document.getElementById(current);
+  fitNames(el);
+  refreshGlass(el);
+  sizeLines(el);
+  const platform = document.getElementById('platform');
+  if (platform) { fitNames(platform); refreshGlass(platform); }
+});
 buildSeams();
+enableLineMaps();
+enableJumps(() => lenis);
 
 if (html.classList.contains('is-intro') && start === 'home') {
-  fitNames(document.getElementById('platform'));
+  const platform = document.getElementById('platform');
+  bar.inert = true;
+  car.inert = true;
+  fitNames(platform);
+  const [wallGlass] = glassFor(platform, { assemble: true });
   arrive('home');
-  runIntro({ onBoarded: () => { document.getElementById('platform')?.remove(); arrive('home'); greet(); } });
+  intro = runIntro({
+    glass: wallGlass,
+    onBoarded: () => {
+      intro = null;
+      bar.inert = false;
+      car.inert = false;
+      dropGlass(platform);
+      platform.remove();
+      if (current === 'home') { arrive('home'); greet(); }
+      paintBar();
+    },
+    onSkip: () => document.querySelector('.greet')?.focus({ preventScroll: true }),
+  });
 } else {
   html.classList.remove('is-intro');
   document.getElementById('platform')?.remove();
   setStation(start);
-  arrive(start);
+  arrive(start, { assemble: true });
   revealHero(start);
 }

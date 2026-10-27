@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="/src/styles/main.css">
 </head>
 <body data-station="home">
-  <a class="skip" href="#main">Skip to content</a>
+  <a class="skip" href="#main" data-skip>Skip to content</a>
 
   <!-- ============ HEADER: the in-car line map ============ -->
   <header class="bar" id="bar">
@@ -33,7 +33,7 @@
         <li><a href="#/social" data-ride="social" data-mode="subway">Social</a></li>
         <li><a href="#/case-studies" data-ride="case-studies" data-mode="bike">Case studies</a></li>
         <li><a href="#/projects" data-ride="projects" data-mode="streetcar">Projects</a></li>
-        <li><a href="#/art" data-ride="art" data-mode="streetcar">Art</a></li>
+        <li><a href="#/art" data-ride="art" data-mode="subway">Art</a></li>
         <li><a href="#/about" data-ride="about" data-mode="subway">About</a></li>
         <li><a href="#/contact" data-ride="contact" data-mode="subway">Contact</a></li>
       </ol>
@@ -48,14 +48,14 @@
   </header>
 
   <!-- Phone line map sheet -->
-  <div class="stops-sheet" id="stops-sheet" hidden>
+  <div class="stops-sheet" id="stops-sheet" role="dialog" aria-modal="true" aria-label="Stops on the Liam Vu Line" data-lenis-prevent hidden>
     <p class="stops-sheet-title">Liam Vu Line</p>
     <ol class="stops-sheet-list">
       <li><a href="#/" data-ride="home"><span>Liam Vu</span><small>Home</small></a></li>
       <li><a href="#/social" data-ride="social"><span>Social</span><small>Subway</small></a></li>
       <li><a href="#/case-studies" data-ride="case-studies"><span>Case studies</span><small>Bike lane</small></a></li>
       <li><a href="#/projects" data-ride="projects"><span>Projects</span><small>Streetcar</small></a></li>
-      <li><a href="#/art" data-ride="art"><span>Art</span><small>Streetcar</small></a></li>
+      <li><a href="#/art" data-ride="art"><span>Art</span><small>Subway, Museum</small></a></li>
       <li><a href="#/about" data-ride="about"><span>About</span><small>Subway</small></a></li>
       <li><a href="#/contact" data-ride="contact"><span>Contact</span><small>Subway</small></a></li>
     </ol>
@@ -70,7 +70,7 @@
 
       <!-- The platform: the train arrives here on load -->
       <div class="platform" id="platform">
-        <div class="wall wall--home">
+        <div class="wall wall--home" data-glass="home">
           <div class="wall-trim"></div>
           <h1 class="wall-name"><span class="wall-word">Liam</span> <span class="wall-word">Vu</span></h1>
           <div class="wall-sign" aria-hidden="true">
@@ -98,7 +98,7 @@
           <div class="pole pole--left" aria-hidden="true"></div>
           <div class="pole pole--right" aria-hidden="true"></div>
           <div class="car-greeting">
-            <h1 class="greet lines">
+            <h1 class="greet lines" tabindex="-1">
               <span class="line"><span data-line style="--i:0">Hey, it’s me,</span></span>
               <span class="line"><span data-line style="--i:1">Liam Vu.</span></span>
             </h1>
@@ -110,6 +110,7 @@
           <div class="car-stops">
             <h2 class="car-stops-title"><span class="led-text">Where to?</span><span class="led-aside">Doors open</span></h2>
             <ol class="stoplist">
+              <li class="stop-here" aria-hidden="true"><span class="stop-dot"></span><span class="stop-name">Liam Vu</span><span class="stop-note">You are here</span></li>
               <li><a href="#/social" data-ride="social" class="stop stop--subway">
                 <span class="stop-mode" aria-hidden="true"><svg><use href="#i-subway"/></svg></span>
                 <span class="stop-name">Social media</span>
@@ -125,10 +126,10 @@
                 <span class="stop-name">Projects</span>
                 <span class="stop-note">Videos, a podcast, live painting</span>
               </a></li>
-              <li><a href="#/art" data-ride="art" class="stop stop--streetcar">
-                <span class="stop-mode" aria-hidden="true"><svg><use href="#i-streetcar"/></svg></span>
+              <li><a href="#/art" data-ride="art" class="stop stop--subway">
+                <span class="stop-mode" aria-hidden="true"><svg><use href="#i-subway"/></svg></span>
                 <span class="stop-name">Art</span>
-                <span class="stop-note">Plein air, urban sketching, shows</span>
+                <span class="stop-note">Paintings, sketches, live painting</span>
               </a></li>
               <li><a href="#/about" data-ride="about" class="stop stop--subway">
                 <span class="stop-mode" aria-hidden="true"><svg><use href="#i-subway"/></svg></span>
@@ -165,10 +166,10 @@
     <!-- ===================================================== -->
     <section class="station station--social" id="social" data-mode="subway" data-title="Social">
       <header class="hero hero--subway">
-        <div class="wall wall--social">
+        <div class="wall wall--social" data-glass="social">
           <div class="wall-trim"></div>
           <h1 class="wall-name station-name" tabindex="-1">Social<span class="vh"> media from Liam Vu, The Urban Planning Influencer</span></h1>
-          <p class="wall-sign"><span class="wall-sign-line">1</span><span>Instagram, TikTok, YouTube</span></p>
+          <p class="wall-sign" data-sign></p>
         </div>
         <div class="track"><span class="rail"></span><span class="rail"></span></div>
         <div class="edge"><div class="tactile"></div><div class="floor">
@@ -183,21 +184,21 @@
           <h2 class="section-title" id="numbers-title" data-reveal>The numbers</h2>
           <dl class="figure-list">
             <div class="figure-row" data-reveal><dt><span data-count="50000">50,000</span>+</dt><dd>views on the best-performing reels Liam led for Monumental, a Toronto city-building firm.</dd></div>
-            <div class="figure-row" data-reveal><dt><span data-count="2409">2,409</span></dt><dd>followers across Instagram, LinkedIn and YouTube, and growing every week.</dd></div>
+            <div class="figure-row" data-reveal><dt><span data-count="2409">2,409</span></dt><dd>followers across his two Instagram accounts, LinkedIn and YouTube, and growing every week.</dd></div>
             <div class="figure-row" data-reveal><dt><span data-count="3500">3,500</span>+</dt><dd>likes on a single reel from October 2026.</dd></div>
             <div class="figure-row" data-reveal><dt><span data-count="1250">1,250</span></dt><dd>LinkedIn followers: planners, students and firms from across Canada.</dd></div>
-            <div class="figure-row" data-reveal><dt><span data-count="1863">1,863</span></dt><dd>views on his first two YouTube videos about studying planning.</dd></div>
+            <div class="figure-row" data-reveal><dt><span data-count="1870">1,870</span></dt><dd>views on his first two YouTube videos about studying planning.</dd></div>
           </dl>
           <p class="figures-note" data-reveal>Counts as of October 2026.</p>
         </div>
-        <figure class="figures-photo shutter" data-reveal-shutter>
-          <img src="/media/yt-OzqEFPckPuE.jpg" width="1280" height="720" alt="Liam Vu smiling in a still from his YouTube video about studying urban planning" loading="lazy" decoding="async">
+        <figure class="figures-photo" data-paint>
+          <img src="/media/liam-podium.jpg" width="720" height="680" alt="Liam Vu smiling at a podium while speaking at a planning event" loading="lazy" decoding="async">
         </figure>
       </section>
 
       <section class="platforms" aria-labelledby="platforms-title">
         <h2 class="section-title" id="platforms-title" data-reveal>Follow the line</h2>
-        <ul class="platform-rows">
+        <ul class="platform-rows lm lm--yellow">
           <li data-reveal><a href="https://www.instagram.com/liamvutoronto/" target="_blank" rel="noopener">
             <span class="pr-name">Instagram</span><span class="pr-handle">@liamvutoronto</span><span class="pr-count">648 followers</span></a></li>
           <li data-reveal><a href="https://www.tiktok.com/@liamvutoronto" target="_blank" rel="noopener">
@@ -216,7 +217,7 @@
           <h2 class="section-title" id="reels-title" data-reveal>Latest reels</h2>
           <p class="reels-lead" data-reveal>Straight from Instagram: his own channel and the reels he made with Monumental, TRCA and The Laneway Project.</p>
         </div>
-        <div class="reel-track" data-drag tabindex="0" aria-label="Instagram reels, scroll sideways">
+        <div class="reel-track" data-drag tabindex="0" role="region" aria-label="Instagram reels, scroll sideways">
           <!-- Filled from src/data.js (or a live feed, if one is configured) -->
         </div>
       </section>
@@ -292,12 +293,20 @@
         </div>
       </header>
 
+      <nav class="route-strip" aria-label="Case study route">
+        <p class="route-strip-title">Bike route</p>
+        <ol class="lmh lmh--green">
+          <li><a href="#case-yzd" data-jump><span>YZD Downsview</span><small>North York</small></a></li>
+          <li><a href="#case-om" data-jump><span>Ookwemin Minising</span><small>Port Lands</small></a></li>
+          <li><a href="#case-meadoway" data-jump><span>The Meadoway</span><small>Scarborough</small></a></li>
+        </ol>
+      </nav>
+
       <article class="case" aria-labelledby="case-yzd">
         <div class="seam" data-seam>
           <figure class="seam-pane seam-pane--left"><img src="/media/downsview-park-ttc-station-01.jpg" width="1920" height="1318" alt="Downsview Park subway station, beside the former Downsview airport lands" loading="lazy" decoding="async"></figure>
-          <figure class="seam-pane seam-pane--right" aria-hidden="true"><img src="/media/downsview-park-ttc-station-01.jpg" width="1920" height="1318" alt="" loading="lazy" decoding="async"></figure>
           <h2 class="seam-label">Community engagement</h2>
-          <div class="seam-title"><h3 class="seam-half seam-half--l" id="case-yzd">YZD<br>Downsview</h3><p class="seam-half seam-half--r" aria-hidden="true">YZD<br>Downsview</p></div>
+          <div class="seam-title"><h3 class="seam-half seam-half--l" id="case-yzd">YZD <br>Downsview</h3><p class="seam-half seam-half--r" aria-hidden="true">YZD <br>Downsview</p></div>
           <p class="case-figure"><span>100</span> questions a day from neighbours</p>
         </div>
         <div class="case-body">
@@ -306,6 +315,10 @@
             <div data-reveal>
               <h4>The place</h4>
               <p>The former Downsview airport lands in north Toronto, where Northcrest is planning new neighbourhoods. It is also where Liam grew up: an essay on what the airport site should become, written for a scholarship in grade 12, is what led him to planning.</p>
+              <figure class="case-art">
+                <img src="/media/art-yzd-experience-centre.jpg" width="1080" height="771" alt="Liam’s painting of the YZD Experience Centre" loading="lazy" decoding="async">
+                <figcaption>He painted the Experience Centre too, in 2025.</figcaption>
+              </figure>
             </div>
             <div data-reveal>
               <h4>The work</h4>
@@ -322,9 +335,8 @@
       <article class="case" aria-labelledby="case-om">
         <div class="seam" data-seam>
           <figure class="seam-pane seam-pane--left"><img src="/media/port-lands-2025.jpg" width="1920" height="1440" alt="The Port Lands on Toronto’s waterfront in 2025, where Ookwemin Minising is being built" loading="lazy" decoding="async"></figure>
-          <figure class="seam-pane seam-pane--right" aria-hidden="true"><img src="/media/port-lands-2025.jpg" width="1920" height="1440" alt="" loading="lazy" decoding="async"></figure>
           <h2 class="seam-label">Short-form video</h2>
-          <div class="seam-title"><h3 class="seam-half seam-half--l" id="case-om">Ookwemin<br>Minising</h3><p class="seam-half seam-half--r" aria-hidden="true">Ookwemin<br>Minising</p></div>
+          <div class="seam-title"><h3 class="seam-half seam-half--l" id="case-om">Ookwemin <br>Minising</h3><p class="seam-half seam-half--r" aria-hidden="true">Ookwemin <br>Minising</p></div>
           <p class="case-figure"><span>50K+</span> views on his best posts</p>
         </div>
         <div class="case-body">
@@ -349,10 +361,9 @@
       <article class="case" aria-labelledby="case-meadoway">
         <div class="seam" data-seam>
           <figure class="seam-pane seam-pane--left"><img src="/media/the-meadoway-in-scarborough-toronto-ontario.jpg" width="1920" height="1440" alt="Wildflowers under the hydro towers of the Meadoway in Scarborough" loading="lazy" decoding="async"></figure>
-          <figure class="seam-pane seam-pane--right" aria-hidden="true"><img src="/media/the-meadoway-in-scarborough-toronto-ontario.jpg" width="1920" height="1440" alt="" loading="lazy" decoding="async"></figure>
           <h2 class="seam-label">Watershed planning</h2>
-          <div class="seam-title"><h3 class="seam-half seam-half--l" id="case-meadoway">The<br>Meadoway</h3><p class="seam-half seam-half--r" aria-hidden="true">The<br>Meadoway</p></div>
-          <p class="case-figure"><span>16 km</span> of hydro corridor becoming meadow</p>
+          <div class="seam-title"><h3 class="seam-half seam-half--l" id="case-meadoway">The <br>Meadoway</h3><p class="seam-half seam-half--r" aria-hidden="true">The <br>Meadoway</p></div>
+          <p class="case-figure"><span>16&nbsp;km</span> of hydro corridor becoming meadow</p>
         </div>
         <div class="case-body">
           <p class="case-meta" data-reveal>Toronto and Region Conservation Authority · Watershed Planning and Ecosystem Science, summer student and media intern · Summer 2026</p>
@@ -406,14 +417,14 @@
           <a class="link" href="https://www.instagram.com/liamvutoronto/" target="_blank" rel="noopener" data-reveal>Watch the series on Instagram</a>
         </div>
         <div class="feature-reels">
-          <figure class="ig-item" data-reveal><div class="ig-slot" data-ui data-ig="DcOkmuiymGW" data-ig-kind="reel"></div><figcaption class="ig-caption"><strong>@liamvutoronto</strong> · August 2026</figcaption></figure>
-          <figure class="ig-item" data-reveal><div class="ig-slot" data-ui data-ig="Db52C25Sbgu" data-ig-kind="reel"></div><figcaption class="ig-caption"><strong>@liamvutoronto</strong> · August 2026</figcaption></figure>
+          <div data-reel="DcOkmuiymGW" data-reveal></div>
+          <div data-reel="Db52C25Sbgu" data-reveal></div>
         </div>
       </section>
 
       <section class="index" aria-labelledby="all-projects">
         <h2 class="section-title" id="all-projects" data-reveal>All projects</h2>
-        <ol class="index-list">
+        <ol class="index-list lm lm--red">
           <li class="index-row" data-reveal>
             <h3>Urban Planning Tea</h3>
             <p class="index-role">Podcast host · 2026</p>
@@ -450,16 +461,16 @@
       <section class="city" aria-labelledby="city-title">
         <h2 class="section-title" id="city-title" data-reveal>The city is the subject</h2>
         <div class="city-band">
-          <figure class="city-panel"><img src="/media/laneways-in-roncesvalles-toronto-2026-09.jpg" width="1600" height="1065" alt="A laneway lined with garages in Roncesvalles, Toronto" loading="lazy" decoding="async"><figcaption>Laneways, filmed with The Laneway Project</figcaption></figure>
-          <figure class="city-panel"><img src="/media/streetcar-stop-on-spadina-avenue-at-sullivan.jpg" width="1600" height="1067" alt="A streetcar stop on Spadina Avenue" loading="lazy" decoding="async"></figure>
-          <figure class="city-panel"><img src="/media/bike-lane-on-bloor-street-toronto-11.jpg" width="1600" height="2133" alt="The protected bike lane on Bloor Street" loading="lazy" decoding="async"></figure>
-          <figure class="city-panel"><img src="/media/toronto-rocket-subway-train-on-line-1.jpg" width="1600" height="1067" alt="A Toronto Rocket train on Line 1" loading="lazy" decoding="async"></figure>
+          <figure class="city-panel" data-paint><img src="/media/laneways-in-roncesvalles-toronto-2026-09.jpg" width="1600" height="1065" alt="A laneway lined with garages in Roncesvalles, Toronto" loading="lazy" decoding="async"><figcaption>Laneways, filmed with The Laneway Project</figcaption></figure>
+          <figure class="city-panel" data-paint><img src="/media/streetcar-stop-on-spadina-avenue-at-sullivan.jpg" width="1600" height="1067" alt="A streetcar stop on Spadina Avenue" loading="lazy" decoding="async"></figure>
+          <figure class="city-panel" data-paint><img src="/media/bike-lane-on-bloor-street-toronto-11.jpg" width="1600" height="2133" alt="The protected bike lane on Bloor Street" loading="lazy" decoding="async"></figure>
+          <figure class="city-panel" data-paint><img src="/media/toronto-rocket-subway-train-on-line-1.jpg" width="1600" height="1067" alt="A Toronto Rocket train on Line 1" loading="lazy" decoding="async"></figure>
         </div>
         <p class="city-caption">Laneways, streetcar stops, bike lanes and Line 1: the places his videos explain.</p>
       </section>
 
       <figure class="band">
-        <video muted loop playsinline preload="none" poster="/media/ttc-509-harbourfront-streetcar-on-queen-s-poster.jpg" width="854" height="480" aria-hidden="true" data-autoplay>
+        <video muted loop playsinline preload="none" poster="/media/ttc-509-harbourfront-streetcar-on-queen-s-poster.jpg" width="1280" height="720" aria-hidden="true" data-autoplay>
           <source src="/media/ttc-509-harbourfront-streetcar-on-queen-s.webm" type="video/webm">
         </video>
         <figcaption>The 509 Harbourfront streetcar on Queens Quay, a short ride from the Port Lands.</figcaption>
@@ -469,64 +480,84 @@
         <p class="next-stop-led">Next stop</p>
         <a class="next-stop-link" href="#/art" data-ride="art"><span>Art</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
-        <p class="next-stop-mode">Stay on the streetcar</p>
+        <p class="next-stop-mode">Change here for the subway</p>
       </nav>
     </section>
 
     <!-- ===================================================== -->
     <!-- ART — streetcar stop                                    -->
     <!-- ===================================================== -->
-    <section class="station station--art" id="art" data-mode="streetcar" data-title="Art">
-      <header class="hero hero--street">
-        <h1 class="street-name station-name" tabindex="-1">Art<span class="vh"> by Liam Vu</span></h1>
-        <div class="street">
-          <div class="street-skyline" data-skyline></div>
-          <div class="street-stop" data-stop-pole></div>
-          <div class="street-road"><span class="street-rail"></span><span class="street-rail"></span></div>
+    <section class="station station--art" id="art" data-mode="subway" data-title="Art">
+      <header class="hero hero--subway">
+        <div class="wall wall--art" data-glass="art">
+          <div class="wall-trim"></div>
+          <h1 class="wall-name station-name" tabindex="-1">Art<span class="vh"> by Liam Vu</span></h1>
+          <p class="wall-sign" data-sign></p>
         </div>
-        <div class="street-foot">
-          <p class="hero-lead">Liam paints outdoors, sketches streets and runs art workshops. He founded the Oh Canada Art Show.</p>
+        <div class="track"><span class="rail"></span><span class="rail"></span></div>
+        <div class="edge"><div class="tactile"></div><div class="floor">
+          <p class="hero-lead">Liam paints outdoors, sketches Toronto’s third spaces and teaches urban sketching. He founded the Oh Canada Art Show.</p>
           <a class="next-sign" href="#/about" data-ride="about">Next: About
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
-        </div>
+        </div></div>
       </header>
 
       <section class="live" aria-labelledby="live-title">
         <div class="live-text">
           <h2 class="section-title" id="live-title" data-reveal>Painted live at ACTION 2025</h2>
-          <p data-reveal>At Canada’s national planning conference in Toronto, Liam pitched himself to the organizers and painted the skyline live in front of over 1,000 planners. That evening at Roy Thomson Hall, guests wrote messages on the finished canvas.</p>
+          <p data-reveal>At Canada’s national planning conference in Toronto, Liam pitched himself to the organizers and painted the skyline live in front of over 1,000 planners. It was his first live painting. That evening at Roy Thomson Hall, guests wrote messages on the finished canvas.</p>
           <blockquote class="quote" data-reveal>
             <p>“With my paints, brushes, and a huge wooden French easel, I completed a painting of the Toronto skyline.”</p>
             <footer>Liam, to the Canadian Institute of Planners</footer>
           </blockquote>
         </div>
-        <div class="live-reel" data-reveal>
-          <!-- Instagram reel from July 2025, filled from data.js -->
-          <div class="ig-slot" data-ui data-ig="DL-R89ssSiy" data-ig-kind="reel"></div>
-        </div>
+        <figure class="live-photo" data-reveal>
+          <img src="/media/art-action-live-painting.jpg" width="640" height="786" alt="Liam beside his finished painting of the Toronto skyline at ACTION 2025" loading="lazy" decoding="async">
+          <figcaption><a class="link" href="https://www.instagram.com/reel/DL-R89ssSiy/" target="_blank" rel="noopener">Watch the live painting reel</a></figcaption>
+        </figure>
       </section>
 
-      <figure class="skyline-photo shutter" data-reveal-shutter>
-        <img src="/media/sunset-toronto-skyline-panorama-crop-from-snake.jpg" width="1920" height="852" alt="The Toronto skyline at sunset, seen from the Toronto Islands" loading="lazy" decoding="async">
-        <figcaption>The Toronto skyline from the Islands.</figcaption>
-      </figure>
 
       <section class="gallery" aria-labelledby="gallery-title">
-        <h2 class="gallery-title" id="gallery-title" data-reveal>From the studio <span class="gallery-count" data-gallery-count></span></h2>
-        <div class="gallery-track" data-drag tabindex="0" aria-label="Artwork from Instagram, scroll sideways">
-          <!-- Filled from src/data.js -->
+        <h2 class="section-title" id="gallery-title" data-reveal>On the wall</h2>
+        <div class="hang">
+          <figure class="work work--a" data-reveal>
+            <div class="work-frame"><img src="/media/art-yzd-experience-centre.jpg" width="1080" height="771" alt="Liam’s painting of the YZD Experience Centre in Downsview, a blue building beside a rainbow mural" loading="lazy" decoding="async"></div>
+            <figcaption class="label"><strong>YZD Experience Centre</strong><span>Downsview, Toronto. Painting, 2025.</span><span>The building where he works as an engagement ambassador.</span></figcaption>
+          </figure>
+          <figure class="work work--b" data-reveal>
+            <div class="work-frame"><img src="/media/art-duncan-portrait.jpg" width="545" height="840" alt="A painted portrait of a baby in a white frame" loading="lazy" decoding="async"></div>
+            <figcaption class="label"><strong>My new muse</strong><span>Portrait of his brother Duncan. Painting, 2023.</span></figcaption>
+          </figure>
+          <figure class="work work--c" data-reveal>
+            <div class="work-frame"><img src="/media/art-reference-library.jpg" width="770" height="930" alt="An ink and watercolour sketch of the reading room at the Toronto Reference Library" loading="lazy" decoding="async"></div>
+            <figcaption class="label"><strong>Toronto Reference Library</strong><span>From the series Sketching Toronto’s Third Spaces. Sketch, 2026.</span></figcaption>
+          </figure>
+          <figure class="work work--d" data-reveal>
+            <div class="work-frame"><img src="/media/art-sneaky-dees.jpg" width="879" height="1078" alt="A coloured pencil sketch of the inside of Sneaky Dee’s restaurant" loading="lazy" decoding="async"></div>
+            <figcaption class="label"><strong>Sneaky Dee’s</strong><span>From the series Sketching Toronto’s Third Spaces. Sketch, 2026.</span></figcaption>
+          </figure>
         </div>
+        <a class="link gallery-more" href="https://www.instagram.com/liamvuart/" target="_blank" rel="noopener" data-reveal>More of his work on @liamvuart</a>
+      </section>
+
+      <section class="process" aria-labelledby="process-title">
+        <figure class="process-a" data-reveal><img src="/media/art-sketching-greenhouse.jpg" width="720" height="820" alt="Liam sketching in a sketchbook inside a greenhouse" loading="lazy" decoding="async"></figure>
+        <div class="process-text">
+          <h2 class="section-title" id="process-title" data-reveal>Sketchbook first</h2>
+          <p data-reveal>He sketches the places planners talk about: libraries, diners, plazas and greenhouses where people spend time outside home and work. The sketches become reels, and the reels start conversations about third spaces.</p>
+        </div>
+        <figure class="process-b" data-reveal><img src="/media/art-yonge-dundas-workshop.jpg" width="900" height="1126" alt="Poster for Sketching Street Life at Yonge-Dundas, a free workshop at Sankofa Square on May 1, 2026" loading="lazy" decoding="async"></figure>
       </section>
 
       <section class="practice" aria-labelledby="practice-title">
         <h2 class="section-title" id="practice-title" data-reveal>How he works</h2>
         <dl class="practice-list">
           <div data-reveal><dt>Plein air</dt><dd>Painting outside, on location, with a French easel, from parks to the skyline.</dd></div>
-          <div data-reveal><dt>Urban sketching</dt><dd>Drawing streets as they are, and teaching it: he led an urban sketching workshop for plazaPOPS.</dd></div>
-          <div data-reveal><dt>Workshops</dt><dd>Art workshops for community groups and young people.</dd></div>
-          <div data-reveal><dt>Shows</dt><dd>Founder of the Oh Canada Art Show.</dd></div>
+          <div data-reveal><dt>Urban sketching</dt><dd>Drawing Toronto’s third spaces, from the Reference Library to Sneaky Dee’s, and teaching it: he led an urban sketching workshop for plazaPOPS.</dd></div>
+          <div data-reveal><dt>Workshops</dt><dd>Free sketching workshops in public space, like Sketching Street Life at Yonge-Dundas in Sankofa Square, May 2026.</dd></div>
+          <div data-reveal><dt>Shows</dt><dd>Founder of the Oh Canada Art Show. Its free 2025 showcase, Allyship Through Music and Dance, was hosted with the Toronto Catholic District School Board.</dd></div>
         </dl>
-        <a class="button button--ink" href="https://www.instagram.com/liamvuart/" target="_blank" rel="noopener" data-reveal>See more on @liamvuart</a>
       </section>
 
       <nav class="next-stop" aria-label="Next station">
@@ -542,10 +573,10 @@
     <!-- ===================================================== -->
     <section class="station station--about" id="about" data-mode="subway" data-title="About">
       <header class="hero hero--subway">
-        <div class="wall wall--about">
+        <div class="wall wall--about" data-glass="about">
           <div class="wall-trim"></div>
           <h1 class="wall-name station-name" tabindex="-1">About<span class="vh"> Liam Vu</span></h1>
-          <p class="wall-sign"><span class="wall-sign-line">1</span><span>Liam Vu, planning student at TMU</span></p>
+          <p class="wall-sign" data-sign></p>
         </div>
         <div class="track"><span class="rail"></span><span class="rail"></span></div>
         <div class="edge"><div class="tactile"></div><div class="floor">
@@ -560,7 +591,7 @@
         <ul class="bio-facts" data-reveal>
           <li><strong>Based in</strong> Toronto, Canada</li>
           <li><strong>Studying</strong> since 2024</li>
-          <li><strong>Reach him</strong> <a class="link" href="mailto:liamvuplanning@gmail.com">liamvuplanning@gmail.com</a></li>
+          <li><strong>Reach him</strong> <a class="link" href="mailto:liamvuplanning@gmail.com">liamvuplanning<wbr>@gmail.com</a></li>
         </ul>
         <div class="bio-text">
           <p class="bio-lead" data-reveal><img class="bio-portrait" src="/media/liam-portrait.jpg" width="480" height="480" alt="Portrait of Liam Vu" loading="lazy" decoding="async"><strong>Liam Vu</strong> is an award-winning planning student at TMU and a Council Director at the Ontario Professional Planners Institute.</p>
@@ -574,14 +605,14 @@
       <section class="stops-pair" aria-labelledby="pair-title">
         <h2 class="section-title" id="pair-title" data-reveal>Home stop, school stop</h2>
         <div class="pair">
-          <figure class="pair-a shutter" data-reveal-shutter><img src="/media/downsview-park-ttc-station-01.jpg" width="1600" height="1098" alt="Downsview Park station in north Toronto" loading="lazy" decoding="async"><figcaption>Downsview Park, near where he grew up.</figcaption></figure>
-          <figure class="pair-b shutter" data-reveal-shutter><video muted loop playsinline preload="none" poster="/media/ttc-line-1-subway-train-at-dundas-poster.jpg" width="854" height="480" aria-hidden="true" data-autoplay><source src="/media/ttc-line-1-subway-train-at-dundas.webm" type="video/webm"></video><figcaption>Line 1 arriving at Dundas, a block from TMU.</figcaption></figure>
+          <figure class="pair-a" data-paint><img src="/media/downsview-park-ttc-station-01.jpg" width="1600" height="1098" alt="Downsview Park station in north Toronto" loading="lazy" decoding="async"><figcaption>Downsview Park, near where he grew up.</figcaption></figure>
+          <figure class="pair-b" data-paint="ttc-line-1-subway-train-at-dundas-poster"><video muted loop playsinline preload="none" poster="/media/ttc-line-1-subway-train-at-dundas-poster.jpg" width="854" height="480" aria-hidden="true" data-autoplay><source src="/media/ttc-line-1-subway-train-at-dundas.webm" type="video/webm"></video><figcaption>Line 1 arriving at Dundas, a block from TMU.</figcaption></figure>
         </div>
       </section>
 
       <section class="route" aria-labelledby="route-title">
         <h2 class="section-title" id="route-title" data-reveal>Experience</h2>
-        <ol class="route-list">
+        <ol class="route-list lm lm--yellow">
           <li class="route-stop" data-reveal><p class="route-when">April 2026 to now</p><div><h3>Monumental</h3><p>Junior Fellow, Social Media. Short-form video for a social purpose city-building firm, including work with Waterfront Toronto.</p></div></li>
           <li class="route-stop" data-reveal><p class="route-when">2026 to 2027</p><div><h3>Ontario Professional Planners Institute</h3><p>Council Director.</p></div></li>
           <li class="route-stop" data-reveal><p class="route-when">Summer 2026</p><div><h3>Toronto and Region Conservation Authority</h3><p>Watershed Planning and Ecosystem Science summer student and media intern.</p></div></li>
@@ -597,11 +628,11 @@
           <h2 class="section-title" id="school-title" data-reveal>School</h2>
           <p class="school-name" data-reveal>Toronto Metropolitan University</p>
           <p data-reveal>Bachelor of Urban and Regional Planning, with a minor in Innovation and Zone Learning. 2024 to 2028.</p>
-          <figure class="school-photo" data-reveal><img src="/media/yt-0MCG_PvzqTc.jpg" width="1280" height="720" alt="Liam in a still from his urban planning student vlog" loading="lazy" decoding="async"><figcaption>From his planning school vlog on YouTube.</figcaption></figure>
+          <figure class="school-photo" data-paint><img src="/media/yt-0MCG_PvzqTc.jpg" width="1280" height="720" alt="Liam in a still from his urban planning student vlog" loading="lazy" decoding="async"><figcaption>From his planning school vlog on YouTube.</figcaption></figure>
         </div>
         <div class="school-col">
           <h2 class="section-title" data-reveal>Awards</h2>
-          <dl class="awards">
+          <dl class="awards lm lm--green">
             <div data-reveal><dt>Noah D’Alleva Memorial Award in Urban Planning</dt><dd>TMU School of Urban and Regional Planning, 2025. For a top student in first year.</dd></div>
             <div data-reveal><dt>Ted Rogers Future Leader Scholarship</dt><dd>Rogers, 2024. One of 100 recipients across Canada.</dd></div>
             <div data-reveal><dt>Environmental Stewardship Award</dt><dd>Emery Village BIA, 2024.</dd></div>
@@ -609,7 +640,7 @@
         </div>
       </section>
 
-      <figure class="band">
+      <figure class="band" data-paint>
         <img src="/media/toronto-rocket-subway-train-at-college-station.jpg" width="1920" height="1280" alt="A Toronto Rocket subway train waiting at College station on Line 1" loading="lazy" decoding="async">
         <figcaption>Line 1 at College station, one stop from campus.</figcaption>
       </figure>
@@ -627,10 +658,10 @@
     <!-- ===================================================== -->
     <section class="station station--contact" id="contact" data-mode="subway" data-title="Contact">
       <header class="hero hero--subway">
-        <div class="wall wall--contact">
+        <div class="wall wall--contact" data-glass="contact">
           <div class="wall-trim"></div>
           <h1 class="wall-name station-name" tabindex="-1">Contact<span class="vh"> Liam Vu</span></h1>
-          <p class="wall-sign"><span class="wall-sign-line">1</span><span>Email, LinkedIn, Instagram</span></p>
+          <p class="wall-sign" data-sign></p>
         </div>
         <div class="track"><span class="rail"></span><span class="rail"></span></div>
         <div class="edge"><div class="tactile"></div><div class="floor">
@@ -645,14 +676,14 @@
           <h2 class="section-title" id="open-title" data-reveal>The doors are open</h2>
           <p data-reveal>For planning internships and jobs, social media and engagement work, collaborations with firms and agencies, talks for students, and art commissions.</p>
         </div>
-        <figure class="open-photo shutter" data-reveal-shutter><img src="/media/ttc-subway-train-doors-01.jpg" width="1600" height="2400" alt="The doors of a TTC subway train" loading="lazy" decoding="async"></figure>
-        <figure class="open-photo-2 shutter" data-reveal-shutter><img src="/media/toronto-rocket-subway-train-on-line-1.jpg" width="1600" height="1067" alt="A Toronto Rocket train at a Line 1 platform" loading="lazy" decoding="async"></figure>
+        <figure class="open-photo" data-paint><img src="/media/ttc-subway-train-doors-01.jpg" width="1600" height="2400" alt="The doors of a TTC subway train" loading="lazy" decoding="async"></figure>
+        <figure class="open-photo-2" data-paint><img src="/media/toronto-rocket-subway-train-on-line-1.jpg" width="1600" height="1067" alt="A Toronto Rocket train at a Line 1 platform" loading="lazy" decoding="async"></figure>
       </section>
 
       <section class="rows" aria-labelledby="reach-title">
         <h2 class="vh" id="reach-title">Ways to reach Liam</h2>
         <ul class="rows-list">
-          <li class="rows-first" data-reveal><a href="mailto:liamvuplanning@gmail.com?subject=Hi%20Liam">liamvuplanning@gmail.com</a><img class="rows-face" src="/media/liam-portrait.jpg" width="480" height="480" alt="Liam Vu" loading="lazy" decoding="async"></li>
+          <li class="rows-first" data-reveal><a href="mailto:liamvuplanning@gmail.com?subject=Hi%20Liam">liamvuplanning<wbr>@gmail.com</a><img class="rows-face" src="/media/liam-portrait.jpg" width="480" height="480" alt="Liam Vu" loading="lazy" decoding="async"></li>
           <li data-reveal><a href="https://www.linkedin.com/in/liamhoangvu" target="_blank" rel="noopener">LinkedIn: Liam Vũ</a></li>
           <li data-reveal><a href="https://www.instagram.com/liamvutoronto/" target="_blank" rel="noopener">Instagram: @liamvutoronto</a></li>
           <li data-reveal><a href="https://www.tiktok.com/@liamvutoronto" target="_blank" rel="noopener">TikTok: @liamvutoronto</a></li>
@@ -661,7 +692,7 @@
         </ul>
       </section>
 
-      <figure class="band band--flush">
+      <figure class="band band--flush" data-paint>
         <img src="/media/sunset-toronto-skyline-panorama-crop-from-snake.jpg" width="1600" height="710" alt="The Toronto skyline at sunset from the Toronto Islands" loading="lazy" decoding="async">
       </figure>
 
@@ -687,6 +718,16 @@
       </footer>
     </section>
   </main>
+
+  <dialog class="player" id="player" aria-label="Instagram reel" data-lenis-prevent>
+    <div class="player-inner">
+      <button class="player-close" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+      </button>
+      <div class="player-slot" data-ui></div>
+      <p class="player-meta"></p>
+    </div>
+  </dialog>
 
   <!-- The ride layer: transitions are drawn in here -->
   <div class="ride" id="ride" aria-hidden="true"></div>

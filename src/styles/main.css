@@ -1,7 +1,10 @@
 @import '@fontsource-variable/jost';
+@import '@fontsource-variable/fraunces/full.css';
+@import '@fontsource-variable/fraunces/full-italic.css';
 @import './base.css';
 @import './bar.css';
 @import './scenes.css';
 @import './home.css';
 @import './stations.css';
 @import './ride.css';
+@import './art.css';

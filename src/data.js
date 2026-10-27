@@ -7,39 +7,32 @@
  */
 export const FEED_URL = '';
 
-/** Reels on the Social station: his own channel first, then collaborations. */
+/** Reels on the Social station. Covers live in public/media/reels/<code>.jpg */
 export const reels = [
-  { code: 'Dcj205zyRjI', by: '@liamvutoronto', when: 'August 2026', note: 'OPPI 2026' },
-  { code: 'De97BNQyUl3', by: '@liamvutoronto', when: 'October 2026' },
-  { code: 'DYXmxBVxKOs', by: 'with @monumentalprojects', when: 'May 2026' },
-  { code: 'Ddr26Xez5Mc', by: 'with @lanewayproject', when: 'September 2026' },
-  { code: 'DauwlDFx-px', by: '@liamvutoronto', when: 'July 2026' },
-  { code: 'DZ51Bq-R6Ep', by: 'with @monumentalprojects', when: 'June 2026' },
-  { code: 'DaLjq-hikR0', by: 'with @trca_hq', when: 'June 2026' },
-  { code: 'DaSmR4MSPtL', by: '@liamvutoronto', when: 'July 2026' },
+  { code: 'DcOkmuiymGW', title: 'What is adaptive reuse?', by: '@liamvutoronto', when: 'August 2026', likes: 180, series: 'One Minute Urbanism' },
+  { code: 'Db52C25Sbgu', title: 'What are third places?', by: '@liamvutoronto', when: 'August 2026', likes: 178, series: 'One Minute Urbanism' },
+  { code: 'DYXmxBVxKOs', title: 'Greetings from Ookwemin Minising', by: 'with @monumentalprojects', when: 'May 2026', likes: 971 },
+  { code: 'Ddr26Xez5Mc', title: 'Transforming Toronto’s laneways', by: 'with @lanewayproject', when: 'September 2026', likes: 170 },
+  { code: 'DaLjq-hikR0', title: 'Invasive carp surveillance', by: 'with @trca_hq', when: 'June 2026', likes: 558 },
+  { code: 'Dcj205zyRjI', title: 'Ontario planners, listen up', by: '@liamvutoronto', when: 'August 2026', likes: 57 },
+  { code: 'DauwlDFx-px', title: 'Every planner’s dream', by: '@liamvutoronto', when: 'July 2026', likes: 139 },
+  { code: 'DZ1i4ONktqW', title: 'These are climate stripes', by: 'with @trca_hq', when: 'June 2026', likes: 283 },
+  { code: 'DaSmR4MSPtL', title: 'Don’t be afraid of conferences', by: '@liamvutoronto', when: 'July 2026', likes: 85 },
+  { code: 'DZ51Bq-R6Ep', title: 'The Biidaasige Prize', by: 'with @monumentalprojects', when: 'June 2026', likes: 92 },
 ];
 
-/** Artwork on the Art station, from @liamvuart. */
-export const art = [
-  { code: 'DXrZG7qljJN', kind: 'p', when: 'April 2026' },
-  { code: 'DV9BFYiEvdI', kind: 'reel', when: 'March 2026' },
-  { code: 'DVgwDVvkQv4', kind: 'reel', when: 'March 2026' },
-  { code: 'DU5ta7CDqaf', kind: 'reel', when: 'February 2026' },
-  { code: 'DKH_3K5vlO8', kind: 'p', when: 'May 2025', note: 'Oh Canada Art Show' },
-  { code: 'DJO-yrlOgV6', kind: 'reel', when: 'May 2025' },
-  { code: 'DI60sTmJK8T', kind: 'reel', when: 'April 2025' },
-  { code: 'DIWkw7eu1-I', kind: 'p', when: 'April 2025' },
-  { code: 'DFifu3vx0nP', kind: 'p', when: 'February 2025' },
-  { code: 'C02SHoNJ4Os', kind: 'reel', when: 'December 2023' },
-];
-
-/** The line, in riding order. mode decides which vehicle carries you there. */
+/**
+ * The line, in riding order. mode decides which vehicle carries you there.
+ * Every subway stop is tiled after a real station's original scheme: the 1954 Yonge line was
+ * Vitrolite structural glass in three tints with four trim colours; the 1963 University line added more.
+ * Station names were set large in the trim colour, and small in the wall colour along the trim.
+ */
 export const stations = [
-  { id: 'home', name: 'Liam Vu', mode: 'subway', wall: '#e8e7e2', ink: '#121212' },
-  { id: 'social', name: 'Social', mode: 'subway', wall: '#ffc72c', ink: '#121212' },
-  { id: 'case-studies', name: 'Case studies', mode: 'bike', wall: '#1d8a4b', ink: '#ffffff' },
-  { id: 'projects', name: 'Projects', mode: 'streetcar', wall: '#da251d', ink: '#f4f4f1' },
-  { id: 'art', name: 'Art', mode: 'streetcar', wall: '#ecebe6', ink: '#121212' },
-  { id: 'about', name: 'About', mode: 'subway', wall: '#0b4ea2', ink: '#ffdc00' },
-  { id: 'contact', name: 'Contact', mode: 'subway', wall: '#1a1a1a', ink: '#f4f4f1' },
+  { id: 'home', name: 'Liam Vu', mode: 'subway', after: 'Eglinton, 1954', tile: 'Pearl Grey', trimName: 'Black', wall: '#dcd8dc', trim: '#1c1c1e', ink: '#1c1c1e' },
+  { id: 'social', name: 'Social', mode: 'subway', after: 'Union, 1954', tile: 'Primrose', trimName: 'American Red', wall: '#eedc94', trim: '#a8262b', ink: '#a8262b' },
+  { id: 'case-studies', name: 'Case studies', mode: 'bike', wall: '#1d8a4b', trim: '#16703c', ink: '#ffffff' },
+  { id: 'projects', name: 'Projects', mode: 'streetcar', wall: '#da251d', trim: '#b51c15', ink: '#f4f4f1' },
+  { id: 'art', name: 'Art', mode: 'subway', after: 'Museum, 1963', tile: 'Yellow', trimName: 'Blue', wall: '#e7cf7c', trim: '#2a4f8f', ink: '#2a4f8f', columns: true },
+  { id: 'about', name: 'About', mode: 'subway', after: 'College, 1954', tile: 'English Eggshell', trimName: 'American Red', wall: '#b3d4c8', trim: '#a8262b', ink: '#a8262b' },
+  { id: 'contact', name: 'Contact', mode: 'subway', after: 'St. Patrick, 1963', tile: 'Green', trimName: 'Forest Green', wall: '#7fae94', trim: '#24533b', ink: '#1f4632' },
 ];

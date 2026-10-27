@@ -18,6 +18,12 @@ Plain HTML/CSS/JS with Vite, GSAP 3.15 (ScrollTrigger) and Lenis. No framework.
 - `src/content.js`: Instagram embeds (lazy), YouTube facades, counters, seams, credits, fitted station names
 - `src/data.js`: reels, art posts and the station list. Optional `FEED_URL` (Behold.so JSON) makes the reels update automatically
 - `src/audio.js`: synthesized chimes, off by default
+- `src/glass.js`: WebGL Vitrolite tile walls (per-tile refraction, bevel light, sheen). Palettes per station are the real
+  1954/1963 TTC schemes in `src/data.js` (`after`, `tile`, `trimName`); CSS tiles are the fallback without WebGL
+- `src/art.js`: station signs, Museum columns, reel cards + player dialog, sketch-to-paint reveals, line maps, next-stop maps
+- Type: Jost = TTC signage (station names, places, nav, map stops); Fraunces = Liam's voice (greeting, section titles, quotes, labels)
+- Art images come from Liam's Instagram posts (`/p/<code>/media/?size=l`), cropped to the work; raw downloads live in `.taste-skill/raw/` (not shipped)
+- Pencil-sketch versions of photos are in `public/media/sketch/` (generated with PIL); `public/media/brush-reveal.png` is the brush mask sprite
 - `public/media/`: downloaded photos and clips; `credits.json` records source and licence and feeds the credits list
 
 ## Design rules (taste-skill, in `.devin/skills/taste-skill`)
@@ -26,7 +32,8 @@ Plain HTML/CSS/JS with Vite, GSAP 3.15 (ScrollTrigger) and Lenis. No framework.
 - Gate: `node .devin/skills/taste-skill/scripts/lint.mjs index.html src` and
   `node .devin/skills/taste-skill/scripts/inspect.mjs "http://localhost:5173/?nointro#/<station>" --allow late-title`
   (`late-title` is allowed on station deep links: the meter reads the first `h1` in the document, which belongs to a hidden station)
-- Dev film harness: `node .taste-skill/shots.mjs <plan.json>` (see `.taste-skill/*.json`)
+- Dev film harness: `node .taste-skill/shots.mjs <plan.json>` (see `.taste-skill/*.json`); supports wait, click, eval, wheel, key, clickAt, tap, back, log, shot
+- Persona test reports and plans live in `.taste-skill/tests/<persona>/` (recruiter, phone, artdirector, a11y, chaos)
 
 ## Facts on the page
 All facts come from Liam's LinkedIn, Instagram, YouTube, CIP, TRCA and Monumental pages (October 2026).

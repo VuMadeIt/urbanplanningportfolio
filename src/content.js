@@ -1,6 +1,5 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { reels, art, FEED_URL } from './data.js';
 import credits from '../public/media/credits.json';
 import { skylineSVG, stopPoleSVG } from './kit.js';
 
@@ -22,11 +21,12 @@ export function fitNames(scope = document) {
     el.style.width = '';
     const isRoad = el.classList.contains('road-name');
     const isStreet = el.classList.contains('street-name');
-    const targetW = box.width * (isRoad ? 0.66 : isStreet ? 0.96 : 0.9);
+    const phone = window.innerWidth < 760;
+    const targetW = box.width * (isRoad ? 0.66 : isStreet ? 0.96 : el.closest('.wall--art') ? (phone ? 0.6 : 0.68) : el.closest('.platform') && phone ? 0.8 : 0.9);
     const nLines = stacked ? lines.length : 1;
     const hero = el.closest('.hero');
     const streetRoom = isStreet && hero ? hero.clientHeight - hero.querySelector('.street').offsetHeight - hero.querySelector('.street-foot').offsetHeight - 64 - 24 : 0;
-    let maxH = isRoad ? box.height * 0.5 / 1.45 : isStreet ? Math.max(120, streetRoom) : box.height * (el.closest('.platform') ? 0.42 : 0.62);
+    let maxH = isRoad ? box.height * 0.5 / 1.45 : isStreet ? Math.max(120, streetRoom) : box.height * (el.closest('.platform') ? (window.innerWidth < 760 ? 0.34 : 0.42) : 0.62);
     let size = (100 * targetW) / widest;
     size = Math.min(size, maxH / (0.82 * nLines));
     el.style.setProperty('--fit', `${Math.max(40, Math.floor(size))}px`);
@@ -50,70 +50,23 @@ export function splitRoadNames() {
   });
 }
 
-/* ---------------- Instagram ---------------- */
+/* ---------------- Instagram's embed script, loaded once, only when a reel is played ---------------- */
 let igScript = null;
-function loadIgScript() {
+export function loadIgScript() {
   if (igScript) return igScript;
   igScript = new Promise((resolve) => {
     const s = document.createElement('script');
     s.src = 'https://www.instagram.com/embed.js';
     s.async = true;
     s.onload = () => resolve(window.instgrm);
-    s.onerror = () => resolve(null);
+    s.onerror = () => { igScript = null; resolve(null); };
     document.head.appendChild(s);
   });
   return igScript;
 }
-function igBlock(code, kind = 'reel') {
-  const url = `https://www.instagram.com/${kind}/${code}/`;
-  return `<blockquote class="instagram-media" data-instgrm-permalink="${url}?utm_source=ig_embed" data-instgrm-version="14" style="margin:0;width:100%;min-width:0;border:0;padding:0;background:transparent">
-    <a class="ig-fallback" href="${url}" target="_blank" rel="noopener">View on Instagram<small>Opens Instagram in a new tab</small></a></blockquote>`;
-}
-function igItem({ code, kind = 'reel', by, when, note }) {
-  const caption = [by && `<strong>${by}</strong>`, note, when].filter(Boolean).join(' · ');
-  return `<figure class="ig-item"><div class="ig-slot" data-ui>${igBlock(code, kind)}</div>${caption ? `<figcaption class="ig-caption">${caption}</figcaption>` : ''}</figure>`;
-}
 
-async function liveReels() {
-  if (!FEED_URL) return null;
-  try {
-    const res = await fetch(FEED_URL);
-    const data = await res.json();
-    const posts = Array.isArray(data) ? data : data.posts || [];
-    return posts.slice(0, 10).map((p) => {
-      const m = String(p.permalink || '').match(/instagram\.com\/(p|reel|tv)\/([^/?#]+)/);
-      return m && { code: m[2], kind: m[1] === 'tv' ? 'reel' : m[1], by: '@liamvutoronto', when: p.timestamp ? new Date(p.timestamp).toLocaleDateString('en-CA', { month: 'long', year: 'numeric' }) : '' };
-    }).filter(Boolean);
-  } catch { return null; }
-}
-
-export async function fillTracks() {
-  const reelTrack = document.querySelector('.reel-track');
-  if (reelTrack) {
-    reelTrack.innerHTML = reels.map((r) => igItem(r)).join('');
-    liveReels().then((live) => { if (live && live.length) reelTrack.innerHTML = live.map(igItem).join(''); });
-  }
-  const gal = document.querySelector('.gallery-track');
-  if (gal) {
-    gal.innerHTML = art.map((a) => igItem({ code: a.code, kind: a.kind })).join('');
-    const count = document.querySelector('[data-gallery-count]');
-    if (count) count.textContent = `(${art.length})`;
-  }
-  document.querySelectorAll('.ig-slot[data-ig]').forEach((slot) => (slot.innerHTML = igBlock(slot.dataset.ig, slot.dataset.igKind)));
-  [reelTrack, gal].forEach((t) => t && addTrackButtons(t));
-}
-
-/** Load embeds only for the station being visited, and only near the viewport */
-const igObserver = new IntersectionObserver(async (entries) => {
-  const hits = entries.filter((e) => e.isIntersecting);
-  if (!hits.length) return;
-  hits.forEach((e) => igObserver.unobserve(e.target));
-  const ig = await loadIgScript();
-  ig?.Embeds?.process();
-}, { rootMargin: '1200px 0px' });
-
-export function wakeEmbeds(station) {
-  station.querySelectorAll('.reel-track, .gallery-track, .live-reel, .feature-reels').forEach((el) => igObserver.observe(el));
+export function fillTracks() {
+  document.querySelectorAll('.reel-track').forEach(addTrackButtons);
 }
 
 /* ---------------- Horizontal tracks: drag with a mouse, buttons for everyone ---------------- */
@@ -159,9 +112,17 @@ export function enableVideos() {
     frame.title = btn.getAttribute('aria-label').replace(/^Play: /, '');
     frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
     frame.allowFullscreen = true;
+    frame.dataset.poster = '1';
+    posters.set(frame, btn);
     btn.replaceWith(frame);
     frame.focus();
   });
+}
+const posters = new WeakMap();
+/** Leaving a station stops its videos: the poster comes back */
+export function stopVideos(scope) {
+  scope.querySelectorAll('iframe[data-poster]').forEach((f) => { const b = posters.get(f); if (b) f.replaceWith(b); });
+  scope.querySelectorAll('video').forEach((v) => v.pause());
 }
 
 /* ---------------- Muted loops: play only while seen ---------------- */
@@ -189,7 +150,7 @@ const revealObserver = new IntersectionObserver((entries) => {
     e.target.classList.add('is-in');
     revealObserver.unobserve(e.target);
   }
-}, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
+}, { rootMargin: '0px 0px -4% 0px', threshold: 0.01 });
 // pictures start opening just before they enter, so no blank band is ever on screen for long
 const shutterObserver = new IntersectionObserver((entries) => {
   for (const e of entries) {
@@ -198,6 +159,14 @@ const shutterObserver = new IntersectionObserver((entries) => {
     shutterObserver.unobserve(e.target);
   }
 }, { rootMargin: '0px 0px 10% 0px', threshold: 0 });
+/** Show anything already on screen (a safety net for fast scrolling) */
+export function revealVisible() {
+  const h = window.innerHeight;
+  document.querySelectorAll('.station.is-current [data-reveal]:not(.is-in), .station.is-current .shutter:not(.is-in)').forEach((el) => {
+    const r = el.getBoundingClientRect();
+    if (r.top < h * 0.98 && r.bottom > 0) { el.classList.add('is-in'); revealObserver.unobserve(el); }
+  });
+}
 export function watchReveals() {
   // stagger siblings that share a parent, in reading order
   const groups = new Map();
@@ -221,7 +190,7 @@ const countObserver = new IntersectionObserver((entries) => {
     if (reduced.matches) continue;
     const obj = { v: 0 };
     gsap.to(obj, {
-      v: end, duration: end > 100 ? 1.6 : 0.8, ease: 'power3.out',
+      v: end, duration: end > 100 ? 1.0 : 0.6, ease: 'power3.out',
       onUpdate: () => (el.textContent = Math.round(obj.v).toLocaleString('en-CA')),
     });
   }
@@ -234,16 +203,16 @@ export function watchCounts() {
 export function buildSeams() {
   if (reduced.matches) return;
   document.querySelectorAll('[data-seam]').forEach((seam) => {
-    const l = seam.querySelector('.seam-pane--left img');
-    const r = seam.querySelector('.seam-pane--right img');
+    const img = seam.querySelector('.seam-pane--left img');
     const tl = seam.querySelector('.seam-half--l');
     const tr = seam.querySelector('.seam-half--r');
-    const st = { trigger: seam, start: 'top bottom', end: 'bottom top', scrub: true };
-    gsap.timeline({ scrollTrigger: st })
-      .fromTo(l, { yPercent: 9 }, { yPercent: -9, ease: 'none' }, 0)
-      .fromTo(r, { yPercent: -9 }, { yPercent: 9, ease: 'none' }, 0)
-      .fromTo(tl, { yPercent: 60 }, { yPercent: -60, ease: 'none' }, 0)
-      .fromTo(tr, { yPercent: -60 }, { yPercent: 60, ease: 'none' }, 0);
+    // the title tears as the photo enters and leaves, and is whole while it fills the screen
+    gsap.timeline({ scrollTrigger: { trigger: seam, start: 'top bottom', end: 'bottom top', scrub: true } })
+      .fromTo(img, { yPercent: 6 }, { yPercent: -6, ease: 'none', duration: 1 }, 0)
+      .fromTo(tl, { yPercent: 45 }, { yPercent: 0, ease: 'power2.out', duration: 0.38 }, 0)
+      .fromTo(tr, { yPercent: -45 }, { yPercent: 0, ease: 'power2.out', duration: 0.38 }, 0)
+      .to(tl, { yPercent: -45, ease: 'power2.in', duration: 0.38 }, 0.62)
+      .to(tr, { yPercent: 45, ease: 'power2.in', duration: 0.38 }, 0.62);
   });
 }
 
@@ -255,5 +224,5 @@ export function renderCredits() {
     .map((el) => (el.getAttribute('src') || el.getAttribute('poster')).split('/').pop()));
   const items = credits.filter((c) => used.has(c.file.split('/').pop()) || (c.media === 'video' && used.has(c.file.split('/').pop())));
   list.innerHTML = items.map((c) => `<li><a class="link" href="${c.page}" target="_blank" rel="noopener">${c.title}</a> by ${c.creator}, <a class="link" href="${c.licenseUrl}" target="_blank" rel="noopener">${c.license}</a>, via ${c.via}.</li>`).join('') +
-    '<li>Portrait and video stills: Liam Vu, from his YouTube channel. Train, streetcar, bike and street drawings made for this site.</li>';
+    '<li>Paintings, sketches, reel covers, portraits and video stills: Liam Vu, from his Instagram and YouTube. Pencil versions of the photographs, tile walls, trains, streetcar, bike and street drawings made for this site.</li>';
 }

@@ -1,0 +1,343 @@
+/* =========================================================
+   Round two: Liam's voice, Vitrolite glass, line maps, the gallery
+   ========================================================= */
+
+/* ---------- Two voices ----------
+   Jost speaks for the TTC: station names, signs, places, the map.
+   Fraunces speaks for Liam: what he says, his headings, his work. Soft serifs, a little wonky, warm. */
+:root { --voice: 'Fraunces Variable', 'Fraunces', Georgia, serif; }
+.greet, .section-title, .close-title, .bio-lead, .quote p, .mic-item h3, .school-name, .label strong,
+.practice-list dt, .video-title, .reel-card strong, .case-cols h4, .gallery-more, .index-row h3 {
+  font-family: var(--voice);
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 100, 'WONK' 0;
+}
+.greet { font-style: italic; font-weight: 420; letter-spacing: -0.03em; line-height: 0.95; font-variation-settings: 'SOFT' 100, 'WONK' 1; }
+.section-title, .close-title { font-weight: 480; letter-spacing: -0.025em; }
+.close-title, .open-text .section-title { font-style: italic; font-variation-settings: 'SOFT' 100, 'WONK' 1; }
+.bio-lead, .quote p { font-weight: 400; letter-spacing: -0.012em; }
+.bio-lead strong { font-weight: 600; }
+.case-cols h4 { font-size: 22px; font-weight: 500; font-style: italic; }
+.mic-item h3, .index-row h3, .practice-list dt { font-weight: 500; }
+
+/* ---------- Vitrolite glass walls ---------- */
+.wall .glass { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; display: block; }
+.wall.has-glass::after { display: none; }
+.wall .wall-sign { z-index: 3; }
+.wall--home { --wall: #dcd8dc; --trim: #1c1c1e; --name: #1c1c1e; }
+.wall--social { --wall: #eedc94; --trim: #a8262b; --name: #a8262b; }
+.wall--art { --wall: #e7cf7c; --trim: #2a4f8f; --name: #2a4f8f; }
+.wall--about { --wall: #b3d4c8; --trim: #a8262b; --name: #a8262b; }
+.wall--contact { --wall: #7fae94; --trim: #24533b; --name: #1f4632; }
+.wall-sign { gap: 12px; padding: 10px 14px 10px 10px; max-width: min(440px, calc(100vw - 2 * var(--m))); line-height: 1.3; }
+.sign-swatches { display: inline-flex; flex: none; }
+.sign-swatches i { width: 22px; height: 30px; display: block; border: 2px solid #fff; }
+.sign-swatches i + i { margin-left: -2px; }
+.sign-text strong { font-weight: 600; display: block; }
+.sign-text span { font-weight: 400; opacity: 0.85; }
+
+/* Museum station: columns stand in front of the glass */
+.columns { position: absolute; inset: 64px 0 0 0; z-index: 3; pointer-events: none; }
+.column { position: absolute; top: 0; bottom: 0; width: clamp(64px, 7.5vw, 124px); }
+.column svg { width: 100%; height: 100%; }
+.column--lotus { left: clamp(12px, 3vw, 48px); }
+.column--doric { right: clamp(12px, 3vw, 48px); }
+.wall--art .wall-sign { right: calc(var(--m) + clamp(64px, 7.5vw, 124px) + 16px); }
+
+/* ---------- Line maps: lists that are journeys ---------- */
+.lm { --lc: var(--yellow); --dot-top: 0.15em; position: relative; padding-left: 68px; }
+.lm--green { --lc: #00923f; }
+.lm--red { --lc: var(--red); }
+.lm::before {
+  content: ''; position: absolute; left: 22px; width: 12px; border-radius: 6px;
+  top: var(--lm-top, 16px); bottom: var(--lm-bottom, 16px); background: var(--lc);
+  transform-origin: top; transform: scaleY(var(--draw, 1));
+}
+.lm > * { position: relative; }
+.lm > *::before {
+  content: ''; position: absolute; left: -58px; top: var(--dot-top); width: 36px; height: 36px; border-radius: 50%;
+  background: var(--paper); border: 7px solid var(--ink); box-sizing: border-box;
+  transition: background-color 400ms ease, transform 500ms var(--ease-out);
+}
+.lm > .is-lit::before { background: var(--lc); }
+.lm > :first-child::before, .lm > :last-child::before { width: 40px; height: 40px; left: -60px; border-width: 8px; }
+.route-list::before, .route-stop::before { all: unset; }
+.route-list.lm::before { content: ''; position: absolute; left: 22px; width: 12px; border-radius: 6px; top: 16px; bottom: 16px; background: var(--lc); transform-origin: top; transform: scaleY(var(--draw, 1)); }
+.route-list.lm > .route-stop::before { content: ''; position: absolute; left: -58px; top: var(--dot-top); width: 36px; height: 36px; border-radius: 50%; background: var(--paper); border: 7px solid var(--ink); box-sizing: border-box; transition: background-color 400ms ease; }
+.route-list.lm > .route-stop.is-lit::before { background: var(--lc); }
+.route-list.lm { padding-left: 68px; }
+.awards.lm { gap: 26px; }
+.awards.lm > div { --dot-top: -2px; }
+
+/* Social: platforms as stations on Line 1 */
+.platform-rows.lm { margin: 0 var(--m); padding-left: 68px; --lm-top: 38px; --lm-bottom: 38px; }
+.platform-rows.lm li { --dot-top: calc(22px + 0.2 * var(--t-big) - 18px); }
+.platform-rows.lm li:nth-child(odd) a { background: transparent; }
+.platform-rows.lm a { padding-left: 0; padding-right: 0; }
+.platform-rows.lm li { transition: background-color var(--t-hover) ease; }
+@media (hover: hover) and (pointer: fine) {
+  .platform-rows.lm a:hover { background: transparent; }
+  .platform-rows.lm li:hover::before { background: var(--lc); transform: scale(1.18); }
+}
+
+/* Projects: a streetcar route */
+.index-list.lm { margin: 0 var(--m); --lm-top: 40px; --lm-bottom: 40px; }
+.index-list.lm .index-row { padding-left: 0; padding-right: 0; background: transparent; --dot-top: 24px; }
+@media (hover: hover) and (pointer: fine) {
+  .index-list.lm .index-row:hover { background: transparent; }
+  .index-list.lm .index-row:hover::before { background: var(--lc); transform: scale(1.18); }
+}
+
+/* Horizontal strip map */
+.lmh { --lc: var(--yellow); display: flex; position: relative; }
+.lmh--green { --lc: #00923f; }
+.lmh::before { content: ''; position: absolute; left: 18px; right: 18px; top: 13px; height: 12px; border-radius: 6px; background: var(--lc); transform-origin: left; transform: scaleX(var(--draw, 1)); }
+.lmh li { position: relative; flex: 1 1 0; min-width: 0; padding-top: 52px; }
+.lmh li:last-child { flex: 0 0 auto; text-align: right; }
+.lmh li::before { content: ''; position: absolute; left: 0; top: 0; width: 38px; height: 38px; border-radius: 50%; background: var(--paper); border: 7px solid var(--ink); box-sizing: border-box; }
+.lmh li:last-child::before { left: auto; right: 0; }
+.lmh a, .lmh .lmh-label { display: inline-grid; gap: 2px; text-decoration: none; padding-right: 12px; }
+.lmh span { font-weight: 600; font-size: 20px; letter-spacing: -0.01em; line-height: 1.15; }
+.lmh small { font-size: var(--t-small); }
+@media (hover: hover) and (pointer: fine) { .lmh a:hover span { text-decoration: underline; text-underline-offset: 4px; } }
+
+.route-strip { padding: var(--section) var(--m) var(--section); display: grid; gap: 28px; }
+.route-strip-title { font-weight: 600; font-size: var(--t-small); }
+.route-strip + .case { margin-top: 0; }
+
+/* The next-stop board carries the whole line, with you on it */
+.next-map { --lc: var(--yellow); margin-top: 40px; overflow-x: auto; scrollbar-width: none; }
+.next-map::-webkit-scrollbar { display: none; }
+.next-map .lmh { min-width: 760px; }
+.next-map .lmh li::before { background: var(--ink); border-color: var(--paper); }
+.next-map .lmh li.is-here::before { background: var(--paper); }
+.next-map .lmh li.is-next::before { background: var(--amber); border-color: var(--amber); animation: next-pulse 1.6s ease-in-out infinite; }
+.next-map .lmh span { font-size: var(--t-small); font-weight: 500; }
+.next-map .lmh small { color: var(--amber); }
+.next-map .lmh a { color: var(--paper); }
+@keyframes next-pulse { 50% { transform: scale(1.18); } }
+
+/* Home: the in-car route map */
+.stoplist { position: relative; gap: 2px; }
+.stoplist::before { content: ''; position: absolute; left: 29px; width: 12px; top: 26px; bottom: 30px; border-radius: 6px; background: var(--yellow-deep); transform-origin: top; transform: scaleY(var(--draw, 1)); }
+.stoplist li { position: relative; }
+.stop { background: transparent; padding-left: 13px; }
+.stop-mode { border: 4px solid #e4e5e3; width: 44px; height: 44px; box-sizing: content-box; margin-left: -4px; }
+.stop-here { display: grid; grid-template-columns: 44px 1fr; grid-template-rows: auto auto; column-gap: 16px; align-items: center; padding: 6px 14px 10px 13px; }
+.stop-dot { grid-row: 1 / span 2; justify-self: center; width: 36px; height: 36px; border-radius: 50%; background: var(--paper); border: 8px solid var(--ink); box-sizing: border-box; position: relative; z-index: 1; }
+.stop-here .stop-note { font-weight: 600; color: var(--red-strong); }
+@media (hover: hover) and (pointer: fine) { .stop:hover { background: rgba(18, 18, 18, 0.07); } }
+
+/* ---------- Reel cards and the player ---------- */
+.reel-track { gap: 18px; }
+.reel-card { flex: none; width: 250px; scroll-snap-align: start; margin: 0; }
+.feature-reels .reel-card, .feature-reels [data-reel] { width: min(250px, 46%); }
+.reel-btn { position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; overflow: hidden; background: var(--ink); color: #fff; text-align: left; }
+.reel-btn img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transition: transform 900ms var(--ease-soft); }
+.reel-play { position: absolute; right: 14px; bottom: 14px; width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: var(--red); transition: transform var(--t-ui) var(--ease-out); }
+.reel-play svg { width: 22px; height: 22px; margin-left: 3px; }
+.reel-likes { position: absolute; left: 0; bottom: 0; padding: 8px 12px; background: rgba(10, 10, 10, 0.72); font-size: var(--t-small); font-weight: 600; }
+.reel-series { position: absolute; left: 0; top: 0; padding: 8px 12px; background: var(--yellow); color: var(--ink); font-size: 13px; font-weight: 600; }
+.reel-card figcaption { margin-top: 12px; display: grid; gap: 2px; }
+.reel-card strong { font-size: 20px; font-weight: 500; line-height: 1.15; letter-spacing: -0.01em; }
+.reel-card span { font-size: var(--t-small); }
+.reel-btn:active .reel-play { transform: scale(0.92); }
+@media (hover: hover) and (pointer: fine) {
+  .reel-btn:hover img { transform: scale(1.05); }
+  .reel-btn:hover .reel-play { transform: scale(1.12); }
+}
+
+.player { padding: 0; border: 0; background: transparent; max-width: none; max-height: none; width: 100%; height: 100%; }
+.player::backdrop { background: rgba(8, 8, 8, 0.86); }
+.player-inner { position: relative; width: min(420px, 92vw); max-height: 92vh; margin: 4vh auto 0; overflow-y: auto; background: #fff; color: var(--ink); }
+.player-slot { min-height: 520px; }
+.player-slot iframe { width: 100% !important; min-width: 0 !important; margin: 0 !important; border: 0 !important; border-radius: 0 !important; }
+.player-meta { padding: 12px 16px 16px; font-size: var(--t-small); }
+.player-close { position: sticky; top: 0; float: right; z-index: 2; display: grid; place-items: center; width: 48px; height: 48px; background: var(--ink); color: #fff; }
+.player-close svg { width: 22px; height: 22px; }
+.player[open] .player-inner { animation: player-in 420ms var(--ease-expo); }
+@keyframes player-in { from { opacity: 0; transform: translateY(24px) scale(0.98); } }
+
+/* ---------- The gallery: real works, hung on a museum wall ---------- */
+.gallery { background: #22314a; color: var(--paper); padding: var(--section) var(--m); margin-bottom: var(--section); }
+.gallery .section-title { margin-bottom: 64px; }
+.hang { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 72px; align-items: start; }
+.work { margin: 0; }
+.work--a { grid-column: 1 / 8; }
+.work--b { grid-column: 9 / 13; grid-row: 1 / span 2; }
+.work--c { grid-column: 2 / 5; }
+.work--d { grid-column: 5 / 8; margin-top: 64px; }
+.work-frame { position: relative; background: #f6f3ec; padding: clamp(14px, 2.2vw, 34px); border: 10px solid #15110d; }
+.work-frame::after { content: ''; position: absolute; z-index: -1; inset: 14px -14px -14px 14px; background: rgba(0, 0, 0, 0.28); }
+.work-frame img { width: 100%; height: auto; transition: transform 900ms var(--ease-soft); }
+.work { position: relative; z-index: 0; }
+.label { margin-top: 22px; display: grid; gap: 4px; max-width: 34ch; padding: 12px 14px; background: #f6f3ec; color: var(--ink); font-size: var(--t-small); }
+.label strong { font-size: 19px; font-weight: 500; font-style: italic; }
+.gallery-more { display: inline-block; margin-top: 72px; font-size: 22px; font-style: italic; }
+@media (hover: hover) and (pointer: fine) { .work:hover .work-frame img { transform: scale(1.02); } }
+
+.process { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 40px; padding: 0 var(--m) var(--section); align-items: center; }
+.process figure { margin: 0; overflow: hidden; }
+.process-a { grid-column: 1 / 5; }
+.process-a img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 30%; }
+.process-text { grid-column: 5 / 9; display: grid; gap: 20px; padding: 0 clamp(0px, 2vw, 32px); }
+.process-b { grid-column: 9 / 13; }
+.process-b img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 40%; }
+.live-photo { grid-column: 8 / 13; margin: 0; justify-self: end; width: min(100%, 440px); }
+.live-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 30%; }
+.live-photo figcaption { margin-top: 12px; font-size: var(--t-small); }
+
+.case-art { margin: 28px 0 0; max-width: 420px; }
+.case-art img { width: 100%; border: 8px solid #15110d; background: #f6f3ec; padding: 10px; }
+.case-art figcaption { margin-top: 10px; font-size: var(--t-small); font-style: italic; font-family: var(--voice); }
+
+/* ---------- Sketch first, then the photograph is painted in ---------- */
+.paint-box { position: relative; display: block; overflow: hidden; }
+.paint-box > img:not(.paint-sketch), .paint-box > video { position: relative; z-index: 1; }
+.paint-sketch { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; }
+.city-panel .paint-box { height: 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .paint-box.is-waiting > img:not(.paint-sketch), .js .paint-box.is-waiting > video,
+  .js .paint-box.is-painting > img:not(.paint-sketch), .js .paint-box.is-painting > video {
+    -webkit-mask-image: url('/media/brush-reveal.png'); mask-image: url('/media/brush-reveal.png');
+    -webkit-mask-size: 2400% 100%; mask-size: 2400% 100%;
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    -webkit-mask-position: 0% 0; mask-position: 0% 0;
+  }
+  .js .paint-box.is-painting > img:not(.paint-sketch), .js .paint-box.is-painting > video {
+    animation: paint-in 1.6s steps(23) 0.45s forwards;
+  }
+}
+@keyframes paint-in { to { -webkit-mask-position: 100% 0; mask-position: 100% 0; } }
+
+/* ---------- Phone ---------- */
+@media (max-width: 1100px) {
+  .live-photo { grid-column: 8 / 13; }
+  .work--a { grid-column: 1 / 9; }
+  .work--b { grid-column: 9 / 13; }
+}
+@media (max-width: 760px) {
+  .lm { padding-left: 52px; }
+  .lm::before, .route-list.lm::before { left: 14px; width: 10px; }
+  .lm > *::before, .route-list.lm > .route-stop::before { left: -48px; width: 30px; height: 30px; border-width: 6px; }
+  .lm > :first-child::before, .lm > :last-child::before { left: -50px; width: 34px; height: 34px; }
+  .route-list.lm { padding-left: 52px; }
+  .platform-rows.lm, .index-list.lm { padding-left: 52px; }
+  .platform-rows.lm li { --dot-top: 24px; }
+  .lmh span { font-size: 16px; }
+  .lmh small { font-size: 13px; }
+  .reel-card { width: 210px; }
+  .feature-reels { flex-direction: row !important; }
+  .feature-reels [data-reel] { width: 48%; }
+  .gallery .section-title { margin-bottom: 40px; }
+  .hang { row-gap: 48px; }
+  .work--a, .work--b, .work--c, .work--d { grid-column: 1 / -1; grid-row: auto; margin-top: 0; }
+  .work--b { width: 78%; justify-self: end; }
+  .work--c { width: 86%; }
+  .process-a, .process-text, .process-b, .live-photo { grid-column: 1 / -1; }
+  .process-text { padding: 0; }
+  .process-a, .process-b { width: 82%; }
+  .process-b { justify-self: end; }
+  .live-photo { justify-self: start; }
+  .wall-sign { font-size: 13px; }
+  .sign-text span { display: none; }
+}
+
+/* =========================================================
+   Fixes from user testing
+   ========================================================= */
+:root { --section: clamp(80px, 10vw, 150px); }
+
+/* Focus is always visible: dark ring on light ground, yellow on dark */
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.next-stop :focus-visible, .station--contact :focus-visible, .gallery :focus-visible, .stops-sheet :focus-visible,
+.bar:not(.is-solid) :focus-visible, .ride :focus-visible, .lane-foot :focus-visible, .street-foot :focus-visible { outline-color: var(--yellow); }
+.greet:focus, .greet:focus-visible { outline: none; }
+
+/* The bar changes at once, never half see-through */
+.bar { transition: color 200ms ease, transform 500ms var(--ease-out), opacity 400ms ease; }
+
+/* Headings and captions break into even lines */
+h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .video-title { text-wrap: balance; }
+.school-name { font-family: var(--font); font-weight: 500; }
+
+/* Case studies: one photograph across the stage; the title tears, then mends */
+.seam { grid-template-columns: 1fr; }
+.seam-pane img { width: 100%; left: 0; right: auto; }
+.seam-pane::after { background: rgba(10, 10, 10, 0.46); }
+.case-figure { display: flex; flex-direction: column; align-items: flex-end; max-width: none; }
+.case-figure span { white-space: nowrap; }
+.case-figure { font-size: var(--t-small); }
+.case-figure::after { content: none; }
+
+/* Projects: the reel cards keep their size */
+.feature-reels .reel-card { width: 100%; }
+.feature-reels [data-reel] { width: min(250px, 47%); flex: none; }
+.reel-series { display: none; }
+.reel-likes { top: 0; bottom: auto; }
+
+/* The gallery hangs on shared centrelines */
+.hang { align-items: center; }
+.work--a { grid-column: 1 / 8; grid-row: 1; }
+.work--b { grid-column: 9 / 13; grid-row: 1; }
+.work--c { grid-column: 2 / 6; grid-row: 2; }
+.work--d { grid-column: 7 / 11; grid-row: 2; margin-top: 0; }
+.work .label { min-height: 92px; }
+.case-art img { border: 10px solid #15110d; background: #f6f3ec; padding: 12px; }
+
+/* Next-stop map: room for the pulse, big enough to tap */
+.next-map { padding-top: 8px; margin-top: 32px; }
+.next-map .lmh a { min-height: 44px; }
+.lmh a { min-height: 44px; }
+
+/* Projects stop pole stands below the name */
+.street-stop { height: 100%; bottom: 0; z-index: 0; right: 6%; }
+
+/* YouTube posters: play button out of the headline's way */
+.play { left: 20px; top: auto; bottom: 20px; margin: 0; }
+
+/* Dark pages draw their sketches in chalk */
+.station--contact .paint-sketch { filter: invert(0.9); }
+@media (prefers-reduced-motion: no-preference) {
+  .js .paint-box.is-painting > img:not(.paint-sketch), .js .paint-box.is-painting > video { animation-duration: 1.2s; animation-delay: 0.15s; }
+}
+
+/* Credits disclose like a button */
+.credits summary { list-style: none; gap: 10px; }
+.credits summary::-webkit-details-marker { display: none; }
+.credits summary::before { content: '+'; font-size: 22px; line-height: 1; width: 1em; }
+.credits[open] summary::before { content: '–'; }
+
+/* Small text links get a full tap target */
+.mic-item .link, .feature-text .link, .ticks .link, .live-photo .link, .player-meta .link { display: inline-flex; align-items: center; min-height: 44px; }
+.wordmark { min-height: 44px; }
+
+/* The home stop list slides in from below, never past the edge */
+.car { overflow-x: clip; }
+
+/* Museum columns: capital, shaded shaft, base */
+.column { display: flex; flex-direction: column; }
+.column svg { height: auto; width: 100%; flex: none; }
+.column .col-shaft { flex: 1; width: 100%; display: block; }
+.column .col-base { flex: none; height: auto; }
+
+/* Short screens (phones held sideways) */
+@media (max-height: 520px) {
+  .reel-card { width: 170px; }
+  .player-inner { margin-top: 2vh; max-height: 96vh; }
+}
+@media (max-width: 760px) {
+  .feature-reels [data-reel] { width: 47%; }
+  .work--a, .work--b, .work--c, .work--d { grid-row: auto; }
+}
+
+/* One left edge for section headings */
+.figures-inner { grid-column: 1 / 8; }
+.figures .section-title, .figures-note { margin-left: 0; }
+.city .section-title { padding-left: 0; }
+@media (max-width: 760px) { .figures .section-title, .figures-note { margin-left: 0; } }
+
+/* Headings never wait invisible for their entrance: they slide, they don't fade from nothing */
+@media (prefers-reduced-motion: no-preference) {
+  .js .section-title[data-reveal], .js .gallery-title[data-reveal] { opacity: 1; }
+}
