@@ -350,3 +350,20 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 [data-stat].is-ticked { animation: tick 900ms var(--ease-out); }
 @keyframes tick { 0% { color: var(--red); } 100% { color: inherit; } }
 @media (prefers-reduced-motion: reduce) { .figures-note.is-live .live-dot, [data-stat].is-ticked { animation: none; } }
+
+/* Sketch and paint, both ways: paint in from the edge you meet first, wash back to pencil on the way out */
+@media (prefers-reduced-motion: no-preference) {
+  .js .paint-box.is-erasing > img:not(.paint-sketch), .js .paint-box.is-erasing > video {
+    -webkit-mask-image: url('/media/brush-reveal.png'); mask-image: url('/media/brush-reveal.png');
+    -webkit-mask-size: 2400% 100%; mask-size: 2400% 100%;
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    -webkit-mask-position: 100% 0; mask-position: 100% 0;
+    animation: paint-out 0.7s steps(23) forwards;
+  }
+  .js .paint-box.from-top > img:not(.paint-sketch), .js .paint-box.from-top > video {
+    -webkit-mask-image: url('/media/brush-reveal-up.png'); mask-image: url('/media/brush-reveal-up.png');
+  }
+  /* coming back to a picture you have seen: a quicker stroke */
+  .js .paint-box.from-top.is-painting > img:not(.paint-sketch), .js .paint-box.from-top.is-painting > video { animation-duration: 1s; animation-delay: 0.05s; }
+}
+@keyframes paint-out { from { -webkit-mask-position: 100% 0; mask-position: 100% 0; } to { -webkit-mask-position: 0% 0; mask-position: 0% 0; } }

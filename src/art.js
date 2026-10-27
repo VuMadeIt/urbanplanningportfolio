@@ -155,17 +155,43 @@ export function enablePlayer(getLenis) {
 }
 
 /* ---------------- Sketch first, then paint ---------------- */
+// Two ways. A picture paints itself in from the edge you meet first: its top when you scroll down,
+// its bottom when you scroll back up. When it slips off screen it washes back to pencil, ready to paint again.
+const PAINT_AT = 0.18;   // share of the picture (or of the screen, for tall pictures) that must be showing
+const ERASE_AT = 0.06;
+const setState = (box, state, fromTop) => {
+  box.classList.remove('is-waiting', 'is-painting', 'is-erasing', 'from-top');
+  if (fromTop) box.classList.add('from-top');
+  if (state) box.classList.add(state);
+  box.dataset.ink = state || 'done';
+};
 const paintObserver = new IntersectionObserver((entries) => {
   for (const e of entries) {
-    if (!e.isIntersecting) continue;
     const box = e.target;
-    paintObserver.unobserve(box);
-    box.classList.remove('is-waiting');
-    box.classList.add('is-painting');
-    const media = box.querySelector('img:not(.paint-sketch), video');
-    media?.addEventListener('animationend', () => box.classList.remove('is-painting'), { once: true });
+    const state = box.dataset.ink;
+    const root = e.rootBounds?.height || window.innerHeight;
+    const showing = Math.max(e.intersectionRatio, e.intersectionRect.height / root);
+    const above = e.boundingClientRect.top < (e.rootBounds?.top ?? 0); // the picture's top is above the screen
+    if (!e.isIntersecting) {
+      // fully off screen: back to pencil without anyone seeing the change
+      if (state !== 'is-waiting') setState(box, 'is-waiting');
+      continue;
+    }
+    if (showing >= PAINT_AT && (state === 'is-waiting' || state === 'is-erasing')) {
+      // entering from above (scrolling up): paint from the bottom edge, the part that shows first
+      setState(box, 'is-painting', above);
+    } else if (showing < ERASE_AT && (state === 'done' || state === 'is-painting')) {
+      // leaving: wash back to pencil, starting from the edge that is still in view
+      setState(box, 'is-erasing', !above);
+    }
   }
-}, { rootMargin: '0px', threshold: 0.12 });
+}, { rootMargin: '0px', threshold: [0, 0.03, ERASE_AT, 0.12, PAINT_AT, 0.3, 0.5] });
+
+function onPaintEnd(e) {
+  const box = e.currentTarget.parentElement;
+  if (box.dataset.ink === 'is-painting') setState(box, null);
+  else if (box.dataset.ink === 'is-erasing') setState(box, 'is-waiting');
+}
 
 export function enablePaint() {
   document.querySelectorAll('[data-paint]').forEach((fig) => {
@@ -183,12 +209,13 @@ export function enablePaint() {
     sk.alt = '';
     sk.loading = 'lazy';
     sk.decoding = 'async';
-    sk.onerror = () => { sk.remove(); box.classList.remove('is-waiting'); };
+    sk.onerror = () => { sk.remove(); paintObserver.unobserve(box); setState(box, null); };
     box.prepend(sk);
     const pos = () => { sk.style.objectPosition = getComputedStyle(media).objectPosition; };
     pos();
     if (reduced.matches) return;
-    box.classList.add('is-waiting');
+    setState(box, 'is-waiting');
+    media.addEventListener('animationend', onPaintEnd);
     paintObserver.observe(box);
   });
 }
