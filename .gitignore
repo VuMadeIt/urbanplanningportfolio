@@ -3,3 +3,4 @@ dist
 .taste-skill
 *.log
 .DS_Store
+.vercel
