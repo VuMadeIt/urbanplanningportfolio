@@ -83,12 +83,11 @@
         </div></div>
       </div>
       <div class="intro-tools">
-        <button class="intro-sound" type="button" data-intro-sound>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5c1 1 1.5 2.2 1.5 3.5s-.5 2.5-1.5 3.5M18.5 6c1.7 1.6 2.5 3.7 2.5 6s-.8 4.4-2.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          Board with sound
-        </button>
-        <button class="intro-quiet" type="button" data-intro-quiet>Board quietly</button>
-        <button class="skip-intro" type="button" id="skip-intro">Skip intro</button>
+        <p class="intro-ask">Ride with sound?</p>
+        <div class="stop-buttons">
+          <button class="stop-btn" type="button" data-intro-sound><span class="stop-cap"><span>STOP</span></span><span class="stop-label">Board with sound</span></button>
+          <button class="stop-btn stop-btn--quiet" type="button" data-intro-quiet><span class="stop-cap"><span>STOP</span></span><span class="stop-label">Board quietly</span></button>
+        </div>
       </div>
 
       <header class="hero hero--subway" id="car">
@@ -120,28 +119,6 @@
             <p data-reveal>Outside work and school you will find him volunteering with advocacy groups, at networking events, painting outdoors, learning K-pop choreography, or playing with his two-year-old brother, Duncan.</p>
           </div>
         </div>
-      </section>
-
-      <section class="hire" aria-labelledby="hire-title">
-        <div class="hire-text">
-          <h2 class="section-title" id="hire-title" data-reveal>Open to summer roles</h2>
-          <p data-reveal>Urban planning, real estate and social media. His reel says the rest.</p>
-          <a class="button" href="https://www.linkedin.com/in/liamhoangvu" target="_blank" rel="noopener" data-reveal>Message him on LinkedIn</a>
-        </div>
-        <figure class="car-screen">
-            <div class="screen-bezel">
-              <p class="screen-head"><span>Now showing</span><span>Liam Vu · 0:26</span></p>
-              <div class="screen-glass">
-                <video class="screen-video" muted loop playsinline preload="metadata" poster="/media/hire-liam-poster.jpg" width="720" height="1280" data-autoplay data-hire aria-label="Liam’s reel: we’re hiring a summer student? Reliable, hard worker, communicative, research skills, positive, based in Toronto. Open to roles in urban planning and social media.">
-                  <source src="/media/hire-liam.mp4" type="video/mp4">
-                </video>
-                <button class="screen-sound" type="button" aria-pressed="false" data-hire-sound>
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5c1 1 1.5 2.2 1.5 3.5s-.5 2.5-1.5 3.5M18.5 6c1.7 1.6 2.5 3.7 2.5 6s-.8 4.4-2.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  <span>Play with sound</span>
-                </button>
-              </div>
-            </div>
-          </figure>
       </section>
 
       <section class="stops-pair" aria-labelledby="pair-title">

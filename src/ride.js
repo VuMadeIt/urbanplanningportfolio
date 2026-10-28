@@ -141,7 +141,7 @@ function subwayRide(from, to, swap, reveal) {
     .fromTo(marker || document.createElement('i'), { '--fill': 0 }, { '--fill': 1, duration: 1.8, ease: 'power2.inOut' }, 0.95)
     .to(doors, { x: -6, duration: 0.18, yoyo: true, repeat: 1, ease: 'sine.out' }, 2.72)
     .call(() => { swap(); el.querySelector('.ride-led-a').textContent = 'Arriving at'; }, null, 2.78)
-    .call(() => { chimeOpen(); say([`arriving-${to.id}`, DOORS[to.id] || 'doors-right'], { queue: true }); }, null, 2.9)
+    .call(chimeOpen, null, 2.9)
     .to(out, { opacity: 0, duration: 0.15, ease: 'none' }, 3.0)
     .to(L, { xPercent: -100, duration: 0.65, ease: 'power3.inOut' }, 3.0)
     .to(R, { xPercent: 100, duration: 0.65, ease: 'power3.inOut' }, 3.0)

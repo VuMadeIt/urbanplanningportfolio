@@ -53,11 +53,12 @@ export function runIntro({ onBoarded, glass, onSkip }) {
   const soundBtn = document.querySelector('[data-intro-sound]');
   // The train waits for you: browsers only allow sound after a click, so boarding is that click.
   const quietBtn = document.querySelector('[data-intro-quiet]');
+  if (soundBtn) gsap.set(platform, { scale: 1.9, transformOrigin: '50% 18%' });
   const board = (withSound) => {
     sound.set(withSound);
-    soundBtn.hidden = true;
-    if (quietBtn) quietBtn.hidden = true;
-    if (tl.paused()) tl.play();
+    document.querySelector('.intro-tools')?.classList.add('is-gone');
+    // step back from the wall: the platform and track come into view, then the train arrives
+    gsap.to(platform, { scale: 1, duration: 1.3, ease: 'power3.inOut', onComplete: () => { if (tl.paused()) tl.play(); } });
   };
   soundBtn?.addEventListener('click', () => board(true));
   quietBtn?.addEventListener('click', () => board(false));
@@ -74,7 +75,6 @@ export function runIntro({ onBoarded, glass, onSkip }) {
     window.removeEventListener('keydown', onKey);
     window.removeEventListener('resize', onResize);
     sessionStorage.setItem('lv-boarded', '1');
-    if (doorsOpen || sound.on) say(['welcome'], { queue: true });
     onBoarded?.();
   };
 
@@ -90,7 +90,7 @@ export function runIntro({ onBoarded, glass, onSkip }) {
     .to(platform.querySelector('.headlight'), { opacity: 0, duration: 0.5 }, 1.7)
     .set(streaks, { opacity: 0 })
     .to(trainEl, { x: () => g.stopX + 7 * g.s, duration: 0.22, ease: 'sine.out', yoyo: true, repeat: 1 })
-    .call(() => { arrivals.textContent = 'Doors open'; chimeOpen(); doorsOpen = true; say(['arriving-home', 'doors-right']); }, null, '+=0.1')
+    .call(() => { arrivals.textContent = 'Doors open'; chimeOpen(); doorsOpen = true; }, null, '+=0.1')
     .to(svg.querySelectorAll('.dl'), { x: -80, duration: 0.85, ease: 'power2.inOut' }, '+=0.12')
     .to(svg.querySelectorAll('.dr'), { x: 80, duration: 0.85, ease: 'power2.inOut' }, '<')
     // step aboard: the camera walks into the open door in the middle of the screen
@@ -110,10 +110,10 @@ export function runIntro({ onBoarded, glass, onSkip }) {
 
   const skipNow = () => { if (!done) finish(); };
   const skipByHand = () => { if (!done) { finish(); onSkip?.(); } };
-  skip.addEventListener('click', skipByHand);
+  skip?.addEventListener('click', skipByHand);
   const onKey = (e) => { if (e.key === 'Escape' || (e.key === 'Enter' && document.activeElement === document.body)) skipByHand(); };
   window.addEventListener('keydown', onKey);
-  skip.addEventListener('click', () => window.removeEventListener('keydown', onKey));
+
 
   return { skip: skipNow };
 }
