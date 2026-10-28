@@ -592,3 +592,5 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 .close { grid-template-rows: auto auto 1fr auto auto; }
 .close-legal, .close-name { grid-row: auto; }
 .credits { grid-row: auto; }
+.close { display: flex; flex-direction: column; }
+.close-legal { margin-top: auto; }
