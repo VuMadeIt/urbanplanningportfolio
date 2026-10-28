@@ -22,7 +22,6 @@
 <body data-station="home">
   <a class="skip" href="#main" data-skip>Skip to content</a>
 
-  <!-- ============ HEADER: the in-car line map ============ -->
   <header class="bar" id="bar">
     <a class="wordmark" href="#/" data-ride="home" aria-label="Liam Vu, home station">
       <span class="wordmark-name">Liam Vu</span>
@@ -46,7 +45,6 @@
     </div>
   </header>
 
-  <!-- Phone line map sheet -->
   <div class="stops-sheet" id="stops-sheet" role="dialog" aria-modal="true" aria-label="Stops on the Liam Vu Line" data-lenis-prevent hidden>
     <p class="stops-sheet-title">Liam Vu Line</p>
     <ol class="stops-sheet-list">
@@ -61,12 +59,8 @@
 
   <main id="main">
 
-    <!-- ===================================================== -->
-    <!-- HOME — Liam Vu station: platform intro + inside the car -->
-    <!-- ===================================================== -->
     <section class="station station--home is-current" id="home" data-mode="subway" data-title="Liam Vu">
 
-      <!-- The platform: the train arrives here on load -->
       <div class="platform" id="platform">
         <div class="wall wall--home" data-glass="home">
           <div class="wall-trim"></div>
@@ -240,9 +234,6 @@
       </nav>
     </section>
 
-    <!-- ===================================================== -->
-    <!-- SOCIAL — subway, Line 1 yellow wall                    -->
-    <!-- ===================================================== -->
     <section class="station station--social" id="social" data-mode="subway" data-title="Social">
       <header class="hero hero--subway">
         <div class="wall wall--social" data-glass="social">
@@ -297,7 +288,6 @@
           <p class="reels-lead" data-reveal>Straight from Instagram: his own channel and the reels he made with Monumental, TRCA and The Laneway Project.</p>
         </div>
         <div class="reel-track" data-drag tabindex="0" role="region" aria-label="Instagram reels, scroll sideways">
-          <!-- Filled from src/data.js (or a live feed, if one is configured) -->
         </div>
       </section>
 
@@ -369,9 +359,6 @@
       </nav>
     </section>
 
-    <!-- ===================================================== -->
-    <!-- CASE STUDIES — the bike lane                            -->
-    <!-- ===================================================== -->
     <section class="station station--case" id="case-studies" data-mode="bike" data-title="Case studies">
       <header class="hero hero--bike">
         <div class="lane">
@@ -487,9 +474,6 @@
       </nav>
     </section>
 
-    <!-- ===================================================== -->
-    <!-- PROJECTS — streetcar stop                               -->
-    <!-- ===================================================== -->
     <section class="station station--projects" id="projects" data-mode="streetcar" data-title="Projects">
       <header class="hero hero--street">
         <h1 class="street-name station-name" tabindex="-1">Projects<span class="vh"> by Liam Vu</span></h1>
@@ -579,9 +563,6 @@
       </nav>
     </section>
 
-    <!-- ===================================================== -->
-    <!-- ART — streetcar stop                                    -->
-    <!-- ===================================================== -->
     <section class="station station--art" id="art" data-mode="subway" data-title="Art">
       <header class="hero hero--subway">
         <div class="wall wall--art" data-glass="art">
@@ -676,12 +657,7 @@
       </nav>
     </section>
 
-    <!-- ===================================================== -->
-    <!-- ABOUT — subway, TMU blue                                -->
 
-    <!-- ===================================================== -->
-    <!-- CONTACT — subway, end of the line                       -->
-    <!-- ===================================================== -->
     <section class="station station--contact" id="contact" data-mode="subway" data-title="Contact">
       <header class="hero hero--subway">
         <div class="wall wall--contact" data-glass="contact">
@@ -744,9 +720,6 @@
       </footer>
     </section>
 
-    <!-- ===================================================== -->
-    <!-- THE OLIVIA CHOW SHRINE — a hidden stop                  -->
-    <!-- ===================================================== -->
     <section class="station station--shrine" id="shrine" data-mode="subway" data-title="Olivia Chow Shrine">
       <header class="hero hero--shrine">
         <div class="shrine-sky" aria-hidden="true"><span class="shrine-star"></span><span class="shrine-star"></span><span class="shrine-star"></span><span class="shrine-star"></span><span class="shrine-star"></span></div>
@@ -879,7 +852,7 @@
         <p class="next-stop-led">Leaving the shrine</p>
         <a class="next-stop-link" href="#/" data-ride="home"><span>Liam Vu</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
-        <p class="next-stop-mode">Please exit quietly</p>
+        <p class="next-stop-mode">Back to the line</p>
       </nav>
     </section>
   </main>
@@ -894,11 +867,9 @@
     </div>
   </dialog>
 
-  <!-- The ride layer: transitions are drawn in here -->
   <div class="ride" id="ride" aria-hidden="true"></div>
   <p class="vh" aria-live="polite" id="announcer"></p>
 
-  <!-- Pictograms -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <filter id="pencil-ink"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter>
     <symbol id="i-subway" viewBox="0 0 32 32"><rect x="6" y="3" width="20" height="20" rx="5" fill="currentColor"/><rect x="9" y="7" width="14" height="7" rx="1.5" fill="var(--pict-bg, #fff)"/><circle cx="11" cy="18" r="1.8" fill="var(--pict-bg, #fff)"/><circle cx="21" cy="18" r="1.8" fill="var(--pict-bg, #fff)"/><path d="M10 23l-3 6h3l2-4h8l2 4h3l-3-6z" fill="currentColor"/></symbol>
