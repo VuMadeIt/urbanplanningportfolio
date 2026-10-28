@@ -114,17 +114,17 @@ function revealHero(id) {
     settleEntrances();
     const tl = gsap.timeline({ onComplete: () => heroTimelines.delete(id) });
     if (el.querySelector('.hero--subway')) {
-      tl.from(el.querySelectorAll('.floor > *, .wall-sign'), { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.1);
+      tl.fromTo(el.querySelectorAll('.floor > *, .wall-sign'), { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.08, ease: 'power3.out', clearProps: 'transform,opacity' }, 0.1);
     } else if (el.querySelector('.hero--street')) {
       tl.from(name, { yPercent: 30, opacity: 0, duration: 1, ease: 'expo.out' })
         .from(el.querySelector('.street-skyline'), { yPercent: 14, duration: 1.2, ease: 'expo.out' }, 0)
         .from(el.querySelector('.street-stop'), { yPercent: 8, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.15)
-        .from(el.querySelectorAll('.street-foot > *'), { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.25);
+        .fromTo(el.querySelectorAll('.street-foot > *'), { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.08, ease: 'power3.out', clearProps: 'transform,opacity' }, 0.25);
     } else if (el.querySelector('.hero--bike')) {
       tl.from(name.querySelectorAll('.rl'), { x: '-12vw', opacity: 0, duration: 1, stagger: 0.1, ease: 'expo.out' })
         .from(el.querySelector('.lane-stencil'), { x: -40, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.1)
         .from(el.querySelector('.lane-arrow'), { x: 40, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.2)
-        .from(el.querySelectorAll('.lane-foot > *'), { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, 0.25);
+        .fromTo(el.querySelectorAll('.lane-foot > *'), { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.08, ease: 'power3.out', clearProps: 'transform,opacity' }, 0.25);
     } else if (el.querySelector('.hero--shrine')) {
       // you step off the train; the square is dark; then the light comes down on her
       tl.set(el.querySelector('.hero--shrine'), { '--lit': 0 })

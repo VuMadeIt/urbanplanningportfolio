@@ -9,6 +9,7 @@ export const FEED_URL = '';
 
 /** Reels on the Social station. Covers live in public/media/reels/<code>.jpg */
 export const reels = [
+  { code: 'De97BNQyUl3', title: 'Vote today, until 8 p.m.', by: '@liamvutoronto', when: 'October 2026', likes: 3602 },
   { code: 'DcOkmuiymGW', title: 'What is adaptive reuse?', by: '@liamvutoronto', when: 'August 2026', likes: 180, series: 'One Minute Urbanism' },
   { code: 'Db52C25Sbgu', title: 'What are third places?', by: '@liamvutoronto', when: 'August 2026', likes: 178, series: 'One Minute Urbanism' },
   { code: 'DYXmxBVxKOs', title: 'Greetings from Ookwemin Minising', by: 'with @monumentalprojects', when: 'May 2026', likes: 971 },

@@ -74,7 +74,7 @@ function reelCard(r) {
       <img src="${cover}" width="540" height="960" alt="" loading="lazy" decoding="async">${series}${likes}
       <span class="reel-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
     </button>
-    <figcaption><strong>${r.title}</strong><span>${r.by} · ${r.when}</span></figcaption>
+    <figcaption><strong>${r.title}</strong><span>${r.by}&nbsp;· <span class="nowrap">${r.when}</span></span></figcaption>
   </figure>`;
 }
 
