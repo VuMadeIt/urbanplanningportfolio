@@ -13,7 +13,10 @@ Plain HTML/CSS/JS with Vite, GSAP 3.15 (ScrollTrigger) and Lenis. No framework.
 ## Structure
 - `index.html`: all page content (every station is a `<section class="station">`, only `.is-current` shows when JS runs; without JS they all show stacked)
 - `src/main.js`: boot, hash router, Lenis, bar colour, hero entrances
-- `src/intro.js`: platform intro (train arrives, doors open, camera boards)
+- `src/intro.js`: platform intro (train arrives, doors open, camera boards). It waits zoomed in on the wall; the two
+  boarding buttons (`.tile-btn`) live inside `#platform .wall` and `layTiles()` snaps them to the tile grid as 2x1 slabs that
+  `glass.js` draws (`setButtons`, `buttonState`). Never position them against `#home`: that section is ~7,000px tall.
+  Measure walls with `offsetWidth/Height`, not `getBoundingClientRect`, because the platform is scaled while waiting
 - `src/ride.js`: transitions, chosen by the destination's mode: `subway` (inside the car: doors, tunnel), `streetcar` (stop, Flexity pulls in), `bike` (green lane, cyclist)
 - `src/kit.js`: SVG drawings (Toronto Rocket, Flexity, cyclist, stop pole, skyline)
 - `src/content.js`: Instagram embeds (lazy), YouTube facades, counters, seams, credits, fitted station names
