@@ -180,3 +180,43 @@ export function choir(duration = 4.5) {
     }
   });
 }
+
+/** Outdoors on the bike lane: birdsong, a little wind, the tick of a freewheel */
+export function outdoors(duration = 2.6) {
+  if (!enabled || !ensure()) return;
+  const t0 = ctx.currentTime;
+  // wind: soft filtered noise
+  const len = Math.floor(ctx.sampleRate * (duration + 0.5));
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const wind = ctx.createBufferSource(); wind.buffer = buf;
+  const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 0.6;
+  const wg = ctx.createGain();
+  wg.gain.setValueAtTime(0.0001, t0); wg.gain.exponentialRampToValueAtTime(0.05, t0 + 0.5); wg.gain.exponentialRampToValueAtTime(0.0001, t0 + duration + 0.4);
+  wind.connect(bp).connect(wg).connect(master); wind.start(t0); wind.stop(t0 + duration + 0.5);
+  // birds: quick falling and rising chirps from two or three birds
+  const chirp = (at, f0, f1, len2, gain) => {
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(f0, at); o.frequency.exponentialRampToValueAtTime(f1, at + len2);
+    g.gain.setValueAtTime(0.0001, at); g.gain.exponentialRampToValueAtTime(gain, at + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, at + len2);
+    o.connect(g).connect(master); o.start(at); o.stop(at + len2 + 0.02);
+  };
+  for (let b = 0; b < 3; b++) {
+    let t = t0 + 0.2 + b * 0.55 + Math.random() * 0.3;
+    const base = 2600 + b * 700 + Math.random() * 400;
+    const n = 3 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < n && t < t0 + duration; i++) {
+      chirp(t, base * 1.25, base * 0.8, 0.07, 0.05);
+      t += 0.1 + Math.random() * 0.08;
+    }
+  }
+  // freewheel ticks
+  for (let t = t0 + 1.4; t < t0 + duration; t += 0.045) {
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.type = 'square'; o.frequency.value = 5200;
+    g.gain.setValueAtTime(0.012, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.012);
+    o.connect(g).connect(master); o.start(t); o.stop(t + 0.015);
+  }
+}

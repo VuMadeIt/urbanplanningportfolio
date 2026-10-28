@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import { stations } from './data.js';
 import { streetcarSVG, streetcarDoorX, streetcarWidth, STREETCAR, cyclistSVG, poseCyclist, skylineSVG, stopPoleSVG } from './kit.js';
-import { chimeClose, chimeOpen, gong, bell, say, rideSound } from './audio.js';
+import { chimeClose, chimeOpen, gong, bell, say, rideSound, outdoors } from './audio.js';
 import { reduced } from './content.js';
 
 const DOORS = { shrine: 'doors-right', home: 'doors-right', social: 'doors-right', art: 'doors-left', about: 'doors-left', contact: 'doors-left' };
@@ -222,7 +222,7 @@ function bikeRide(from, to, swap, reveal) {
 
   active = gsap.timeline({ onComplete: () => { gsap.ticker.remove(pedal); end(); } })
     .fromTo(lane, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.55, ease: 'power3.inOut' })
-    .call(() => { bell(); say(['next-case-studies'], { delay: 0.45 }); }, null, 0.3)
+    .call(() => { outdoors(2.6); bell(); say(['next-case-studies'], { delay: 0.6 }); }, null, 0.2)
     .fromTo(marksEl, { x: 0 }, { x: -vw * 2.2, duration: 2.3, ease: 'power1.inOut' }, 0)
     .fromTo(rider, { x: -vw * 0.45 }, { x: vw * 0.5 - rider.offsetWidth / 2, duration: 0.85, ease: 'power3.out' }, 0.25)
     .call(swap, null, 1.15)
