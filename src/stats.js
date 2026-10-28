@@ -51,15 +51,17 @@ export function applyStats(scope = document) {
   paintUpdated();
 }
 
+// The Action commits fresh counts to GitHub every 30 minutes; the copy deployed with the site is only as new as
+// the last deploy. Read both and keep whichever was updated more recently.
+const SOURCES = ['https://raw.githubusercontent.com/VuMadeIt/urbanplanningportfolio/main/public/stats.json', '/stats.json'];
+const fetchStats = (url) => fetch(`${url}?t=${Date.now()}`, { cache: 'no-store' })
+  .then((r) => (r.ok ? r.json() : null)).then((d) => (d && typeof d === 'object' ? d : null)).catch(() => null);
+
 async function load() {
-  try {
-    const res = await fetch(`/stats.json?t=${Date.now()}`, { cache: 'no-store' });
-    if (!res.ok) return;
-    const data = await res.json();
-    if (!data || typeof data !== 'object') return;
-    last = data;
-    applyStats();
-  } catch { /* offline or no file: the numbers in the HTML stand */ }
+  const found = (await Promise.all(SOURCES.map(fetchStats))).filter(Boolean);
+  if (!found.length) return; // offline or no file: the numbers in the HTML stand
+  last = found.sort((a, b) => new Date(b.updated || 0) - new Date(a.updated || 0))[0];
+  applyStats();
 }
 
 export function startLiveStats() {
