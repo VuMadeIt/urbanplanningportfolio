@@ -10,6 +10,25 @@ Plain HTML/CSS/JS with Vite, GSAP 3.15 (ScrollTrigger) and Lenis. No framework.
 - `npm run stats`: refresh `public/stats.json` (live follower/like/view counts) by hand; `npm run build:offline` skips it
 - `?nointro` skips the train intro; `#/social`, `#/case-studies`, `#/projects`, `#/art`, `#/about`, `#/contact` open a station directly
 
+## Deploy
+- Live: https://urbanplanningportfolio.vercel.app (Vercel project `lucasmadeits-projects/urbanplanningportfolio`, linked in `.vercel/`)
+- GitHub: https://github.com/VuMadeIt/urbanplanningportfolio (public). Vercel is NOT git-connected (the Vercel account has no
+  access to the VuMadeIt GitHub account), so deploy by hand: `npx --yes vercel@65.0.0 deploy --prod --yes`
+- Live counts still update without a redeploy: `src/stats.js` reads `public/stats.json` from raw.githubusercontent.com and the
+  deployed copy, and keeps the newer one. Pull before pushing: the stats bot commits to `main` every 30 minutes
+- Pushing needs the `gh` token's `workflow` scope (`.github/workflows/stats.yml`)
+
+## Checks (dev-only, in `.taste-skill/tests/`)
+- `node .taste-skill/tests/live/e2e.mjs [url] [--phone]`: rides the whole site (intro, every station, back, reel player,
+  stops sheet, shrine, sound toggle, deep link, live counts), and fails on any failed request or console error
+- `node .taste-skill/tests/mobile/audit.mjs [--shots] [--sizes=390x844,768x1024] [--only=social,art]`: phone/tablet
+  overflow, 2-word text columns, small text, small tap targets
+- `node .taste-skill/tests/mobile/hero.mjs [--shots]`: anything in a hero cut off, incl. short phones and landscape
+- `node .taste-skill/tests/tiles/vp.mjs`: intro boarding buttons fully on screen at ten viewports
+- `python .taste-skill/tests/live/links.py`: outbound links (LinkedIn 999 and ListenNotes 403 are bot blocks, not dead links)
+- Station calls are made with Kokoro (`.taste-skill/raw/tts/make.py`); the current voice is `af_bella`. Check what a new
+  clip says with faster-whisper before shipping it (other spellings of "Vu" come out as "vous")
+
 ## Structure
 - `index.html`: all page content (every station is a `<section class="station">`, only `.is-current` shows when JS runs; without JS they all show stacked)
 - `src/main.js`: boot, hash router, Lenis, bar colour, hero entrances
