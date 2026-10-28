@@ -570,3 +570,17 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
   .monument-bust { width: 58vw; }
   .monument-plinth { width: 74vw; padding-bottom: 34vh; }
 }
+
+/* ---------- Art: dance break ---------- */
+.dance { display: grid; grid-template-columns: auto 1fr; gap: clamp(24px, 4vw, 64px); align-items: center; margin: 0 var(--m) var(--section); padding: clamp(32px, 5vw, 64px); background: var(--yellow); color: var(--ink); }
+.dance-text { display: grid; gap: 18px; justify-items: start; max-width: 52ch; }
+.dancer { width: clamp(90px, 10vw, 140px); }
+@media (prefers-reduced-motion: no-preference) {
+  .dancer { animation: groove 0.9s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+  .dancer-arm-l { animation: arm-l 0.45s ease-in-out infinite alternate; transform-origin: 48px 50px; }
+  .dancer-arm-r { animation: arm-r 0.45s ease-in-out infinite alternate-reverse; transform-origin: 72px 50px; }
+}
+@keyframes groove { from { transform: rotate(-5deg) translateY(0); } to { transform: rotate(5deg) translateY(-6px); } }
+@keyframes arm-l { from { transform: rotate(-20deg); } to { transform: rotate(35deg); } }
+@keyframes arm-r { from { transform: rotate(20deg); } to { transform: rotate(-35deg); } }
+@media (max-width: 760px) { .dance { grid-template-columns: 1fr; } }
