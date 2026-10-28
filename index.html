@@ -96,101 +96,20 @@
         <button class="skip-intro" type="button" id="skip-intro">Skip intro</button>
       </div>
 
-      <!-- Inside the car: the home screen -->
-      <div class="car" id="car">
-        <div class="car-body">
-          <svg class="car-riders" viewBox="0 0 560 240" aria-hidden="true" focusable="false">
-            <rect x="0" y="226" width="560" height="14" fill="#cfd0cc"/>
-            <rect x="0" y="6" width="560" height="6" rx="3" fill="#bfc1bd"/>
-            <g fill="#c9cac6">
-              <rect x="70" y="12" width="4" height="40"/><rect x="62" y="50" width="20" height="10" rx="5"/>
-              <circle cx="72" cy="86" r="17"/><path d="M50 108h44l8 70H42z"/><path d="M84 112 74 60l6-2 12 52z"/><rect x="50" y="176" width="14" height="50"/><rect x="80" y="176" width="14" height="50"/>
-              <circle cx="190" cy="92" r="16"/><path d="M168 114h44l6 64h-56z"/><rect x="210" y="118" width="22" height="34" rx="4"/><rect x="170" y="176" width="13" height="50"/><rect x="198" y="176" width="13" height="50"/>
-              <path d="M214 136l20-10 3 6-20 10z"/>
-              <rect x="318" y="12" width="4" height="40"/><rect x="310" y="50" width="20" height="10" rx="5"/>
-              <circle cx="330" cy="88" r="17"/><path d="M306 110h48l6 68h-60z"/><path d="M322 114 316 60l6-1 8 54z"/><rect x="308" y="176" width="15" height="50"/><rect x="336" y="176" width="15" height="50"/>
-              <circle cx="455" cy="96" r="15"/><path d="M434 116h42l8 62h-58z"/><path d="M470 128h22v20h-22z"/><rect x="438" y="176" width="13" height="50"/><rect x="462" y="176" width="13" height="50"/>
-            </g>
-          </svg>
-          <div class="pole pole--left" aria-hidden="true"></div>
-          <figure class="car-screen">
-            <div class="screen-bezel">
-              <p class="screen-head"><span>Now showing</span><span>Liam Vu · 0:26</span></p>
-              <div class="screen-glass">
-                <video class="screen-video" muted loop playsinline preload="metadata" poster="/media/hire-liam-poster.jpg" width="720" height="1280" data-autoplay data-hire aria-label="Liam’s reel: we’re hiring a summer student? Reliable, hard worker, communicative, research skills, positive, based in Toronto. Open to roles in urban planning and social media.">
-                  <source src="/media/hire-liam.mp4" type="video/mp4">
-                </video>
-                <button class="screen-sound" type="button" aria-pressed="false" data-hire-sound>
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5c1 1 1.5 2.2 1.5 3.5s-.5 2.5-1.5 3.5M18.5 6c1.7 1.6 2.5 3.7 2.5 6s-.8 4.4-2.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  <span>Play with sound</span>
-                </button>
-              </div>
-            </div>
-            <figcaption>Open to summer roles in planning, real estate and social media. <a class="link" href="https://www.linkedin.com/in/liamhoangvu" target="_blank" rel="noopener">Message him on LinkedIn</a>.</figcaption>
-          </figure>
-          <div class="pole pole--right" aria-hidden="true"></div>
-          <div class="car-greeting">
-            <h1 class="greet lines" tabindex="-1">
-              <span class="line"><span data-line style="--i:0">Hey, it’s me,</span></span>
-              <span class="line"><span data-line style="--i:1">Liam Vu.</span></span>
-            </h1>
-            <p class="greet-lead" data-load style="--d:420ms">The Urban Planning Influencer. I make city-building easy to follow on Instagram, TikTok and YouTube, and I study urban planning at Toronto Metropolitan University.</p>
-            <a class="button" href="#/social" data-ride="social" data-load style="--d:520ms">Ride to Social
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>
-            </a>
-          </div>
-          <div class="car-stops">
-            <h2 class="car-stops-title"><span class="led-text">Where to?</span><span class="led-aside">Doors open</span></h2>
-            <ol class="stoplist">
-              <li class="stop-here" aria-hidden="true"><span class="stop-dot"></span><span class="stop-name">Liam Vu</span><span class="stop-note">You are here</span></li>
-              <li><a href="#/social" data-ride="social" class="stop stop--subway">
-                <span class="stop-mode" aria-hidden="true"><svg><use href="#i-subway"/></svg></span>
-                <span class="stop-name">Social media</span>
-                <span class="stop-note">The numbers, the reels, the podcast</span>
-              </a></li>
-              <li><a href="#/case-studies" data-ride="case-studies" class="stop stop--bike">
-                <span class="stop-mode" aria-hidden="true"><svg><use href="#i-bike"/></svg></span>
-                <span class="stop-name">Case studies</span>
-                <span class="stop-note">Downsview, the waterfront, the Meadoway</span>
-              </a></li>
-              <li><a href="#/projects" data-ride="projects" class="stop stop--streetcar">
-                <span class="stop-mode" aria-hidden="true"><svg><use href="#i-streetcar"/></svg></span>
-                <span class="stop-name">Projects</span>
-                <span class="stop-note">Videos, a podcast, live painting</span>
-              </a></li>
-              <li><a href="#/art" data-ride="art" class="stop stop--subway">
-                <span class="stop-mode" aria-hidden="true"><svg><use href="#i-subway"/></svg></span>
-                <span class="stop-name">Art</span>
-                <span class="stop-note">Paintings, sketches, live painting</span>
-              </a></li>
-              <li><a href="#bio-title" data-jump class="stop stop--subway">
-                <span class="stop-mode" aria-hidden="true"><svg><use href="#i-subway"/></svg></span>
-                <span class="stop-name">About Liam</span>
-                <span class="stop-note">Jobs, conferences, school, awards: just below</span>
-              </a></li>
-              <li><a href="#/contact" data-ride="contact" class="stop stop--subway">
-                <span class="stop-mode" aria-hidden="true"><svg><use href="#i-subway"/></svg></span>
-                <span class="stop-name">Contact me</span>
-                <span class="stop-note">Email, LinkedIn, socials</span>
-              </a></li>
-            </ol>
-          </div>
-          <ul class="car-cards" aria-label="Featured">
-            <li class="card card--wide"><a href="#pair-title" data-jump>
-              <span class="card-pic"><video muted loop playsinline preload="none" poster="/media/ttc-line-1-subway-train-at-dundas-poster.jpg" width="854" height="480" aria-hidden="true" data-autoplay><source src="/media/ttc-line-1-subway-train-at-dundas.webm" type="video/webm"></video></span>
-              <span class="card-text">Line 1 at Dundas, a block from TMU. <strong>His home and school stops</strong></span></a></li>
-            <li class="card"><a href="#/projects" data-ride="projects">
-              <span class="card-pic"><img src="/media/yt-OzqEFPckPuE.jpg" width="1280" height="720" alt="Liam in a still from his YouTube video" loading="lazy" decoding="async"></span>
-              <span class="card-text">Now on YouTube. <strong>Projects</strong></span></a></li>
-            <li class="card"><a href="#/case-studies" data-ride="case-studies">
-              <span class="card-pic"><img src="/media/the-meadoway-in-scarborough-toronto-ontario.jpg" width="1600" height="1200" alt="Wildflowers under hydro towers in the Meadoway" loading="lazy" decoding="async"></span>
-              <span class="card-text">The Meadoway. <strong>Case studies</strong></span></a></li>
-            <li class="card"><a href="#/case-studies" data-ride="case-studies">
-              <span class="card-pic"><img src="/media/port-lands-2025.jpg" width="1600" height="1200" alt="The Port Lands on Toronto’s waterfront" loading="lazy" decoding="async"></span>
-              <span class="card-text">Ookwemin Minising. <strong>Case studies</strong></span></a></li>
-          </ul>
+      <header class="hero hero--subway" id="car">
+        <div class="wall wall--home" data-glass="home">
+          <div class="wall-trim"></div>
+          <h1 class="wall-name station-name" tabindex="-1"><span class="wall-word">Liam</span> <span class="wall-word">Vu</span><span class="vh">, the Urban Planning Influencer</span></h1>
+          <p class="wall-sign" data-sign></p>
         </div>
-      </div>
+        <div class="track"><span class="rail"></span><span class="rail"></span></div>
+        <div class="edge"><div class="tactile"></div><div class="floor">
+          <p class="hero-lead">The Urban Planning Influencer. Urban and Regional Planning student at TMU, content creator and painter, from Downsview, Toronto.</p>
+          <a class="next-sign" href="#/social" data-ride="social">Next: Social
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></a>
+        </div></div>
+      </header>
+
       <div class="home-about" id="about-liam">
       <section class="bio" aria-labelledby="bio-title">
         <h2 class="vh" id="bio-title">About Liam</h2>
@@ -206,6 +125,28 @@
             <p data-reveal>Outside work and school you will find him volunteering with advocacy groups, at networking events, painting outdoors, learning K-pop choreography, or playing with his two-year-old brother, Duncan.</p>
           </div>
         </div>
+      </section>
+
+      <section class="hire" aria-labelledby="hire-title">
+        <div class="hire-text">
+          <h2 class="section-title" id="hire-title" data-reveal>Open to summer roles</h2>
+          <p data-reveal>Urban planning, real estate and social media. His reel says the rest.</p>
+          <a class="button" href="https://www.linkedin.com/in/liamhoangvu" target="_blank" rel="noopener" data-reveal>Message him on LinkedIn</a>
+        </div>
+        <figure class="car-screen">
+            <div class="screen-bezel">
+              <p class="screen-head"><span>Now showing</span><span>Liam Vu · 0:26</span></p>
+              <div class="screen-glass">
+                <video class="screen-video" muted loop playsinline preload="metadata" poster="/media/hire-liam-poster.jpg" width="720" height="1280" data-autoplay data-hire aria-label="Liam’s reel: we’re hiring a summer student? Reliable, hard worker, communicative, research skills, positive, based in Toronto. Open to roles in urban planning and social media.">
+                  <source src="/media/hire-liam.mp4" type="video/mp4">
+                </video>
+                <button class="screen-sound" type="button" aria-pressed="false" data-hire-sound>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5c1 1 1.5 2.2 1.5 3.5s-.5 2.5-1.5 3.5M18.5 6c1.7 1.6 2.5 3.7 2.5 6s-.8 4.4-2.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Play with sound</span>
+                </button>
+              </div>
+            </div>
+          </figure>
       </section>
 
       <section class="stops-pair" aria-labelledby="pair-title">

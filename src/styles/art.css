@@ -417,7 +417,6 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 .conf-pic { max-width: 150px; }
 
 /* ---------- Home: the route map above the doors, and the people riding with you ---------- */
-body[data-station='home'] .linemap { visibility: hidden; }
 .car-map { position: relative; z-index: 2; margin: 0 var(--m); padding: 14px 18px 18px; background: #fff; overflow-x: auto; scrollbar-width: none; }
 .car-map::-webkit-scrollbar { display: none; }
 .car-map-title { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
@@ -539,3 +538,9 @@ body[data-station='home'] .linemap { visibility: hidden; }
   .shrine-vote-text, .shrine-vote [data-reel] { grid-column: 1 / -1; }
 }
 @media (prefers-reduced-motion: reduce) { .shrine-motes, .shrine-star { animation: none; } }
+
+/* ---------- Home: the hire-me reel as its own section ---------- */
+.hire { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 32px; padding: 0 var(--m) var(--section); align-items: center; }
+.hire-text { grid-column: 1 / 7; display: grid; gap: 20px; justify-items: start; }
+.hire .car-screen { grid-column: 8 / 12; justify-self: start; width: min(100%, 300px); margin: 0; }
+@media (max-width: 760px) { .hire-text, .hire .car-screen { grid-column: 1 / -1; } .hire .car-screen { width: min(72vw, 290px); } }

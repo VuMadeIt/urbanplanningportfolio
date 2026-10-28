@@ -23,7 +23,7 @@ const byId = Object.fromEntries(stations.map((s) => [s.id, s]));
 const bar = document.getElementById('bar');
 const car = document.getElementById('car');
 const announcer = document.getElementById('announcer');
-const heroInk = { home: '#121212', social: '#ffffff', 'case-studies': '#ffffff', projects: '#f4f4f1', shrine: '#e9c46a', art: '#ffffff', about: '#ffffff', contact: '#ffffff' };
+const heroInk = { home: '#ffffff', social: '#ffffff', 'case-studies': '#ffffff', projects: '#f4f4f1', shrine: '#e9c46a', art: '#ffffff', about: '#ffffff', contact: '#ffffff' };
 
 let current = 'home';
 let lenis = null;
@@ -135,36 +135,20 @@ function revealHero(id) {
         .fromTo(el.querySelector('.shrine-glow'), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.8, ease: 'expo.out' }, 1.1)
         .call(() => choir(), null, 0.95)
         .from(el.querySelectorAll('.shrine-copy > *'), { y: 24, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'expo.out' }, 1.5);
-    } else if (id === 'home') {
-      tl.kill();
-      greet();
     }
-    if (id !== 'home') heroTimelines.set(id, tl);
+    heroTimelines.set(id, tl);
   }
   (name || document.querySelector('.greet'))?.focus?.({ preventScroll: true });
 }
 
 function greet() {
-  if (reduced.matches) return;
-  settleEntrances();
-  const tl = gsap.timeline({ onComplete: () => heroTimelines.delete('home') })
-    .from(car.querySelectorAll('.greet [data-line]'), { yPercent: 105, duration: 0.9, stagger: 0.11, ease: 'expo.out' })
-    .from(car.querySelectorAll('.greet-lead, .car-greeting .button'), { y: 16, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' }, 0.3)
-    .from(car.querySelectorAll('.stoplist li'), { y: 14, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out' }, 0.3)
-    .fromTo(car.querySelector('.stoplist'), { '--draw': 0 }, { '--draw': 1, duration: 1.1, ease: 'power3.inOut' }, 0.3)
-    .from(car.querySelectorAll('.card'), { yPercent: 30, opacity: 0, duration: 0.8, stagger: 0.07, ease: 'expo.out' }, 0.35)
-    .from(car.querySelector('.pole--left'), { scaleY: 0, transformOrigin: 'top', duration: 0.9, ease: 'expo.out' }, 0.1)
-    .from(car.querySelector('.screen-bezel'), { y: 24, opacity: 0, duration: 0.7, ease: 'expo.out' }, 0.25)
-    .fromTo(car.querySelector('.screen-glass'), { scaleY: 0.006, scaleX: 0.5, filter: 'brightness(3)' }, { scaleY: 1, scaleX: 1, filter: 'brightness(1)', duration: 0.6, ease: 'expo.out', clearProps: 'filter,transform' }, 0.75)
-    .from(car.querySelector('.led-text'), { xPercent: 40, opacity: 0, duration: 0.9, ease: 'expo.out' }, 0.25)
-    .from(car.querySelectorAll('.car-riders g > *'), { y: 16, opacity: 0, duration: 0.8, stagger: 0.015, ease: 'expo.out' }, 0.4);
-  heroTimelines.set('home', tl);
+  revealHero('home');
 }
 
 /* ---------------- The bar: clear over the hero's top, solid once you scroll ---------------- */
 function paintBar() {
   const scrolled = (lenis ? lenis.scroll : window.scrollY) > 8;
-  const solid = scrolled || current === 'home';
+  const solid = scrolled;
   bar.classList.toggle('is-solid', solid);
   bar.style.setProperty('--bar-ink', solid ? '' : heroInk[current]);
 }
