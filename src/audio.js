@@ -1,7 +1,7 @@
 // Every sound is synthesized: no recordings, nothing to download. Off until the visitor turns it on.
 let ctx = null;
 let master = null;
-let enabled = localStorage.getItem('lv-sound') === 'on';
+let enabled = localStorage.getItem('lv-sound') !== 'off'; // on unless the visitor turned it off
 
 function ensure() {
   if (!ctx) {

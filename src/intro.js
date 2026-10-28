@@ -51,13 +51,16 @@ export function runIntro({ onBoarded, glass, onSkip }) {
   let doorsOpen = false;
   // Ride with sound: turns the announcements on; if the doors have already opened, you still hear the station
   const soundBtn = document.querySelector('[data-intro-sound]');
-  soundBtn?.addEventListener('click', () => {
-    sound.set(true);
+  // The train waits for you: browsers only allow sound after a click, so boarding is that click.
+  const quietBtn = document.querySelector('[data-intro-quiet]');
+  const board = (withSound) => {
+    sound.set(withSound);
     soundBtn.hidden = true;
-    if (doorsOpen) say(['arriving-home', 'doors-right']);
-    else rideSound(3, 0.8);
-  });
-  if (sound.on && soundBtn) soundBtn.hidden = true;
+    if (quietBtn) quietBtn.hidden = true;
+    if (tl.paused()) tl.play();
+  };
+  soundBtn?.addEventListener('click', () => board(true));
+  quietBtn?.addEventListener('click', () => board(false));
   const finish = () => {
     if (done) return;
     done = true;
@@ -75,7 +78,7 @@ export function runIntro({ onBoarded, glass, onSkip }) {
     onBoarded?.();
   };
 
-  const tl = gsap.timeline({ onComplete: finish });
+  const tl = gsap.timeline({ onComplete: finish, paused: !!document.querySelector('[data-intro-sound]') });
   if (!glass) tl.from(platform.querySelectorAll('.wall-word'), { yPercent: 40, opacity: 0, duration: 0.9, stagger: 0.1, ease: 'expo.out' }, 0.05);
   tl.from(platform.querySelector('.wall-sign'), { opacity: 0, y: -12, duration: 0.6, ease: 'power3.out' }, 0.4)
     .from(platform.querySelector('.floor'), { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.3)

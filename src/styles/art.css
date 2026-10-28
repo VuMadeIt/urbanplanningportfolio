@@ -544,3 +544,6 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 .hire-text { grid-column: 1 / 7; display: grid; gap: 20px; justify-items: start; }
 .hire .car-screen { grid-column: 8 / 12; justify-self: start; width: min(100%, 300px); margin: 0; }
 @media (max-width: 760px) { .hire-text, .hire .car-screen { grid-column: 1 / -1; } .hire .car-screen { width: min(72vw, 290px); } }
+.intro-quiet { min-height: 44px; padding: 0 16px; background: #fff; color: var(--ink); font-size: var(--t-small); font-weight: 600; }
+.intro-quiet[hidden] { display: none; }
+@media (hover: hover) and (pointer: fine) { .intro-quiet:hover { background: var(--paper-2); } }
