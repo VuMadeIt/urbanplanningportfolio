@@ -128,7 +128,7 @@ function revealHero(id) {
     } else if (el.querySelector('.hero--shrine')) {
       // you step off the train; the square is dark; then the light comes down on her
       tl.set(el.querySelector('.hero--shrine'), { '--lit': 0 })
-        .from(el.querySelector('.shrine-statue'), { y: 40, opacity: 0, duration: 1.2, ease: 'expo.out' }, 0)
+        .from(el.querySelector('.monument'), { y: 40, opacity: 0, duration: 1.2, ease: 'expo.out' }, 0)
         .from(el.querySelector('.shrine-hall'), { opacity: 0, duration: 1.4, ease: 'power2.out' }, 0)
         .fromTo(el.querySelector('.shrine-beam'), { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 1.1, ease: 'expo.out' }, 0.9)
         .to(el.querySelector('.hero--shrine'), { '--lit': 1, duration: 1.6, ease: 'power2.out' }, 1.0)

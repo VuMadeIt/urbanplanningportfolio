@@ -547,3 +547,26 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 .intro-quiet { min-height: 44px; padding: 0 16px; background: #fff; color: var(--ink); font-size: var(--t-small); font-weight: 600; }
 .intro-quiet[hidden] { display: none; }
 @media (hover: hover) and (pointer: fine) { .intro-quiet:hover { background: var(--paper-2); } }
+
+/* Shrine, cleaned up: one monument in the light, text always in front */
+.monument { position: relative; z-index: 2; display: grid; justify-items: center; margin-bottom: 0; filter: brightness(calc(0.5 + var(--lit) * 0.6)); }
+.monument-bust { width: min(30vw, 340px); height: auto; }
+.monument-plinth { margin-top: -6px; width: min(38vw, 440px); padding: 22px 20px 26vh; background: #34303b; text-align: center; display: grid; gap: 6px; }
+.monument-name { font-family: var(--font); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: clamp(18px, 1.8vw, 26px); color: #e9c46a; }
+.monument-role { font-family: var(--voice); font-style: italic; font-size: var(--t-small); color: #e9c46a; }
+.hero--shrine .shrine-copy { z-index: 4; }
+.hero--shrine .shrine-hall { z-index: 0; }
+.shrine-beam, .shrine-glow, .shrine-motes { z-index: 1; }
+.record { padding: 0 var(--m) var(--section); display: grid; gap: 24px; }
+.record-lead { max-width: 60ch; }
+.record-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 36px var(--gutter); margin-top: 16px; }
+.record-item { display: grid; gap: 8px; align-content: start; padding-top: 18px; border-top: 4px solid #e9c46a; }
+.record-item h3 { font-size: 22px; font-weight: 600; line-height: 1.15; color: #f4ecdc; }
+.record-item p { font-size: 16px; line-height: 1.5; color: #e2d8c6; }
+.record-sources { font-size: var(--t-small); color: #cbbfa8; max-width: 90ch; margin-top: 16px; }
+@media (max-width: 1100px) { .record-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .record-grid { grid-template-columns: 1fr; }
+  .monument-bust { width: 58vw; }
+  .monument-plinth { width: 74vw; padding-bottom: 34vh; }
+}

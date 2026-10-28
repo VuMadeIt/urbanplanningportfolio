@@ -314,6 +314,5 @@ export function cityHallSVG() {
     <g fill="#3a3048">${Array.from({ length: 14 }, (_, i) => `<rect x="${350 + (i % 7) * 38}" y="${210 + Math.floor(i / 7) * 160}" width="20" height="120"/>`).join('')}${Array.from({ length: 16 }, (_, i) => `<rect x="${950 + (i % 8) * 38}" y="${160 + Math.floor(i / 8) * 180}" width="20" height="140"/>`).join('')}</g>
     <ellipse cx="800" cy="470" rx="150" ry="44" fill="#352c43"/><path d="M650 470c0-70 300-70 300 0z" fill="#3d334d"/>
     <rect x="0" y="540" width="1600" height="60" fill="#1d1726"/>
-    <g font-family="Jost Variable, Jost, sans-serif" font-weight="700" font-size="74">${letters.map(([l, c], i) => `<text x="${520 + i * 82}" y="590" fill="${c}" opacity=".9">${l}</text>`).join('')}</g>
   </svg>`;
 }
