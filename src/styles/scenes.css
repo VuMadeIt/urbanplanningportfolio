@@ -89,14 +89,6 @@
 .arrivals { display: inline-flex; align-items: center; gap: 14px; background: var(--ink); color: var(--amber); padding: 10px 16px; font-weight: 600; }
 .arrivals-label { color: #fff; font-weight: 500; }
 .arrivals-time { min-width: 5.5em; text-align: right; }
-.skip-intro {
-  position: absolute; z-index: 5; right: var(--m); top: 20px;
-  min-height: 44px; padding: 0 16px; background: var(--ink); color: #fff;
-  font-size: var(--t-small); font-weight: 600;
-  transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease, opacity 300ms ease;
-}
-.skip-intro:active { transform: scale(0.96); }
-@media (hover: hover) and (pointer: fine) { .skip-intro:hover { background: var(--red); } }
 
 /* ---------- Streetcar stop hero ---------- */
 .hero--street {

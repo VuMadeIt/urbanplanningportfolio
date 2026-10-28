@@ -15,6 +15,11 @@ uniform float uDpr;
 uniform float uReveal;  // 0..1 tiles assembling
 uniform float uTime;
 uniform vec3 uGrout;
+uniform float uOffX;    // horizontal shift of the tile grid in device px
+uniform vec4 uB0;       // button slabs: start column, row, hover, press (column < -50: none)
+uniform vec4 uB1;
+uniform float uGone;    // 0..1 the button slabs fade back into plain wall
+uniform vec3 uWallC;
 varying vec2 v;
 
 float sdBox(vec2 p, vec2 b, float r) { vec2 q = abs(p) - b + r; return length(max(q, 0.)) + min(max(q.x, q.y), 0.) - r; }
@@ -24,15 +29,28 @@ void main() {
   vec2 px = vec2(v.x, 1. - v.y) * uRes;
   bool trim = px.y < uTrim;
   vec2 ts = trim ? vec2(uTrim * 0.75, uTrim) : uTile;
-  vec2 origin = trim ? vec2(0.) : vec2(0., uTrim);
+  vec2 origin = trim ? vec2(0.) : vec2(uOffX, uTrim);
   vec2 q = px - origin;
   vec2 cell = floor(q / ts);
   vec2 centre = origin + cell * ts + ts * .5;
-  vec2 local = px - centre;
   float gap = 2.5 * uDpr;
   vec2 halfSize = ts * .5 - gap * .5;
+  // a button is one slab the size of two tiles side by side
+  float btn = 0.;
+  vec2 bs = vec2(0.);
+  if (!trim) {
+    for (int i = 0; i < 2; i++) {
+      vec4 b = i == 0 ? uB0 : uB1;
+      if (abs(cell.y - b.y) < .5 && cell.x > b.x - .5 && cell.x < b.x + 1.5) {
+        cell = b.xy;
+        centre = origin + vec2(b.x + 1., b.y + .5) * ts;
+        halfSize = vec2(ts.x, ts.y * .5) - gap * .5;
+        btn = 1.; bs = b.zw;
+      }
+    }
+  }
+  vec2 local = px - centre;
   float r = 5. * uDpr;
-  float d = sdBox(local, halfSize, r);
   float h = hash(cell + (trim ? 91. : 0.));
 
   // tiles assemble in a diagonal wave
@@ -62,13 +80,15 @@ void main() {
   col.r = texture2D(uTex, uv + vec2(ca, 0.)).r;
   col.g = texture2D(uTex, uv).g;
   col.b = texture2D(uTex, uv - vec2(ca, 0.)).b;
+  if (btn > 0.) col = mix(col, uWallC, uGone);
 
   // each slab is a slightly different pour
   col *= 0.965 + h * 0.06;
 
-  // light
+  // light; a pressed button sits back in the wall, so its bevel catches the light the other way
   vec2 ld = normalize(uLight - centre + 1e-4);
-  float facing = dot(g, ld);
+  float facing = dot(g, ld) * (1. - bs.y * 1.6);
+  col *= 1. + bs.x * 0.07 - bs.y * (0.12 + 0.3 * slope);
   float rim = pow(max(facing, 0.), 2.) * pow(slope, 1.6);
   float shade = max(-facing, 0.) * pow(slope, 1.4);
   col += rim * 0.55;
@@ -101,6 +121,14 @@ function hexToRgb(hex) {
 const mix = (a, b, t) => a.map((x, i) => Math.round(x + (b[i] - x) * t));
 const css = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
 
+/** Height of one wall tile in CSS px; a tile is twice as wide as it is tall */
+export const tileHeight = (wallWidth) => (wallWidth < 760 ? 38 : 58);
+
+export const ICONS = {
+  sound: 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z',
+  quiet: 'M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z',
+};
+
 export class GlassWall {
   /**
    * @param {HTMLElement} wall  the .wall element; its .wall-name is drawn into the glass
@@ -121,13 +149,14 @@ export class GlassWall {
     this.visible = false;
     this.t0 = performance.now();
     this.idle = true;
+    this.buttons = [];
+    this.offX = 0;
+    this.gone = 0;
     if (!this.setup()) { this.failed = true; return; }
     wall.classList.add('has-glass');
     wall.prepend(this.canvas);
     this.onPointer = (e) => {
-      const r = this.canvas.getBoundingClientRect();
-      this.light.tx = (e.clientX - r.left) * this.dpr;
-      this.light.ty = (e.clientY - r.top) * this.dpr;
+      this.aim(e.clientX, e.clientY);
       this.idle = false;
       clearTimeout(this.idleT);
       this.idleT = setTimeout(() => (this.idle = true), 2500);
@@ -155,7 +184,7 @@ export class GlassWall {
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     this.u = {};
-    ['uTex', 'uRes', 'uLight', 'uTile', 'uTrim', 'uDpr', 'uReveal', 'uTime', 'uGrout'].forEach((n) => (this.u[n] = gl.getUniformLocation(pr, n)));
+    ['uTex', 'uRes', 'uLight', 'uTile', 'uTrim', 'uDpr', 'uReveal', 'uTime', 'uGrout', 'uOffX', 'uB0', 'uB1', 'uGone', 'uWallC'].forEach((n) => (this.u[n] = gl.getUniformLocation(pr, n)));
     this.tex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, this.tex);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -185,10 +214,11 @@ export class GlassWall {
     }
     // Museum-style columns drawn in front of the wall
     if (o.columns) this.paintColumns(x, W, H, d);
-    // the big name, exactly where the DOM heading sits
+    // the big name, exactly where the DOM heading sits (measured in layout px, so a zoomed wall still lines up)
     const name = wall.querySelector('.wall-name');
+    const wr = wall.getBoundingClientRect();
+    const k = wr.width / (wall.offsetWidth || wr.width || 1);
     if (name) {
-      const wr = wall.getBoundingClientRect();
       const cs = getComputedStyle(name);
       x.fillStyle = cs.color;
       x.textBaseline = 'alphabetic';
@@ -213,15 +243,67 @@ export class GlassWall {
         const m = x.measureText(l.text);
         const asc = m.actualBoundingBoxAscent || size * 0.7;
         const desc = m.actualBoundingBoxDescent || 0;
-        const midY = (l.top - wr.top + l.height / 2) * d;
+        const midY = ((l.top - wr.top + l.height / 2) / k) * d;
         x.fillText(l.text, (W - m.width - ls) / 2, midY + (asc - desc) / 2);
       });
     }
+    this.paintButtons(x, d);
     const gl = this.gl;
     gl.bindTexture(gl.TEXTURE_2D, this.tex);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, c);
     this.grout = mix(base, [40, 38, 36], 0.42).map((v) => v / 255);
+    this.wallC = base.map((v) => v / 255);
+  }
+
+  /** Button slabs: each fills two tiles of the grid, with its label glazed into the glass */
+  paintButtons(x, d) {
+    const [tw, th] = this.tile;
+    if ('letterSpacing' in x) x.letterSpacing = '0px';
+    this.buttons.forEach((b) => {
+      const bx = this.offX + b.col * tw, by = this.trimH + b.row * th, bw = tw * 2;
+      x.fillStyle = b.colour;
+      x.fillRect(bx, by, bw, th);
+      x.fillStyle = b.ink;
+      let size = th * 0.3;
+      const iconGap = size * 0.45;
+      const fit = () => { x.font = `600 ${size}px "Jost Variable", Jost, sans-serif`; return x.measureText(b.label).width + size * 1.25 + iconGap; };
+      while (fit() > bw - th * 0.7 && size > 8 * d) size -= d;
+      const total = fit();
+      const icon = size * 1.25;
+      const left = bx + (bw - total) / 2;
+      const cy = by + th / 2;
+      if (b.icon && ICONS[b.icon]) {
+        x.save();
+        x.translate(left, cy - icon / 2);
+        x.scale(icon / 24, icon / 24);
+        x.fill(new Path2D(ICONS[b.icon]));
+        x.restore();
+      }
+      x.textBaseline = 'middle';
+      x.fillText(b.label, left + icon + iconGap, cy + size * 0.04);
+    });
+  }
+
+  /**
+   * Set the button slabs into the wall.
+   * @param {Array<{col:number,row:number,colour:string,ink:string,label:string,icon?:string}>} list
+   * @param {number} offX  grid shift in CSS px
+   */
+  setButtons(list, offX = 0) {
+    if (this.failed) return;
+    this.buttons = list.map((b) => ({ hover: 0, press: 0, hoverT: 0, pressT: 0, ...b }));
+    this.offXCss = offX;
+    this.gone = 0;
+    this.resize();
+    this.loop();
+  }
+  buttonState(i, { hover, press }) {
+    const b = this.buttons[i];
+    if (!b) return;
+    if (hover !== undefined) b.hoverT = hover;
+    if (press !== undefined) b.pressT = press;
+    this.loop();
   }
 
   paintColumns(x, W, H, d) {
@@ -255,16 +337,17 @@ export class GlassWall {
 
   resize() {
     if (this.failed) return;
-    const r = this.wall.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    this.dpr = Math.min(window.devicePixelRatio || 1, 1.75);
-    const W = Math.round(r.width * this.dpr), H = Math.round(r.height * this.dpr);
+    // layout size, not the on-screen box: the intro wall is drawn while the camera is zoomed in on it
+    const w = this.wall.offsetWidth, h = this.wall.offsetHeight;
+    if (!w || !h) return;
+    this.dpr = Math.min((window.devicePixelRatio || 1) * (this.zoom || 1), this.zoom > 1 ? 2.5 : 1.75);
+    const W = Math.round(w * this.dpr), H = Math.round(h * this.dpr);
     this.canvas.width = W; this.canvas.height = H;
     this.gl.viewport(0, 0, W, H);
-    const small = r.width < 760;
-    const th = (this.o.tile || (small ? 38 : 58)) * this.dpr;
+    const th = (this.o.tile || tileHeight(w)) * this.dpr;
     this.tile = [th * 2, th];
     this.trimH = (this.o.trim ?? 64) * this.dpr;
+    this.offX = (this.offXCss || 0) * this.dpr;
     if (!this.light.x) { this.light.x = this.light.tx = W * 0.3; this.light.y = this.light.ty = H * 0.15; }
     this.paint();
     this.draw();
@@ -272,12 +355,25 @@ export class GlassWall {
 
   /** Let something else hold the light, e.g. a train's headlight */
   setLight(clientX, clientY) {
-    const r = this.canvas.getBoundingClientRect();
-    this.light.tx = (clientX - r.left) * this.dpr;
-    this.light.ty = (clientY - r.top) * this.dpr;
+    this.aim(clientX, clientY);
     this.idle = false;
     clearTimeout(this.idleT);
     this.idleT = setTimeout(() => (this.idle = true), 1500);
+  }
+
+  /** Point the light at a spot on screen, allowing for any zoom on the wall */
+  aim(clientX, clientY) {
+    const r = this.canvas.getBoundingClientRect();
+    const k = r.width / (this.wall.offsetWidth || r.width || 1);
+    this.light.tx = ((clientX - r.left) / k) * this.dpr;
+    this.light.ty = ((clientY - r.top) / k) * this.dpr;
+  }
+
+  /** Render sharper while the camera is zoomed in on the wall */
+  setZoom(z) {
+    if (this.failed || this.zoom === z) return;
+    this.zoom = z;
+    this.resize();
   }
 
   assemble(duration = 1.3) {
@@ -299,6 +395,13 @@ export class GlassWall {
     gl.uniform1f(u.uReveal, this.reveal);
     gl.uniform1f(u.uTime, (performance.now() - this.t0) / 1000);
     gl.uniform3f(u.uGrout, ...this.grout);
+    gl.uniform1f(u.uOffX, this.offX);
+    [u.uB0, u.uB1].forEach((loc, i) => {
+      const b = this.buttons[i];
+      gl.uniform4f(loc, b ? b.col : -99, b ? b.row : -99, b ? b.hover : 0, b ? b.press : 0);
+    });
+    gl.uniform1f(u.uGone, this.gone);
+    gl.uniform3f(u.uWallC, ...this.wallC);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
@@ -321,6 +424,10 @@ export class GlassWall {
       const k = this.idle ? 0.03 : 0.14;
       this.light.x += (this.light.tx - this.light.x) * k;
       this.light.y += (this.light.ty - this.light.y) * k;
+      this.buttons.forEach((b) => {
+        b.hover += (b.hoverT - b.hover) * 0.25;
+        b.press += (b.pressT - b.press) * 0.45;
+      });
       this.draw();
       this.raf = requestAnimationFrame(tick);
     };

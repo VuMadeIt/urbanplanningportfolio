@@ -446,20 +446,6 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 }
 @keyframes draw-line { to { stroke-dashoffset: 0; } }
 
-/* ---------- Intro: ride with sound ---------- */
-.intro-tools { display: none; position: absolute; z-index: 5; right: var(--m); top: 20px; gap: 8px; }
-.js.is-intro .intro-tools { display: flex; }
-.intro-tools .skip-intro { position: static; display: block; }
-.intro-sound {
-  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px;
-  background: var(--yellow); color: var(--ink); font-size: var(--t-small); font-weight: 600;
-  transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease;
-}
-.intro-sound svg { width: 20px; height: 20px; }
-.intro-sound[hidden] { display: none; }
-.intro-sound:active { transform: scale(0.96); }
-@media (hover: hover) and (pointer: fine) { .intro-sound:hover { background: #ffd65c; } }
-
 /* Contact close: the name whole, edge to edge, nothing cut off */
 .close-name { font-size: 25.2vw; line-height: 0.86; margin-bottom: 0; padding: 0 0 0.05em; white-space: nowrap; letter-spacing: -0.045em; }
 @media (max-width: 760px) { .close-name { font-size: 25.2vw; } }
@@ -544,9 +530,6 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 .hire-text { grid-column: 1 / 7; display: grid; gap: 20px; justify-items: start; }
 .hire .car-screen { grid-column: 8 / 12; justify-self: start; width: min(100%, 300px); margin: 0; }
 @media (max-width: 760px) { .hire-text, .hire .car-screen { grid-column: 1 / -1; } .hire .car-screen { width: min(72vw, 290px); } }
-.intro-quiet { min-height: 44px; padding: 0 16px; background: #fff; color: var(--ink); font-size: var(--t-small); font-weight: 600; }
-.intro-quiet[hidden] { display: none; }
-@media (hover: hover) and (pointer: fine) { .intro-quiet:hover { background: var(--paper-2); } }
 
 /* Shrine, cleaned up: one monument in the light, text always in front */
 .monument { position: relative; z-index: 2; display: grid; justify-items: center; margin-bottom: 0; filter: brightness(calc(0.5 + var(--lit) * 0.6)); }
@@ -595,37 +578,23 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 .close { display: flex; flex-direction: column; }
 .close-legal { margin-top: auto; }
 
-/* ---------- Intro: TTC stop-request buttons, centred on the wall ---------- */
-.intro-tools { display: none; position: absolute; z-index: 5; inset: 0; top: auto; right: auto; bottom: 14vh; left: 50%; translate: -50% 0; flex-direction: column; align-items: center; gap: 22px; }
-.js.is-intro .intro-tools { display: flex; }
-.intro-tools.is-gone { opacity: 0; pointer-events: none; transition: opacity 400ms ease; }
-.intro-ask { font-family: var(--voice); font-style: italic; font-size: clamp(22px, 2.4vw, 34px); color: #1c1c1e; background: #f4f4f1; padding: 6px 16px; }
-.stop-buttons { display: flex; gap: clamp(28px, 5vw, 72px); }
-.stop-btn { display: grid; justify-items: center; gap: 14px; background: none; }
-.stop-cap {
-  position: relative; display: grid; place-items: center; width: clamp(112px, 11vw, 150px); aspect-ratio: 1; border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, #e8eaec 0 58%, #9ea3a8 60%, #f4f5f6 66%, #7d8287 72%, #c9cdd1 100%); /* taste-skill-ignore: brushed steel bezel */
-  box-shadow: 0 10px 0 #5d6166, 0 18px 26px rgba(0, 0, 0, 0.45); /* taste-skill-ignore: a physical button */
-  transition: transform 120ms var(--ease-out), box-shadow 120ms var(--ease-out);
-}
-.stop-cap > span {
-  display: grid; place-items: center; width: 74%; aspect-ratio: 1; border-radius: 50%;
-  background: radial-gradient(circle at 35% 28%, #ff8a80 0, #e0281f 34%, #a8150f 78%, #7a0d09 100%); /* taste-skill-ignore: glossy plastic */
-  box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.35), inset 0 6px 8px rgba(255, 255, 255, 0.35), 0 3px 0 #6a0b07; /* taste-skill-ignore: a physical button */
-  color: #fff; font-weight: 800; letter-spacing: 0.08em; font-size: clamp(18px, 1.8vw, 24px); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35); /* taste-skill-ignore: embossed lettering */
-  position: relative; overflow: hidden;
-}
-.stop-cap > span::after { content: ''; position: absolute; left: 18%; top: 8%; width: 46%; height: 30%; border-radius: 50%; background: rgba(255, 255, 255, 0.35); filter: blur(2px); }
-.stop-btn--quiet .stop-cap > span { background: radial-gradient(circle at 35% 28%, #fff3b0 0, #ffc72c 36%, #d79b00 80%, #9e6f00 100%); color: #1c1c1e; text-shadow: none; } /* taste-skill-ignore: glossy plastic */
-.stop-label { background: #121212; color: #fff; font-weight: 600; font-size: var(--t-body); padding: 10px 16px; }
-.stop-btn:hover .stop-cap { transform: translateY(-2px); }
-.stop-btn:active .stop-cap { transform: translateY(8px); box-shadow: 0 2px 0 #5d6166, 0 6px 10px rgba(0, 0, 0, 0.4); } /* taste-skill-ignore: pressed */
-.stop-btn:focus-visible { outline: none; }
-.stop-btn:focus-visible .stop-cap { outline: 4px solid var(--yellow); outline-offset: 6px; }
-@media (max-width: 760px) { .intro-tools { bottom: 10vh; } }
-
-/* Intro waiting screen: just the Liam Vu wall and two plain buttons, no scrolling */
+/* ---------- Intro: two button slabs set into the Liam Vu wall ---------- */
 .js.is-intro, .js.is-intro body { overflow: hidden; height: 100%; }
-.intro-tools { flex-direction: row; gap: 12px; bottom: 16vh; }
-.intro-tools .button { min-height: 60px; padding: 0 28px; font-size: 19px; }
-@media (max-width: 760px) { .intro-tools { flex-direction: column; width: calc(100% - 2 * var(--m)); } .intro-tools .button { justify-content: center; } }
+.intro-tools { display: none; }
+.js.is-intro .intro-tools { display: block; position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.tile-btn {
+  position: absolute; pointer-events: auto;
+  display: flex; align-items: center; justify-content: center; gap: 0.45em; padding: 0 0.6em;
+  border-radius: 5px; background: var(--red); color: #fff;
+  font-size: 17px; font-weight: 600; line-height: 1; white-space: nowrap;
+  transition: background-color var(--t-hover) ease, transform var(--t-press) var(--ease-out);
+}
+.tile-btn svg { width: 1.25em; height: 1.25em; flex: none; fill: currentColor; }
+.tile-btn--ink { background: var(--ink); }
+.tile-btn:active { transform: scale(0.98); }
+.tile-btn:focus-visible { outline: 4px solid var(--yellow); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .tile-btn:hover { background: #b51c15; } .tile-btn--ink:hover { background: #2c2c2e; } }
+/* with the glass running, the slabs and their labels are drawn in the wall; the buttons only take the click */
+.wall.has-glass .tile-btn, .wall.has-glass .tile-btn:hover { background: transparent; color: transparent; transform: none; }
+.intro-tools.is-gone { pointer-events: none; }
+.intro-tools.is-gone .tile-btn { opacity: 0; transition: opacity 500ms ease 200ms; }

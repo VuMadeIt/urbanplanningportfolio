@@ -3,10 +3,8 @@
    ========================================================= */
 .station--home { background: #e4e5e3; }
 .platform { display: none; }
-.skip-intro { display: none; }
 .js.is-intro .platform { display: block; position: absolute; inset: 0 0 auto 0; z-index: 3; }
-.js.is-intro .skip-intro { display: block; }
-.js.is-intro .car { visibility: hidden; }
+.js.is-intro .car, .js.is-intro #car { visibility: hidden; }
 
 .car { position: relative; min-height: 100svh; padding-top: var(--bar-h); background: #e4e5e3; color: var(--ink); transform-origin: 50% 55%; }
 

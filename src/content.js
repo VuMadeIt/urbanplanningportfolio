@@ -11,18 +11,22 @@ export const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 export function fitNames(scope = document) {
   if (!scope) return;
   scope.querySelectorAll('.wall-name, .street-name, .road-name').forEach((el) => {
-    const box = el.parentElement.getBoundingClientRect();
-    if (!box.width) return;
+    // layout px, so a wall the camera is zoomed in on still measures true
+    const rect = el.parentElement.getBoundingClientRect();
+    const box = { width: el.parentElement.offsetWidth, height: el.parentElement.offsetHeight };
+    if (!box.width || !rect.width) return;
+    const k = rect.width / box.width;
     el.style.setProperty('--fit', '100px');
     el.style.width = 'max-content';
     const lines = el.querySelectorAll('.wall-word, .rl');
     const stacked = lines.length > 1 && getComputedStyle(lines[0]).display === 'block';
-    const widest = stacked ? Math.max(...[...lines].map((l) => l.getBoundingClientRect().width)) : el.getBoundingClientRect().width;
+    const widest = (stacked ? Math.max(...[...lines].map((l) => l.getBoundingClientRect().width)) : el.getBoundingClientRect().width) / k;
     el.style.width = '';
     const isRoad = el.classList.contains('road-name');
     const isStreet = el.classList.contains('street-name');
     const phone = window.innerWidth < 760;
-    const targetW = box.width * (isRoad ? 0.66 : isStreet ? 0.96 : el.closest('.wall--art') ? (phone ? 0.6 : 0.68) : el.closest('.platform') && phone ? 0.8 : 0.9);
+    // the intro platform is first seen zoomed in, so its name fits the close-up, not the whole wall
+    const targetW = box.width * (isRoad ? 0.66 : isStreet ? 0.96 : el.closest('.wall--art') ? (phone ? 0.6 : 0.68) : el.closest('.platform') ? 0.44 : 0.9);
     const nLines = stacked ? lines.length : 1;
     const hero = el.closest('.hero');
     const streetRoom = isStreet && hero ? hero.clientHeight - hero.querySelector('.street').offsetHeight - hero.querySelector('.street-foot').offsetHeight - 64 - 24 : 0;
