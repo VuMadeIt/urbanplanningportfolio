@@ -33,7 +33,8 @@ void main() {
   vec2 q = px - origin;
   vec2 cell = floor(q / ts);
   vec2 centre = origin + cell * ts + ts * .5;
-  float gap = 2.5 * uDpr;
+  // grout, corners and bevel shrink with small tiles so a phone wall reads like the same glass
+  float gap = clamp(ts.y * 0.045, 1.2 * uDpr, 2.5 * uDpr);
   vec2 halfSize = ts * .5 - gap * .5;
   // a button is one slab the size of two tiles side by side
   float btn = 0.;
@@ -50,7 +51,7 @@ void main() {
     }
   }
   vec2 local = px - centre;
-  float r = 5. * uDpr;
+  float r = min(5. * uDpr, ts.y * 0.12);
   float h = hash(cell + (trim ? 91. : 0.));
 
   // tiles assemble in a diagonal wave
@@ -64,7 +65,7 @@ void main() {
   if (dp > 0. || p <= 0.001) { gl_FragColor = vec4(grout, 1.); return; }
 
   // bevel normal from the rounded box field
-  float bevel = min(11. * uDpr, ts.y * 0.16);
+  float bevel = min(11. * uDpr, ts.y * (ts.y < 32. * uDpr ? 0.11 : 0.16));
   float e = clamp(-dp / bevel, 0., 1.);
   float slope = 1. - e;
   vec2 g = vec2(sdBox(lp + vec2(1., 0.), halfSize, r) - sdBox(lp - vec2(1., 0.), halfSize, r),
@@ -265,10 +266,10 @@ export class GlassWall {
       x.fillStyle = b.colour;
       x.fillRect(bx, by, bw, th);
       x.fillStyle = b.ink;
-      let size = th * 0.3;
-      const iconGap = size * 0.45;
+      let size = th * 0.31;
+      const iconGap = size * 0.4;
       const fit = () => { x.font = `600 ${size}px "Jost Variable", Jost, sans-serif`; return x.measureText(b.label).width + size * 1.25 + iconGap; };
-      while (fit() > bw - th * 0.7 && size > 8 * d) size -= d;
+      while (fit() > bw - th * 0.45 && size > 8 * d) size -= d * 0.25;
       const total = fit();
       const icon = size * 1.25;
       const left = bx + (bw - total) / 2;

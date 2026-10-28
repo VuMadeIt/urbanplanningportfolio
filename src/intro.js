@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import { trainSVG, doorX, trainWidth, TRAIN } from './kit.js';
-import { chimeOpen, rideSound, sound } from './audio.js';
+import { chimeOpen, rideSound, say, sound } from './audio.js';
 
 const CARS = 4;
 const TRIM = 64;
@@ -12,31 +12,38 @@ const TRIM = 64;
 function layTiles(platform, wall, glass) {
   const W = wall.offsetWidth;
   const H = Math.min(wall.offsetHeight, platform.querySelector('.track').offsetTop);
-  const th = W < 760 ? 46 : 58, tw = th * 2;
-  // frame only the tiles: from under the trim down to the track
-  const zoom = platform.offsetHeight / (H - TRIM);
+  // frame only the tiles, from under the trim down to the track, in whatever part of the platform is on screen
+  const viewH = Math.min(window.innerHeight || platform.offsetHeight, platform.offsetHeight);
+  const zoom = Math.max(1.05, viewH / (H - TRIM));
   const originY = (TRIM * zoom) / (zoom - 1);
-  // side by side with one plain tile between, or stacked with a plain row between
-  const side = 5 * tw <= (W / zoom) * 0.9;
+  // how many tiles fit across the screen: narrow phones stack the two slabs (an odd count keeps
+  // half tiles at both edges), wider screens set them side by side with a plain tile between (an even count)
+  const side = W >= 520;
+  const across = !side ? 5 : W < 1100 && W / viewH < 1.5 ? 6 : 8;
+  const tw = W / zoom / across, th = tw / 2;
   // centre the grid on the wall: side by side, a tile sits on the centre line; stacked, a grout line does
   const offX = (((W / 2 - (side ? tw / 2 : 0)) % tw) + tw) % tw;
   const c = Math.round((W / 2 - offX - (side ? tw / 2 : 0)) / tw);
   const name = wall.querySelector('.wall-name');
   const firstFree = Math.ceil((name.offsetTop + name.offsetHeight - TRIM) / th) + 1;
-  const lastRow = Math.floor((H - TRIM) / th) - 1;
-  const span = side ? 1 : 3;
+  const bottom = Math.min(H, originY + (viewH - originY) / zoom);
+  const lastRow = Math.floor((bottom - TRIM) / th) - 1;
+  // stacked slabs keep a plain row between them when there is room
+  const gapRows = side ? 0 : lastRow - firstFree >= 3 ? 2 : 1;
+  const span = gapRows + 1;
   const row = Math.max(firstFree, firstFree + Math.floor((lastRow - firstFree + 1 - span) * 0.4));
-  const cells = side ? [[c - 2, row], [c + 1, row]] : [[c - 1, row], [c - 1, row + 2]];
+  const cells = side ? [[c - 2, row], [c + 1, row]] : [[c - 1, row], [c - 1, row + gapRows]];
   const looks = [
     { colour: '#da251d', ink: '#ffffff', icon: 'sound' },
     { colour: '#1c1c1e', ink: '#f4f4f1', icon: 'quiet' },
   ];
   const btns = [...wall.querySelectorAll('.tile-btn')];
+  wall.style.setProperty('--zoom', zoom.toFixed(3));
   btns.forEach((b, i) => {
     const [col, r] = cells[i];
     Object.assign(b.style, {
       left: `${offX + col * tw + 1.25}px`, top: `${TRIM + r * th + 1.25}px`,
-      width: `${tw * 2 - 2.5}px`, height: `${th - 2.5}px`, fontSize: `${Math.round(th * 0.29)}px`,
+      width: `${tw * 2 - 2.5}px`, height: `${th - 2.5}px`, fontSize: `${(th * 0.3).toFixed(1)}px`,
     });
   });
   if (glass) {
@@ -151,7 +158,7 @@ export function runIntro({ onBoarded, glass, onSkip }) {
     .to(platform.querySelector('.headlight'), { opacity: 0, duration: 0.5 }, 1.7)
     .set(streaks, { opacity: 0 })
     .to(trainEl, { x: () => g.stopX + 7 * g.s, duration: 0.22, ease: 'sine.out', yoyo: true, repeat: 1 })
-    .call(() => { arrivals.textContent = 'Doors open'; chimeOpen(); }, null, '+=0.1')
+    .call(() => { arrivals.textContent = 'Doors open'; chimeOpen(); say(['welcome'], { delay: 0.45 }); }, null, '+=0.1')
     .to(svg.querySelectorAll('.dl'), { x: -80, duration: 0.85, ease: 'power2.inOut' }, '+=0.12')
     .to(svg.querySelectorAll('.dr'), { x: 80, duration: 0.85, ease: 'power2.inOut' }, '<')
     // step aboard: the camera walks into the open door in the middle of the screen

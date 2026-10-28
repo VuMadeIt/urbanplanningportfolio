@@ -554,19 +554,11 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
   .monument-plinth { width: 74vw; padding-bottom: 34vh; }
 }
 
-/* ---------- Art: dance break ---------- */
-.dance { display: grid; grid-template-columns: auto 1fr; gap: clamp(24px, 4vw, 64px); align-items: center; margin: 0 var(--m) var(--section); padding: clamp(32px, 5vw, 64px); background: var(--yellow); color: var(--ink); }
-.dance-text { display: grid; gap: 18px; justify-items: start; max-width: 52ch; }
-.dancer { width: clamp(90px, 10vw, 140px); }
-@media (prefers-reduced-motion: no-preference) {
-  .dancer { animation: groove 0.9s ease-in-out infinite alternate; transform-origin: 50% 100%; }
-  .dancer-arm-l { animation: arm-l 0.45s ease-in-out infinite alternate; transform-origin: 48px 50px; }
-  .dancer-arm-r { animation: arm-r 0.45s ease-in-out infinite alternate-reverse; transform-origin: 72px 50px; }
-}
-@keyframes groove { from { transform: rotate(-5deg) translateY(0); } to { transform: rotate(5deg) translateY(-6px); } }
-@keyframes arm-l { from { transform: rotate(-20deg); } to { transform: rotate(35deg); } }
-@keyframes arm-r { from { transform: rotate(20deg); } to { transform: rotate(-35deg); } }
-@media (max-width: 760px) { .dance { grid-template-columns: 1fr; } }
+/* ---------- Art: dance class, framed like the work on the wall ---------- */
+.live--dance { padding-top: 0; }
+.work--story { grid-column: 8 / 13; justify-self: end; width: min(100%, 360px); }
+.work--story .work-frame { display: block; }
+@media (max-width: 1100px) { .work--story { grid-column: 1 / -1; justify-self: start; width: min(78vw, 360px); } }
 
 /* Text always sits in front of pictures */
 .city-panel figcaption { z-index: 2; }
@@ -589,6 +581,8 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
   font-size: 17px; font-weight: 600; line-height: 1; white-space: nowrap;
   transition: background-color var(--t-hover) ease, transform var(--t-press) var(--ease-out);
 }
+/* a thumb-sized hit area even when the slab is small */
+.tile-btn::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, calc(44px / var(--zoom, 1))); translate: 0 -50%; }
 .tile-btn svg { width: 1.25em; height: 1.25em; flex: none; fill: currentColor; }
 .tile-btn--ink { background: var(--ink); }
 .tile-btn:active { transform: scale(0.98); }
@@ -598,3 +592,87 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 .wall.has-glass .tile-btn, .wall.has-glass .tile-btn:hover { background: transparent; color: transparent; transform: none; }
 .intro-tools.is-gone { pointer-events: none; }
 .intro-tools.is-gone .tile-btn { opacity: 0; transition: opacity 500ms ease 200ms; }
+
+/* =========================================================
+   Phones and tablets: one consistent pass. Text columns stay wide enough to read
+   (no 2-word lines), and later desktop rules can't pull phone layouts back into columns.
+   ========================================================= */
+@media (max-width: 1100px) {
+  /* Social numbers: full width, the photo beneath */
+  .figures-inner { grid-column: 1 / -1; }
+  .figures-photo { grid-column: 1 / 7; margin-top: 56px; }
+  /* Projects index: title and role on one line, the description under both */
+  .index-row h3 { grid-column: 1 / 8; }
+  .index-role { grid-column: 8 / 13; }
+  .index-text { grid-column: 1 / -1; max-width: 62ch; }
+  /* Art: the photo and poster side by side, the text under them */
+  .process-a { grid-column: 1 / 7; grid-row: 1; }
+  .process-b { grid-column: 7 / 13; grid-row: 1; }
+  .process-text { grid-column: 1 / -1; grid-row: 2; padding: 0; }
+  .process-text p { max-width: 62ch; }
+  /* The gallery: two frames to a row, labels as wide as their frames */
+  .work--a { grid-column: 1 / 8; grid-row: 1; }
+  .work--b { grid-column: 8 / 13; grid-row: 1; }
+  .work--c { grid-column: 1 / 7; grid-row: 2; }
+  .work--d { grid-column: 7 / 13; grid-row: 2; }
+  .work .label { max-width: none; }
+  /* Conferences: more room for the words, a smaller picture */
+  .conf-stop > .conf-body { grid-column: 5 / 10; }
+  .conf-pic { grid-column: 10 / 12; }
+  .shrine-note { max-width: 62ch; }
+}
+@media (max-width: 900px) {
+  /* Case studies and the shrine: the two columns stack */
+  .case-cols > div:nth-child(1), .case-cols > div:nth-child(2) { grid-column: 1 / -1 !important; }
+  .case-cols p, .ticks li { max-width: 62ch; }
+  .bio-cols { grid-template-columns: 1fr; }
+  .practice-list dt { grid-column: 1 / 5; }
+  .practice-list dd { grid-column: 5 / 13; }
+}
+@media (max-width: 760px) {
+  .figures-photo { grid-column: 3 / -1; margin-top: 0; }
+  .figures-note { flex-wrap: nowrap; align-items: flex-start; }
+  .figures-note .live-dot { margin-top: 0.45em; }
+  .index-row h3, .index-role, .index-text { grid-column: 1 / -1; }
+  .process-a, .process-b, .process-text { grid-column: 1 / -1; grid-row: auto; }
+  .process-a, .process-b { width: 82%; }
+  /* the gallery hangs one frame to a row, staggered */
+  .work--a, .work--b, .work--c, .work--d { grid-column: 1 / -1; grid-row: auto; margin-top: 0; }
+  .work--a, .work--d { width: 100%; }
+  .work--b { width: 72%; justify-self: end; }
+  .work--c { width: 80%; justify-self: start; }
+  .work .label { min-height: 0; }
+  .conf-stop > .conf-body, .conf-pic { grid-column: 1 / -1; }
+  .practice-list dt, .practice-list dd { grid-column: 1 / -1; }
+  /* the whole line, drawn down the page instead of off its edge */
+  .next-map { overflow: visible; }
+  .next-map .lmh { min-width: 0; display: grid; gap: 2px; padding-left: 52px; }
+  .next-map .lmh::before { left: 14px; right: auto; top: 20px; bottom: 20px; width: 10px; height: auto; transform-origin: top; transform: scaleY(var(--draw, 1)); }
+  .next-map .lmh li, .next-map .lmh li:last-child { padding-top: 0; flex: none; text-align: left; }
+  .next-map .lmh li::before, .next-map .lmh li:last-child::before { left: -52px; right: auto; top: 50%; translate: 0 -50%; width: 38px; height: 38px; }
+  .next-map .lmh a { display: flex; align-items: baseline; gap: 12px; min-height: 48px; align-content: center; flex-wrap: wrap; padding: 8px 0; }
+}
+/* Standalone text links get a thumb-sized target everywhere */
+.conf-body .link, .route-stop .link, .gallery-more, .close-links a, .live-photo figcaption .link { display: inline-flex; align-items: center; min-height: 44px; }
+.close-links { gap: 2px 20px; }
+.secret-link { display: inline-block; padding: 11px 0; margin: -11px 0; }
+
+/* ---------- Art: dance class hangs on its own gallery wall ---------- */
+.live--dance { background: #22314a; color: var(--paper); padding: var(--section) var(--m); margin-bottom: var(--section); align-items: center; }
+.live--dance .button { background: var(--paper); color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .live--dance .button:hover { background: var(--yellow); } }
+.live--dance :focus-visible { outline-color: var(--yellow); }
+.nowrap { white-space: nowrap; }
+
+/* Subway heroes stack wall, track and platform edge in flow: the edge is always as tall as its words
+   and button need, and the tile wall gives up the room, so nothing is cut off on short screens. */
+.hero--subway { display: flex; flex-direction: column; height: auto; min-height: 100svh; }
+.hero--subway .wall { position: relative; inset: auto; flex: 1 1 auto; height: auto; min-height: 300px; }
+.hero--subway .track { position: relative; top: auto; flex: none; height: 8svh; min-height: 36px; }
+.hero--subway .edge { position: relative; top: auto; flex: none; }
+.hero--subway .floor { min-height: calc(16svh - 26px); flex: none; }
+@media (max-width: 760px) {
+  .hero--subway .wall { min-height: 260px; }
+  .hero--subway .track { height: 6svh; min-height: 28px; }
+  .hero--subway .floor { min-height: calc(30svh - 26px); padding-top: 18px; padding-bottom: 20px; gap: 16px; }
+}
