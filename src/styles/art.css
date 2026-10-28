@@ -623,3 +623,9 @@ h1, h2, h3, h4, .reel-card strong, .label strong, figcaption, .case-figure, .vid
 .stop-btn:focus-visible { outline: none; }
 .stop-btn:focus-visible .stop-cap { outline: 4px solid var(--yellow); outline-offset: 6px; }
 @media (max-width: 760px) { .intro-tools { bottom: 10vh; } }
+
+/* Intro waiting screen: just the Liam Vu wall and two plain buttons, no scrolling */
+.js.is-intro, .js.is-intro body { overflow: hidden; height: 100%; }
+.intro-tools { flex-direction: row; gap: 12px; bottom: 16vh; }
+.intro-tools .button { min-height: 60px; padding: 0 28px; font-size: 19px; }
+@media (max-width: 760px) { .intro-tools { flex-direction: column; width: calc(100% - 2 * var(--m)); } .intro-tools .button { justify-content: center; } }

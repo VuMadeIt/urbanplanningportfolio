@@ -284,10 +284,12 @@ if (html.classList.contains('is-intro') && start === 'home') {
   fitNames(platform);
   const [wallGlass] = glassFor(platform, { assemble: true });
   arrive('home');
+  lenis?.stop();
   intro = runIntro({
     glass: wallGlass,
     onBoarded: () => {
       intro = null;
+      lenis?.start();
       bar.inert = false;
       car.inert = false;
       dropGlass(platform);
