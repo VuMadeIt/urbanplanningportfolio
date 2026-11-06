@@ -53,16 +53,16 @@
       "comments": 5
     },
     "De97BNQyUl3": {
-      "likes": 3912,
+      "likes": 3914,
       "comments": 72
     }
   },
   "youtube": {
     "subscribers": 56,
-    "totalViews": 1964,
+    "totalViews": 1970,
     "videos": {
-      "OzqEFPckPuE": 1132,
-      "0MCG_PvzqTc": 832
+      "OzqEFPckPuE": 1135,
+      "0MCG_PvzqTc": 835
     },
     "source": "public"
   },
@@ -79,11 +79,11 @@
   "totals": {
     "followers": 2394
   },
-  "updated": "2026-11-06T18:10:57.969Z",
+  "updated": "2026-11-06T23:21:27.318Z",
   "ok": {
     "instagram:liamvutoronto": false,
     "instagram:liamvuart": false,
-    "reels": 8,
+    "reels": 6,
     "youtube": true
   }
 }
