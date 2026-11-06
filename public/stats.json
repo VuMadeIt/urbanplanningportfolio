@@ -59,9 +59,9 @@
   },
   "youtube": {
     "subscribers": 56,
-    "totalViews": 1963,
+    "totalViews": 1964,
     "videos": {
-      "OzqEFPckPuE": 1131,
+      "OzqEFPckPuE": 1132,
       "0MCG_PvzqTc": 832
     },
     "source": "public"
@@ -79,11 +79,11 @@
   "totals": {
     "followers": 2394
   },
-  "updated": "2026-11-06T11:15:57.975Z",
+  "updated": "2026-11-06T18:10:57.969Z",
   "ok": {
     "instagram:liamvutoronto": false,
     "instagram:liamvuart": false,
-    "reels": 11,
+    "reels": 8,
     "youtube": true
   }
 }
