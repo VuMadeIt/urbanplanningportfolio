@@ -17,7 +17,7 @@
       "comments": 14
     },
     "Db52C25Sbgu": {
-      "likes": 179,
+      "likes": 181,
       "comments": 23
     },
     "DYXmxBVxKOs": {
@@ -59,10 +59,10 @@
   },
   "youtube": {
     "subscribers": 58,
-    "totalViews": 2060,
+    "totalViews": 2062,
     "videos": {
       "OzqEFPckPuE": 1184,
-      "0MCG_PvzqTc": 876
+      "0MCG_PvzqTc": 878
     },
     "source": "public"
   },
@@ -79,11 +79,11 @@
   "totals": {
     "followers": 2396
   },
-  "updated": "2026-11-15T07:25:50.199Z",
+  "updated": "2026-11-15T14:54:30.142Z",
   "ok": {
     "instagram:liamvutoronto": false,
     "instagram:liamvuart": false,
-    "reels": 6,
+    "reels": 11,
     "youtube": true
   }
 }
